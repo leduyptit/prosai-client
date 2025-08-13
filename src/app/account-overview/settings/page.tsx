@@ -7,12 +7,12 @@ import { ProtectedRoute } from '@/components/shared';
 import Link from 'next/link';
 
 const SettingsPage: React.FC = () => {
-  const handleProfileUpdate = (data: any) => {
+  const handleProfileUpdate = (data: { fullName?: string; email?: string; phone?: string }) => {
     console.log('Profile data updated:', data);
     // Handle profile update logic here
   };
 
-  const handlePasswordUpdate = (data: any) => {
+  const handlePasswordUpdate = (data: { currentPassword: string; newPassword: string; confirmPassword: string }) => {
     console.log('Password updated successfully');
     // Handle password update logic here
   };

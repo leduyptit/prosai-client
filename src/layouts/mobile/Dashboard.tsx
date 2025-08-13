@@ -71,7 +71,7 @@ const MobileDashboard: React.FC = () => {
               <Select
                 placeholder="Loại hình"
                 value={searchForm.propertyType}
-                onChange={(value) => handleInputChange('propertyType', value)}
+                onChange={(value) => handleInputChange('propertyType', value || '')}
                 className="w-full"
                 options={[
                   { value: 'apartment', label: 'Chung cư' },
@@ -82,7 +82,7 @@ const MobileDashboard: React.FC = () => {
               <Select
                 placeholder="Mức giá"
                 value={searchForm.priceRange}
-                onChange={(value) => handleInputChange('priceRange', value)}
+                onChange={(value) => handleInputChange('priceRange', value || '')}
                 className="w-full"
                 options={[
                   { value: 'under-3', label: 'Dưới 3 tỷ' },

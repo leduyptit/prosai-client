@@ -15,15 +15,16 @@ class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
       // Try URL encoded format first (most compatible)
-      const response = await corsApi.postUrlEncoded<ProSaiAuthResponse>('/auth/login', credentials);
+      const response = await corsApi.postUrlEncoded<ProSaiAuthResponse>('/auth/login', credentials as unknown as Record<string, unknown>);
       return this.transformAuthResponse(response);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // If URL encoded fails, try form data
-      if (error.response?.status === 400 || error.response?.status === 415) {
+      const axiosError = error as { response?: { status?: number } };
+      if (axiosError.response?.status === 400 || axiosError.response?.status === 415) {
         try {
-          const response = await corsApi.postForm<ProSaiAuthResponse>('/auth/login', credentials);
+          const response = await corsApi.postForm<ProSaiAuthResponse>('/auth/login', credentials as unknown as Record<string, unknown>);
           return this.transformAuthResponse(response);
-        } catch (formError: any) {
+        } catch (formError: unknown) {
           console.error('❌ Form data login failed:', formError);
           throw formError;
         }
@@ -37,15 +38,16 @@ class AuthService {
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
       // Try URL encoded format first (most compatible)
-      const response = await corsApi.postUrlEncoded<ProSaiAuthResponse>('/auth/register', data);
+      const response = await corsApi.postUrlEncoded<ProSaiAuthResponse>('/auth/register', data as unknown as Record<string, unknown>);
       return this.transformAuthResponse(response);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // If URL encoded fails, try form data
-      if (error.response?.status === 400 || error.response?.status === 415) {
+      const axiosError = error as { response?: { status?: number } };
+      if (axiosError.response?.status === 400 || axiosError.response?.status === 415) {
         try {
-          const response = await corsApi.postForm<ProSaiAuthResponse>('/auth/register', data);
+          const response = await corsApi.postForm<ProSaiAuthResponse>('/auth/register', data as unknown as Record<string, unknown>);
           return this.transformAuthResponse(response);
-        } catch (formError: any) {
+        } catch (formError: unknown) {
           console.error('❌ Form data registration failed:', formError);
           throw formError;
         }
@@ -68,6 +70,7 @@ class AuthService {
           avatar: response.user.avatar || undefined,
           phone: response.user.phone,
           balance: response.user.balance, // Include balance from API
+          role: response.user.role, // Include role from API
           membership: response.user.is_premium ? 'gold' : 'basic',
           createdAt: response.user.created_at || new Date().toISOString(),
           updatedAt: response.user.updated_at || new Date().toISOString(),

@@ -4,7 +4,7 @@ import React from 'react';
 import { Card as AntCard } from 'antd';
 import type { CardProps as AntCardProps } from 'antd';
 
-interface CardProps extends AntCardProps {
+interface CardProps extends Omit<AntCardProps, 'size' | 'variant'> {
   variant?: 'default' | 'elevated' | 'outlined' | 'filled';
   size?: 'small' | 'medium' | 'large';
   className?: string;

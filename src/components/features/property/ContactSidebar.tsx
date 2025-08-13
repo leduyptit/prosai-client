@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { Button, Avatar } from 'antd';
-import { PhoneOutlined, MessageOutlined, UserOutlined, HeartOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import PhoneButton from '@/components/ui/buttons/PhoneButton';
 
-interface ContactInfo {
+interface ContactInfoData {
   name: string;
   avatar?: string;
   phone: string;
@@ -13,7 +13,7 @@ interface ContactInfo {
 }
 
 interface ContactSidebarProps {
-  contactInfo?: ContactInfo;
+  contactInfo?: ContactInfoData;
   propertyId?: string;
   className?: string;
 }

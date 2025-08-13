@@ -92,7 +92,7 @@ const UpgradeDemoPage: React.FC = () => {
         <Card className="mb-6">
           <Title level={3}>Instructions:</Title>
           <div className="space-y-2">
-            <Text>1. Click on either "Test Silver" or "Test Gold" button to open the modal</Text>
+            <Text>1. Click on either &quot;Test Silver&quot; or &quot;Test Gold&quot; button to open the modal</Text>
             <br />
             <Text>2. The modal will display different images and prices based on the selected package</Text>
             <br />

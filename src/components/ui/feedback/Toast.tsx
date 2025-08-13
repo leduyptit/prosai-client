@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+// Toast component - currently using Antd message
 import { message } from 'antd';
 
 interface ToastOptions {

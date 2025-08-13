@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import Image from 'next/image';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/overlay/Modal';
@@ -25,7 +26,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   const { update } = useSession();
   const router = useRouter();
   const [formData, setFormData] = useState({
-    fullname: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     password: '',
@@ -52,8 +54,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     e.preventDefault();
     setErrorMessage(null); // Clear previous errors
     
-    // Validation
-      if (!formData.fullname || !formData.email || !formData.phone || !formData.password || !formData.confirmPassword) {
+        // Validation
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.password || !formData.confirmPassword) {
       const error = 'Vui lòng điền đầy đủ thông tin để đăng ký';
       setErrorMessage(error);
       message.error(error);
@@ -95,7 +97,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     setIsLoading(true);
     try {
       const registerData = {
-        fullname: formData.fullname,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
@@ -130,19 +133,20 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
           }
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { message?: string }; status?: number }; message?: string };
       console.error('❌ Registration failed:', error);
       
       let errorMessage = 'Đăng ký không thành công, vui lòng thử lại';
       
-      if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.response?.status === 400) {
+      if (axiosError.response?.data?.message) {
+        errorMessage = axiosError.response.data.message;
+      } else if (axiosError.response?.status === 400) {
         errorMessage = 'Thông tin đăng ký không hợp lệ';
-      } else if (error.response?.status === 409) {
+      } else if (axiosError.response?.status === 409) {
         errorMessage = 'Email này đã được đăng ký, vui lòng sử dụng email khác';
-      } else if (error.message) {
-        errorMessage = error.message;
+      } else if (axiosError.message) {
+        errorMessage = axiosError.message;
       }
       
       setErrorMessage(errorMessage);
@@ -204,7 +208,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
           duration: 2,
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Social login exception:', error);
       
       message.error({
@@ -243,10 +247,10 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
         {/* Left Panel - Branding and Graphics */}
         <div className="w-1/2 relative overflow-hidden bg-[#00478E]">
           {/* Background Pattern */}
-          <img src="/images/Bg_login@2x.png" alt="bg" className="w-full h-full z-0" />
+          <Image src="/images/Bg_login@2x.png" alt="Register background" fill className="object-cover z-0" />
           {/* Logo and Branding */}
           <div className="absolute top-10 left-10">
-            <img src="/svgs/logo_login.svg" alt="logo" className="w-40" />
+            <Image src="/svgs/logo_login.svg" alt="PROSAI Logo" width={160} height={40} className="w-40" />
           </div>
         </div>
 
@@ -277,10 +281,22 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
               {/* First Name */}
               <div>
                 <Input
-                  placeholder="Họ và tên"
-                  prefix={<img src="/svgs/icon_user.svg" alt="user" className="w-5" />}
-                  value={formData.fullname}
-                  onChange={(e) => handleInputChange('fullname', e.target.value)}
+                  placeholder="Tên"
+                  prefix={<Image src="/svgs/icon_user.svg" alt="user" width={20} height={20} className="w-5" />}
+                  value={formData.firstName}
+                  onChange={(e) => handleInputChange('firstName', e.target.value)}
+                  size="large"
+                  className="h-12"
+                />
+              </div>
+
+              {/* Last Name */}
+              <div>
+                <Input
+                  placeholder="Họ và tên đệm"
+                  prefix={<Image src="/svgs/icon_user.svg" alt="user" width={20} height={20} className="w-5" />}
+                  value={formData.lastName}
+                  onChange={(e) => handleInputChange('lastName', e.target.value)}
                   size="large"
                   className="h-12"
                 />
@@ -290,7 +306,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
               <div>
                 <Input
                   placeholder="Email"
-                  prefix={<img src="/svgs/icon_email.svg" alt="email" className="w-5" />}
+                  prefix={<Image src="/svgs/icon_email.svg" alt="email" width={20} height={20} className="w-5" />}
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   size="large"
@@ -302,7 +318,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
               <div>
                 <Input
                   placeholder="Số điện thoại"
-                  prefix={<img src="/svgs/icon_email.svg" alt="phone" className="w-5" />}
+                  prefix={<Image src="/svgs/phone.svg" alt="phone" width={20} height={20} className="w-5" />}
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   size="large"
@@ -315,7 +331,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                 <Input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Mật khẩu"
-                  prefix={<img src="/svgs/icon_pw.svg" alt="password" className="w-5" />}
+                  prefix={<Image src="/svgs/icon_pw.svg" alt="password" width={20} height={20} className="w-5" />}
                   suffix={
                     <button
                       type="button"
@@ -337,7 +353,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                 <Input
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Nhập lại mật khẩu"
-                  prefix={<img src="/svgs/icon_pw.svg" alt="confirm-password" className="w-5" />}
+                  prefix={<Image src="/svgs/icon_pw.svg" alt="confirm-password" width={20} height={20} className="w-5" />}
                   suffix={
                     <button
                       type="button"

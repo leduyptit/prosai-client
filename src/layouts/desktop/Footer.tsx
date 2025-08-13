@@ -2,11 +2,7 @@
 
 import React from 'react';
 import { Layout, Row, Col, Typography, Space, Divider } from 'antd';
-import { 
-  MailOutlined,
-  PhoneOutlined,
-  EnvironmentOutlined
-} from '@ant-design/icons';
+// Removed unused imports
 
 const { Footer: AntFooter } = Layout;
 const { Text, Link } = Typography;

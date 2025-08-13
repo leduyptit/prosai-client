@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Layout } from 'antd';
-import DesktopHeader from '@/components/responsive/desktop/layouts/DesktopHeader';
+import DesktopHeader from '@/layouts/desktop/Header';
 
 const { Content } = Layout;
 
@@ -29,9 +29,9 @@ const HeaderTestPage: React.FC = () => {
                   <li>Complete navigation menu (Rao bán, Cho thuê, Cần thuê, Cần mua, Chưa rõ, Xếp hạng, Tin tức, Dự án, Chat AI)</li>
                   <li>Heart icon for favorites</li>
                   <li>Bell icon with notification badge</li>
-                  <li>"Thông báo" text</li>
+                  <li>&quot;Thông báo&quot; text</li>
                   <li>Balance display (Số dư: 150.000₫)</li>
-                  <li>"Nạp tiền" button with wallet icon</li>
+                  <li>&quot;Nạp tiền&quot; button with wallet icon</li>
                   <li>User profile with avatar and username</li>
                   <li>Box shadow effect</li>
                 </ul>

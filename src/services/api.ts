@@ -38,10 +38,10 @@ apiClient.interceptors.response.use(
       
       // Try to refresh token or redirect to login
       const session = await getSession();
-      if (session?.user && (session as any).refreshToken) {
+      if (session?.user && 'refreshToken' in session && session.refreshToken) {
         try {
           const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-            refreshToken: (session as any).refreshToken,
+            refreshToken: session.refreshToken,
           });
           
           if (response.data.accessToken) {
@@ -49,8 +49,9 @@ apiClient.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
             return apiClient(originalRequest);
           }
-        } catch (refreshError) {
+        } catch (refreshError: unknown) {
           // Refresh failed, redirect to login
+          console.error('Token refresh failed:', refreshError);
           window.location.href = '/auth/signin';
         }
       } else {
@@ -64,7 +65,7 @@ apiClient.interceptors.response.use(
 );
 
 // API Response Types
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data: T;
   message?: string;
@@ -83,27 +84,27 @@ export interface PaginatedResponse<T> {
 
 // Generic API methods
 class ApiService {
-  async get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  async get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
     const response = await apiClient.get(url, config);
     return response.data;
   }
 
-  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  async post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
     const response = await apiClient.post(url, data, config);
     return response.data;
   }
 
-  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  async put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
     const response = await apiClient.put(url, data, config);
     return response.data;
   }
 
-  async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  async patch<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
     const response = await apiClient.patch(url, data, config);
     return response.data;
   }
 
-  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+  async delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
     const response = await apiClient.delete(url, config);
     return response.data;
   }
@@ -121,14 +122,14 @@ export const corsApiClient: AxiosInstance = axios.create({
 // CORS-friendly API service for auth endpoints
 class CorsApiService {
   // POST request using form data to avoid preflight
-  async postForm<T>(url: string, data: any): Promise<T> {
+  async postForm<T>(url: string, data: Record<string, unknown> | { [key: string]: unknown }): Promise<T> {
     try {
       const formData = new FormData();
       
       // Convert object to form data
       Object.keys(data).forEach(key => {
         if (data[key] !== null && data[key] !== undefined) {
-          formData.append(key, data[key]);
+          formData.append(key, String(data[key]));
         }
       });
 
@@ -138,14 +139,14 @@ class CorsApiService {
         }
       });
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.handleCorsError(error);
       throw error;
     }
   }
 
   // POST request with simple content type to avoid preflight
-  async postSimple<T>(url: string, data: any): Promise<T> {
+  async postSimple<T>(url: string, data: unknown): Promise<T> {
     try {
       const response = await corsApiClient.post(url, JSON.stringify(data), {
         headers: {
@@ -153,21 +154,21 @@ class CorsApiService {
         }
       });
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.handleCorsError(error);
       throw error;
     }
   }
 
   // POST request as URL encoded to avoid preflight
-  async postUrlEncoded<T>(url: string, data: any): Promise<T> {
+  async postUrlEncoded<T>(url: string, data: Record<string, unknown> | { [key: string]: unknown }): Promise<T> {
     try {
       const params = new URLSearchParams();
       
       // Convert object to URL encoded format
       Object.keys(data).forEach(key => {
         if (data[key] !== null && data[key] !== undefined) {
-          params.append(key, data[key]);
+          params.append(key, String(data[key]));
         }
       });
 
@@ -177,25 +178,26 @@ class CorsApiService {
         }
       });
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.handleCorsError(error);
       throw error;
     }
   }
 
   // Handle CORS-specific errors
-  private handleCorsError(error: any) {
-    if (error.code === 'ERR_NETWORK' || !error.response) {
+  private handleCorsError(error: unknown) {
+    const axiosError = error as { code?: string; response?: { status?: number }; config?: { url?: string; method?: string }; message?: string };
+    if (axiosError.code === 'ERR_NETWORK' || !axiosError.response) {
       console.error('❌ CORS/Network error:', {
         message: 'Không thể kết nối đến server - có thể do CORS policy',
-        originalError: error.message,
-        url: error.config?.url,
-        method: error.config?.method
+        originalError: axiosError.message,
+        url: axiosError.config?.url,
+        method: axiosError.config?.method
       });
-    } else if (error.response?.status === 0) {
+    } else if (axiosError.response?.status === 0) {
       console.error('❌ CORS preflight failed:', {
         message: 'CORS preflight request bị chặn',
-        url: error.config?.url
+        url: axiosError.config?.url
       });
     }
   }

@@ -14,7 +14,7 @@ export interface Property {
   listingType: ListingType;
   images: PropertyImage[];
   features: string[];
-  contactInfo: ContactInfo;
+  contactInfo: ContactInfoData;
   aiRating?: AIRating;
   views: number;
   isActive: boolean;
@@ -34,7 +34,7 @@ export interface PropertyImage {
   isPrimary: boolean;
 }
 
-export interface ContactInfo {
+export interface ContactInfoData {
   name: string;
   phone: string;
   email?: string;
@@ -123,7 +123,7 @@ export interface Notification {
   type: NotificationType;
   isRead: boolean;
   createdAt: string;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }
 
 export type NotificationType = 'info' | 'success' | 'warning' | 'error' | 'property' | 'system';

@@ -4,7 +4,7 @@ import React from 'react';
 import { Drawer as AntDrawer } from 'antd';
 import type { DrawerProps as AntDrawerProps } from 'antd';
 
-interface DrawerProps extends AntDrawerProps {
+interface DrawerProps extends Omit<AntDrawerProps, 'size'> {
   variant?: 'default' | 'left' | 'right' | 'top' | 'bottom';
   size?: 'small' | 'medium' | 'large' | 'full';
   className?: string;

@@ -9,7 +9,7 @@ interface ApiState<T> {
   error: string | null;
 }
 
-export function useApi<T = any>() {
+export function useApi<T = unknown>() {
   const [state, setState] = useState<ApiState<T>>({
     data: null,
     loading: false,
@@ -23,7 +23,7 @@ export function useApi<T = any>() {
       successMessage?: string;
       showErrorMessage?: boolean;
       onSuccess?: (data: R) => void;
-      onError?: (error: any) => void;
+      onError?: (error: unknown) => void;
     }
   ) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
@@ -41,8 +41,9 @@ export function useApi<T = any>() {
       }
 
       return result;
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || error.message || 'Đã có lỗi xảy ra';
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { message?: string } }; message?: string };
+      const errorMessage = axiosError.response?.data?.message || axiosError.message || 'Đã có lỗi xảy ra';
       setState(prev => ({ ...prev, loading: false, error: errorMessage }));
 
       if (options?.showErrorMessage !== false) {

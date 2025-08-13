@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import Image from 'next/image';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/overlay/Modal';
@@ -103,7 +104,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
         setErrorMessage(error);
         message.error(error);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Login exception:', error);
       const errorMsg = 'Đã có lỗi xảy ra, vui lòng thử lại';
       setErrorMessage(errorMsg);
@@ -165,7 +166,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
           duration: 2,
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Social login exception:', error);
       
       message.error({
@@ -211,10 +212,10 @@ const LoginModal: React.FC<LoginModalProps> = ({
         {/* Left Panel - Branding and Graphics */}
         <div className="w-1/2 relative overflow-hidden bg-[#00478E]">
           {/* Background Pattern */}
-          <img src="/images/Bg_login@2x.png" alt="bg" className="w-full h-full z-0" />
+          <Image src="/images/Bg_login@2x.png" alt="Login background" fill className="object-cover z-0" />
           {/* Logo and Branding */}
           <div className="absolute top-10 left-10">
-            <img src="/svgs/logo_login.svg" alt="logo" className="w-40" />
+            <Image src="/svgs/logo_login.svg" alt="PROSAI Logo" width={160} height={40} className="w-40" />
           </div>
         </div>
 
@@ -245,7 +246,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
               <div>
                 <Input
                   placeholder="Email hoặc số điện thoại"
-                  prefix={<img src="/svgs/icon_user.svg" alt="email" className="w-5" />}
+                  prefix={<Image src="/svgs/icon_user.svg" alt="email" width={20} height={20} className="w-5" />}
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   size="large"
@@ -257,7 +258,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                 <Input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Mật khẩu"
-                  prefix={<img src="/svgs/icon_pw.svg" alt="email" className="w-5" />}
+                  prefix={<Image src="/svgs/icon_pw.svg" alt="password" width={20} height={20} className="w-5" />}
                   suffix={
                     <button
                       type="button"

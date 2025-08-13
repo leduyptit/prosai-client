@@ -33,9 +33,10 @@ export const authOptions: NextAuthOptions = {
               email: credentials.email,
               password: credentials.password,
             });
-          } catch (error: any) {
+          } catch (error: unknown) {
             // If URL encoded fails, try form data
-            if (error.response?.status === 400 || error.response?.status === 415) {
+            const axiosError = error as { response?: { status?: number } };
+            if (axiosError.response?.status === 400 || axiosError.response?.status === 415) {
               response = await corsApi.postForm<ProSaiAuthResponse>('/auth/login', {
                 email: credentials.email,
                 password: credentials.password,
@@ -55,6 +56,7 @@ export const authOptions: NextAuthOptions = {
               name: response.user.full_name || response.user.first_name || response.user.email,
               image: response.user.avatar || undefined, // Use undefined instead of null
               balance: response.user.balance, // Include balance
+              role: response.user.role, // Include role
               accessToken: response.access_token,
               refreshToken: response.refresh_token,
             };
@@ -64,24 +66,25 @@ export const authOptions: NextAuthOptions = {
             console.error('❌ ProSai API response missing access_token or user');
             return null;
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
+          const axiosError = error as { message?: string; response?: { status?: number; data?: unknown }; config?: { url?: string } };
           console.error('❌ Authentication error:', {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-            url: error.config?.url
+            message: axiosError.message,
+            status: axiosError.response?.status,
+            data: axiosError.response?.data,
+            url: axiosError.config?.url
           });
           
           // Log specific error messages for debugging
-          if (error.response?.status === 401) {
+          if (axiosError.response?.status === 401) {
             console.error('❌ Login failed: Email hoặc mật khẩu không chính xác');
-          } else if (error.response?.status === 403) {
+          } else if (axiosError.response?.status === 403) {
             console.error('❌ Login failed: Tài khoản đã bị khóa hoặc chưa được xác thực');
-          } else if (error.response?.status === 429) {
+          } else if (axiosError.response?.status === 429) {
             console.error('❌ Login failed: Quá nhiều lần thử, vui lòng thử lại sau');
-          } else if (error.response?.status >= 500) {
+          } else if (axiosError.response?.status && axiosError.response.status >= 500) {
             console.error('❌ Login failed: Lỗi server, vui lòng thử lại sau');
-          } else if (error.code === 'NETWORK_ERROR' || !error.response) {
+          } else if ((axiosError as { code?: string }).code === 'NETWORK_ERROR' || !axiosError.response) {
             console.error('❌ Login failed: Không thể kết nối đến server');
           } else {
             console.error('❌ Login failed: Đã có lỗi xảy ra, vui lòng thử lại');
@@ -110,6 +113,7 @@ export const authOptions: NextAuthOptions = {
             name: user.name,
             image: user.image,
             balance: user.balance, // Include balance in JWT
+            role: user.role, // Include role in JWT
           },
         };
       }

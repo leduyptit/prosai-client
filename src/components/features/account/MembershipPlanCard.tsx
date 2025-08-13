@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { CheckOutlined } from '@ant-design/icons';
+// Removed unused CheckOutlined import
 import { Button } from 'antd';
 
 interface MembershipPlanCardProps {

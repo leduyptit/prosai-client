@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import IconButton from './IconButton';
 
 interface CloseButtonProps {
   onClick: () => void;

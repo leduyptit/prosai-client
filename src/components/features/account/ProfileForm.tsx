@@ -9,7 +9,7 @@ interface ProfileFormProps {
     email?: string;
     phone?: string;
   };
-  onUpdate?: (data: any) => void;
+  onUpdate?: (data: { fullName?: string; email?: string; phone?: string }) => void;
   className?: string;
 }
 
@@ -25,7 +25,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: { fullName?: string; email?: string; phone?: string }) => {
     setLoading(true);
     try {
       // Simulate API call

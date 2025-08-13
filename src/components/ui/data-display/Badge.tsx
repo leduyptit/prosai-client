@@ -4,7 +4,7 @@ import React from 'react';
 import { Badge as AntBadge } from 'antd';
 import type { BadgeProps as AntBadgeProps } from 'antd';
 
-interface BadgeProps extends AntBadgeProps {
+interface BadgeProps extends Omit<AntBadgeProps, 'size'> {
   variant?: 'default' | 'success' | 'warning' | 'error' | 'processing';
   size?: 'small' | 'medium' | 'large';
   className?: string;

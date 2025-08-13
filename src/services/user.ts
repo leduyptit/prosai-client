@@ -86,7 +86,14 @@ class UserService {
     createdAt: string;
   }>> {
     const response = await api.get('/user/payments', { params });
-    return response.data;
+    return response.data as PaginatedResponse<{
+      id: string;
+      amount: number;
+      currency: string;
+      status: string;
+      planType: string;
+      createdAt: string;
+    }>;
   }
 
   // Update user settings
@@ -128,7 +135,22 @@ class UserService {
     };
   }> {
     const response = await api.get('/user/settings');
-    return response.data;
+    return response.data as {
+      notifications: {
+        email: boolean;
+        sms: boolean;
+        push: boolean;
+      };
+      privacy: {
+        showPhone: boolean;
+        showEmail: boolean;
+      };
+      preferences: {
+        language: string;
+        currency: string;
+        timezone: string;
+      };
+    };
   }
 
   // Upload user avatar

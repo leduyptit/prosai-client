@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { Layout, Button, Dropdown, Avatar } from 'antd';
+import Image from 'next/image';
 import { 
   UserOutlined, 
   SettingOutlined, 
   LogoutOutlined, 
   DashboardOutlined,
   BellOutlined,
-  HeartOutlined,
-  WalletOutlined
+  HeartOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import Link from 'next/link';
@@ -109,7 +109,7 @@ const DesktopHeader: React.FC = () => {
       <div className="flex items-center space-x-8">
         {/* Logo */}
         <div className="flex items-center space-x-3">
-          <Link href="#"><img src="/svgs/top_logo.svg" alt="logo" className="w-40" /></Link>
+          <Link href="#"><Image src="/svgs/top_logo.svg" alt="PROSAI Logo" width={160} height={40} className="w-40" /></Link>
         </div>
 
         {/* Navigation Menu */}
@@ -173,7 +173,7 @@ const DesktopHeader: React.FC = () => {
 
             {/* Top up money */}
             <Button 
-              icon={<img src="/svgs/icon_naptien.svg" alt="payment" />}
+              icon={<Image src="/svgs/icon_naptien.svg" alt="payment" width={16} height={16} />}
               className="font-medium"
               style={{ border: '1px solid #D4D4D4', borderRadius: '20px' }}
             >
@@ -213,7 +213,7 @@ const DesktopHeader: React.FC = () => {
               Đăng ký
             </Button>
             <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-              <img src="/svgs/icon_download_app.svg" alt="download" className="h-5 mr-2" />
+              <Image src="/svgs/icon_download_app.svg" alt="download" width={20} height={20} className="h-5 mr-2" />
               Tải ứng dụng
             </Button>
           </>

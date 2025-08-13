@@ -6,6 +6,7 @@ export interface User {
   avatar?: string;
   phone?: string;
   balance?: string; // Account balance from ProSai API
+  role?: string; // User role from ProSai API
   membership?: MembershipPlan;
   createdAt: string;
   updatedAt: string;
@@ -86,6 +87,7 @@ declare module 'next-auth' {
     name: string;
     image?: string;
     balance?: string; // Account balance
+    role?: string; // User role for admin access
     accessToken?: string;
     refreshToken?: string;
   }
@@ -101,6 +103,7 @@ declare module 'next-auth/jwt' {
       name: string;
       image?: string;
       balance?: string; // Account balance
+      role?: string; // User role for admin access
     };
   }
 }

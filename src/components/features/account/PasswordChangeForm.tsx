@@ -4,8 +4,14 @@ import React, { useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
+interface PasswordChangeFormData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 interface PasswordChangeFormProps {
-  onUpdate?: (data: any) => void;
+  onUpdate?: (data: PasswordChangeFormData) => void;
   className?: string;
 }
 
@@ -16,7 +22,7 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: PasswordChangeFormData) => {
     setLoading(true);
     try {
       // Simulate API call

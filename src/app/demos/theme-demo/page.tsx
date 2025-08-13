@@ -135,7 +135,7 @@ export default function ThemeDemoPage() {
     },
   ];
 
-  const handleFormSubmit = (values: any) => {
+  const handleFormSubmit = (values: Record<string, unknown>) => {
     setLoading(true);
     setTimeout(() => {
       message.success('Form đã được gửi thành công!');

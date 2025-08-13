@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { Input as AntInput } from 'antd';
-import type { InputProps as AntInputProps } from 'antd';
+import type { TextAreaProps as AntTextAreaProps } from 'antd/es/input/TextArea';
 
 const { TextArea: AntTextArea } = AntInput;
 
-interface TextAreaProps extends Omit<AntInputProps, 'type'> {
+interface TextAreaProps extends Omit<AntTextAreaProps, 'variant' | 'size'> {
   variant?: 'default' | 'filled' | 'outlined';
   size?: 'small' | 'medium' | 'large';
   className?: string;
