@@ -1,0 +1,296 @@
+@import "tailwindcss";
+
+/* Custom Font Family for Tailwind v4 */
+@theme {
+  --font-family-lexend: "Lexend", sans-serif;
+}
+
+@import "../styles/mixins.css";
+
+/* Lexend Font Face Declarations */
+@font-face {
+  font-family: 'Lexend';
+  src: url('/fonts/Lexend-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lexend';
+  src: url('/fonts/Lexend-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lexend';
+  src: url('/fonts/Lexend-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lexend';
+  src: url('/fonts/Lexend-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lexend';
+  src: url('/fonts/Lexend-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lexend';
+  src: url('/fonts/Lexend-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lexend';
+  src: url('/fonts/Lexend-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lexend';
+  src: url('/fonts/Lexend-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lexend';
+  src: url('/fonts/Lexend-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Lexend', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ant Design Overrides */
+.ant-btn {
+  @apply transition-all duration-200;
+}
+
+.ant-card {
+  @apply shadow-md hover:shadow-lg transition-shadow duration-200;
+}
+
+.ant-input {
+  @apply transition-all duration-200;
+}
+
+.ant-select {
+  @apply transition-all duration-200;
+}
+
+/* Select border styling */
+.ant-select .ant-select-selector {
+  border: 1px solid #C3C3C3 !important;
+  box-shadow: none !important;
+}
+
+.ant-select:hover .ant-select-selector {
+  border: 1px solid #40a9ff !important;
+  box-shadow: none !important;
+}
+
+.ant-select-focused .ant-select-selector,
+.ant-select.ant-select-focused .ant-select-selector {
+  border: 1px solid #1890ff !important;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
+}
+
+/* Select placeholder color */
+.ant-select .ant-select-selection-placeholder {
+  color: #1D1D44 !important;
+}
+
+.ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+  color: #1D1D44 !important;
+}
+
+.ant-select-multiple .ant-select-selector .ant-select-selection-placeholder {
+  color: #1D1D44 !important;
+}
+
+/* Borderless Select Variant */
+.select-borderless .ant-select-selector {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.select-borderless:hover .ant-select-selector {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.select-borderless.ant-select-focused .ant-select-selector,
+.select-borderless .ant-select-focused .ant-select-selector {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Responsive Container */
+.responsive-container {
+  @apply max-w-[1200px] mx-auto;
+}
+
+/* Lexend Font Utility Class */
+.font-lexend {
+  font-family: var(--font-family-lexend);
+}
+
+/* Mobile Drawer */
+.mobile-drawer .ant-drawer-content {
+  @apply bg-white;
+}
+
+.mobile-drawer .ant-drawer-header {
+  @apply border-b border-gray-200;
+}
+
+.mobile-drawer .ant-drawer-body {
+  @apply p-0;
+}
+
+.ant-modal-content {
+  padding: 0 !important;
+}
+
+.custom-button {
+  background: transparent linear-gradient(270deg, #005EBC 0%, #00478E 100%) 0% 0% no-repeat padding-box !important;
+  border-radius: 6px;
+  border: none;
+}
+
+.custom-button:hover {
+  background: transparent linear-gradient(270deg, #00478E 0%, #005EBC 100%) 0% 0% no-repeat padding-box !important;
+  opacity: 0.8;
+}
+
+.custom-button:active {
+  background: transparent linear-gradient(270deg, #00478E 0%, #005EBC 100%) 0% 0% no-repeat padding-box !important;
+}
+
+footer.ant-layout-footer {
+  background: #f7f7f7;
+}
+
+.favorite-button:hover {
+  background: #F7F7F7 !important;
+  border-color: #d9d9d9 !important;
+  color: #1D1D44;
+}
+
+.favorite-button .text-red-500 {
+  color: #FF0000;
+}
+
+.phone-button {
+  background: #005EBC;
+}
+
+.phone-button:hover {
+  background: #0F75DB;
+}
+
+.map-button {
+  background: transparent linear-gradient(90deg, #FC7400 0%, #FFAA22 100%) 0% 0% no-repeat padding-box;
+  color: #fff;
+}
+
+.rating-star {
+  color: #FC7400;
+}
+
+.rating-star li {margin-right: 3px !important;}
+
+/* Rating Component Styles */
+.rating-component .ant-rate {
+  line-height: 1;
+}
+
+.rating-component .ant-rate-star {
+  margin-inline-end: 4px;
+}
+
+.rating-component .ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-first,
+.rating-component .ant-rate-star:not(.ant-rate-star-full) .ant-rate-star-second {
+  color: #d9d9d9;
+}
+
+.rating-component .ant-rate-star-full .ant-rate-star-first,
+.rating-component .ant-rate-star-full .ant-rate-star-second,
+.rating-component .ant-rate-star-half .ant-rate-star-first {
+  color: inherit;
+}
+
+.rating-component:not(.ant-rate-disabled) .ant-rate-star:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+.rating-component.ant-rate-disabled {
+  cursor: default;
+}
+
+/* Image Gallery Styles */
+.image-gallery-modal .ant-modal-body {
+  padding: 16px;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Line Clamp Utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

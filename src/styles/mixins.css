@@ -1,0 +1,147 @@
+/* Mixins for Tailwind CSS */
+
+/* Flexbox Mixins */
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+  
+  .flex-start {
+    @apply flex items-center justify-start;
+  }
+  
+  .flex-end {
+    @apply flex items-center justify-end;
+  }
+  
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+  
+  .flex-col-between {
+    @apply flex flex-col items-center justify-between;
+  }
+}
+
+/* Spacing Mixins */
+@layer utilities {
+  .section-padding {
+    @apply px-4 py-8 md:px-8 md:py-12 lg:px-16 lg:py-16;
+  }
+  
+  .container-padding {
+    @apply px-4 md:px-8 lg:px-16;
+  }
+  
+  .card-padding {
+    @apply p-4 md:p-6 lg:p-8;
+  }
+}
+
+/* Typography Mixins */
+@layer utilities {
+  .heading-1 {
+    @apply text-3xl font-bold md:text-4xl lg:text-5xl;
+    font-family: var(--font-family-lexend);
+  }
+  
+  .heading-2 {
+    @apply text-2xl font-semibold md:text-3xl lg:text-4xl;
+    font-family: var(--font-family-lexend);
+  }
+  
+  .heading-3 {
+    @apply text-xl font-semibold md:text-2xl lg:text-3xl;
+    font-family: var(--font-family-lexend);
+  }
+  
+  .body-text {
+    @apply text-base leading-relaxed;
+    font-family: var(--font-family-lexend);
+  }
+  
+  .caption-text {
+    @apply text-sm text-gray-600;
+    font-family: var(--font-family-lexend);
+  }
+  
+
+}
+
+/* Button Mixins */
+@layer utilities {
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+}
+
+/* Card Mixins */
+@layer utilities {
+  .card {
+    @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
+  }
+  
+  .card-elevated {
+    @apply bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200;
+  }
+}
+
+/* Form Mixins */
+@layer utilities {
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
+  
+  .input-error {
+    @apply border-red-500 focus:ring-red-500;
+  }
+}
+
+/* Animation Mixins */
+@layer utilities {
+  .fade-in {
+    @apply opacity-0 animate-pulse;
+  }
+  
+  .slide-up {
+    @apply transform translate-y-4 opacity-0 transition-all duration-300;
+  }
+  
+  .scale-in {
+    @apply transform scale-95 opacity-0 transition-all duration-200;
+  }
+}
+
+/* Responsive Mixins */
+@layer utilities {
+  .responsive-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8;
+  }
+  
+  .responsive-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Dark Mode Mixins */
+@layer utilities {
+  .dark-card {
+    @apply bg-gray-800 text-white;
+  }
+  
+  .dark-input {
+    @apply bg-gray-700 border-gray-600 text-white placeholder-gray-400;
+  }
+} 

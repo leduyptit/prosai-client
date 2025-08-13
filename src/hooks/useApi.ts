@@ -1,0 +1,69 @@
+'use client';
+
+import { useState, useCallback } from 'react';
+import { message } from 'antd';
+
+interface ApiState<T> {
+  data: T | null;
+  loading: boolean;
+  error: string | null;
+}
+
+export function useApi<T = any>() {
+  const [state, setState] = useState<ApiState<T>>({
+    data: null,
+    loading: false,
+    error: null,
+  });
+
+  const execute = useCallback(async <R = T>(
+    apiCall: () => Promise<R>,
+    options?: {
+      showSuccessMessage?: boolean;
+      successMessage?: string;
+      showErrorMessage?: boolean;
+      onSuccess?: (data: R) => void;
+      onError?: (error: any) => void;
+    }
+  ) => {
+    setState(prev => ({ ...prev, loading: true, error: null }));
+
+    try {
+      const result = await apiCall();
+      setState({ data: result as T, loading: false, error: null });
+
+      if (options?.showSuccessMessage) {
+        message.success(options.successMessage || 'Thao tác thành công!');
+      }
+
+      if (options?.onSuccess) {
+        options.onSuccess(result);
+      }
+
+      return result;
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || error.message || 'Đã có lỗi xảy ra';
+      setState(prev => ({ ...prev, loading: false, error: errorMessage }));
+
+      if (options?.showErrorMessage !== false) {
+        message.error(errorMessage);
+      }
+
+      if (options?.onError) {
+        options.onError(error);
+      }
+
+      throw error;
+    }
+  }, []);
+
+  const reset = useCallback(() => {
+    setState({ data: null, loading: false, error: null });
+  }, []);
+
+  return {
+    ...state,
+    execute,
+    reset,
+  };
+}

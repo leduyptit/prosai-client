@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <g id="icon_thongbao_tbmoi" transform="translate(0 0)">
+    <g id="Group_1807" data-name="Group 1807" transform="translate(-2555.836 427.164)">
+      <g id="Line" transform="translate(2560.459 -424.027)">
+        <path id="Path_809" data-name="Path 809" d="M17.749,2A10.059,10.059,0,0,0,7.69,12.059v7.846L5.464,23.258a2.736,2.736,0,0,0,2.273,4.225h5.989a4.024,4.024,0,0,0,8.047,0h5.989a2.736,2.736,0,0,0,2.273-4.245l-2.226-3.333V12.059A10.059,10.059,0,0,0,17.749,2Zm0,28.166a2.682,2.682,0,0,1-2.682-2.682h5.365A2.682,2.682,0,0,1,17.749,30.166Zm11.166-6.183a1.341,1.341,0,0,1,.235.771,1.388,1.388,0,0,1-1.388,1.388H7.737a1.388,1.388,0,0,1-1.388-1.388,1.341,1.341,0,0,1,.235-.771l2.334-3.507a.671.671,0,0,0,.114-.369V12.059a8.718,8.718,0,0,1,17.436,0v8.047a.671.671,0,0,0,.114.369Z" transform="translate(-5.023 -2)" fill="#1d1d44"/>
+      </g>
+      <rect id="Rectangle_636" data-name="Rectangle 636" width="36" height="36" transform="translate(2555.836 -427.164)" fill="none"/>
+    </g>
+    <g id="Ellipse_9" data-name="Ellipse 9" transform="translate(21 1)" fill="red" stroke="#fff" stroke-width="1">
+      <circle cx="5.5" cy="5.5" r="5.5" stroke="none"/>
+      <circle cx="5.5" cy="5.5" r="5" fill="none"/>
+    </g>
+  </g>
+</svg>
