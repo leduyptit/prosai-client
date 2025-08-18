@@ -1,21 +1,14 @@
 'use client';
 
 import React from 'react';
-import { AccountSidebar, ProfileForm, PasswordChangeForm } from '@/components/features/account';
+import { useSession } from 'next-auth/react';
+import { AccountSidebar, ProfileForm, PasswordChangeForm, PasswordChangeNotice } from '@/components/features/account';
 import { Breadcrumb } from '@/components/ui/navigation';
 import { ProtectedRoute } from '@/components/shared';
 import Link from 'next/link';
 
 const SettingsPage: React.FC = () => {
-  const handleProfileUpdate = (data: { fullName?: string; email?: string; phone?: string }) => {
-    console.log('Profile data updated:', data);
-    // Handle profile update logic here
-  };
-
-  const handlePasswordUpdate = (data: { currentPassword: string; newPassword: string; confirmPassword: string }) => {
-    console.log('Password updated successfully');
-    // Handle password update logic here
-  };
+  const { data: session } = useSession();
 
   return (
     <ProtectedRoute>
@@ -53,18 +46,21 @@ const SettingsPage: React.FC = () => {
             <div className="space-y-6">
               {/* Profile Form */}
               <ProfileForm 
-                onUpdate={handleProfileUpdate}
                 initialData={{
-                  fullName: 'user4499682',
-                  email: 'nguyenvana@gmail.com',
-                  phone: '0901234567'
+                  fullName: session?.user?.name || '',
+                  email: session?.user?.email || '',
+                  phone: session?.user?.phone || ''
                 }}
               />
 
               {/* Password Change Form */}
-              <PasswordChangeForm 
-                onUpdate={handlePasswordUpdate}
-              />
+              {session?.user?.provider === 'credentials' ? (
+                <PasswordChangeForm />
+              ) : (
+                <PasswordChangeNotice 
+                  provider={session?.user?.provider}
+                />
+              )}
             </div>
           </div>
         </div>

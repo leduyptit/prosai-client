@@ -3,13 +3,27 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  avatar?: string;
   phone?: string;
-  balance?: string; // Account balance from ProSai API
-  role?: string; // User role from ProSai API
-  membership?: MembershipPlan;
-  createdAt: string;
-  updatedAt: string;
+  image?: string;
+  avatar_url?: string; // Add avatar_url for custom usage
+  balance?: string;
+  role?: string;
+  accessToken?: string;
+  refreshToken?: string;
+  provider?: 'credentials' | 'google' | 'facebook' | 'zalo'; // Track login provider
+}
+
+export interface Session {
+  user: User;
+  accessToken: string;
+  expires: string;
+}
+
+export interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
 }
 
 export interface LoginCredentials {
@@ -17,35 +31,103 @@ export interface LoginCredentials {
   password: string;
 }
 
-export interface RegisterData {
-  first_name: string;
-  last_name: string;
+export interface RegisterCredentials {
   email: string;
   password: string;
-  phone: string;
+  confirmPassword: string;
+  fullName: string;
 }
 
 export interface AuthResponse {
-  success: boolean;
-  user: User;
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
+  user: {
+    id: string;
+    email: string;
+    full_name: string;
+    first_name?: string;
+    last_name?: string;
+    avatar?: string;
+    balance: string;
+    role: string;
+  };
 }
 
-export interface ForgotPasswordData {
+export interface SocialLoginRequest {
+  access_token: string;
+  provider: 'GOOGLE' | 'FACEBOOK';
+}
+
+export interface SocialLoginResponse {
+  access_token: string;
+  refresh_token: string;
+  user: {
+    id: string;
+    email: string;
+    full_name: string;
+    first_name?: string;
+    last_name?: string;
+    avatar?: string;
+    balance: string;
+    role: string;
+  };
+}
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  full_name: string;
+  first_name?: string;
+  last_name?: string;
+  avatar?: string;
+  balance: string;
+  role: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UpdateProfileRequest {
+  full_name?: string;
+  first_name?: string;
+  last_name?: string;
+  avatar?: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ForgotPasswordRequest {
   email: string;
 }
 
-export interface ResetPasswordData {
+export interface ResetPasswordRequest {
   token: string;
-  password: string;
-  confirmPassword: string;
+  new_password: string;
+  confirm_password: string;
 }
 
-export interface ChangePasswordData {
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
+export interface AuthError {
+  message: string;
+  code?: string;
+  field?: string;
+}
+
+export interface AuthContextType {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  login: (credentials: LoginCredentials) => Promise<void>;
+  register: (credentials: RegisterCredentials) => Promise<void>;
+  logout: () => Promise<void>;
+  socialLogin: (accessToken: string, provider: 'GOOGLE' | 'FACEBOOK') => Promise<void>;
+  updateProfile: (data: UpdateProfileRequest) => Promise<void>;
+  changePassword: (data: ChangePasswordRequest) => Promise<void>;
+  forgotPassword: (data: ForgotPasswordRequest) => Promise<void>;
+  resetPassword: (data: ResetPasswordRequest) => Promise<void>;
+  clearError: () => void;
 }
 
 // Membership Types
@@ -85,11 +167,14 @@ declare module 'next-auth' {
     id: string;
     email: string;
     name: string;
+    phone?: string;
     image?: string;
+    avatar_url?: string; // Add avatar_url for custom usage
     balance?: string; // Account balance
     role?: string; // User role for admin access
     accessToken?: string;
     refreshToken?: string;
+    provider?: 'credentials' | 'google' | 'facebook' | 'zalo'; // Track login provider
   }
 }
 
@@ -101,9 +186,12 @@ declare module 'next-auth/jwt' {
       id: string;
       email: string;
       name: string;
+      phone?: string;
       image?: string;
+      avatar_url?: string; // Add avatar_url for custom usage
       balance?: string; // Account balance
       role?: string; // User role for admin access
+      provider?: 'credentials' | 'google' | 'facebook' | 'zalo'; // Track login provider
     };
   }
 }

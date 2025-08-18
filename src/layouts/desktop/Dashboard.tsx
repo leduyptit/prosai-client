@@ -1,24 +1,86 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input, Button } from 'antd';
 import Select from '@/components/ui/forms/Select';
+import { useRouter } from 'next/navigation';
+import { 
+  CITIES, 
+  PROPERTY_TYPES, 
+  PRICE_RANGES, 
+  AREA_RANGES, 
+  LISTING_TYPES
+} from '@/constants';
+import { fetchStatistics, StatisticsResponse } from '@/services/statistics';
 
 const DesktopDashboard: React.FC = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
+  const [statistics, setStatistics] = useState<StatisticsResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchForm, setSearchForm] = useState({
-    location: 'hn',
+    city: 'Tất cả',
     keyword: '',
-    propertyType: undefined,
-    priceRange: undefined,
-    area: undefined,
-    bedrooms: undefined,
-    legal: undefined
+    propertyType: undefined as string | undefined,
+    listingType: undefined as string | undefined,
+    priceRange: undefined as string | undefined,
+    area: undefined as string | undefined,
+    bedrooms: undefined as string | undefined,
+    legal: undefined as string | undefined
   });
 
   const handleSearch = () => {
-    console.log('Search:', searchForm);
-    // Navigate to search results
+    // Convert search form to URL parameters
+    const params = new URLSearchParams();
+    
+    // Add city parameter (only if not "Tất cả")
+    if (searchForm.city && searchForm.city !== 'Tất cả') {
+      params.set('city', searchForm.city);
+    }
+    
+    // Add keyword parameter (only if not empty)
+    if (searchForm.keyword && searchForm.keyword.trim() !== '') {
+      params.set('keyword', searchForm.keyword.trim());
+    }
+    
+    // Add property type parameter (only if selected)
+    if (searchForm.propertyType && searchForm.propertyType !== 'all') {
+      params.set('property_type', searchForm.propertyType);
+    }
+    
+    // Add listing type parameter (only if selected)
+    if (searchForm.listingType && searchForm.listingType !== 'all') {
+      params.set('listing_type', searchForm.listingType);
+    }
+    
+    // Add price range parameter (only if selected)
+    if (searchForm.priceRange && searchForm.priceRange !== 'all') {
+      const [min, max] = String(searchForm.priceRange).split('-');
+      if (min) params.set('from_price', min);
+      if (max && max !== '+') params.set('to_price', max);
+    }
+    
+    // Add area range parameter (only if selected)
+    if (searchForm.area && searchForm.area !== 'all') {
+      const [min, max] = String(searchForm.area).split('-');
+      if (min) params.set('from_area', min);
+      if (max && max !== '+') params.set('to_area', max);
+    }
+    
+    // Add bedrooms parameter (only if selected)
+    if (searchForm.bedrooms && searchForm.bedrooms !== 'all') {
+      params.set('bedrooms', searchForm.bedrooms);
+    }
+    
+    // Add legal status parameter (only if selected)
+    if (searchForm.legal && searchForm.legal !== 'all') {
+      params.set('legal_status', searchForm.legal);
+    }
+    
+    // Navigate to search page with parameters
+    const searchUrl = `/demos/search-demo${params.toString() ? `?${params.toString()}` : ''}`;
+    router.push(searchUrl);
   };
 
   const handleInputChange = (field: string, value: string | undefined) => {
@@ -30,9 +92,36 @@ const DesktopDashboard: React.FC = () => {
 
   const handleTabChange = (index: number) => {
     setActiveTab(index);
-    // You can add logic here to update search form based on selected tab
-    console.log('Selected tab:', ['Bán bán', 'Cho thuê', 'Căn hộ', 'Căn nhà', 'Chung cư'][index]);
+    // Update listing type based on selected tab
+    const selectedTab = LISTING_TYPES[index];
+    if (selectedTab) {
+      setSearchForm(prev => ({
+        ...prev,
+        listingType: selectedTab.value
+      }));
+    }
   };
+
+  // Fetch statistics data on component mount
+  useEffect(() => {
+    const loadStatistics = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchStatistics();
+        setStatistics(data);
+      } catch (error) {
+        console.error('Failed to load statistics:', error);
+        setError('Không thể tải dữ liệu thống kê');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStatistics();
+  }, []);
+
+
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -81,22 +170,22 @@ const DesktopDashboard: React.FC = () => {
                 <h2 className="text-2xl font-medium mb-6 text-left">
                   Tìm kiếm BĐS
                 </h2>
-                {/* Property Type Tabs */}
-                 <div className="flex mb-6 border-b-2 border-white space-x-2">
-                   {['Bán bán', 'Cho thuê', 'Căn hộ', 'Căn nhà', 'Chung cư'].map((type, index) => (
-                     <button
-                       key={type}
-                       onClick={() => handleTabChange(index)}
-                       className={`flex-1 py-2 px-3 font-medium rounded-t-md transition-colors text-sm ${
-                         index === activeTab 
-                           ? 'bg-gray-800 text-white' 
-                           : 'bg-[#FFFFFF80] text-[#8D8DA1] border-t-1 border-r-1 border-l-1 border-white hover:bg-[#FFFFFFA0]'
-                       }`}
-                     >
-                       {type}
-                     </button>
-                   ))}
-                 </div>
+                                 {/* Listing Type Tabs */}
+                  <div className="flex mb-6 border-b-2 border-white space-x-2">
+                    {LISTING_TYPES.map((type, index) => (
+                      <button
+                        key={type.value}
+                        onClick={() => handleTabChange(index)}
+                        className={`flex-1 py-2 px-3 font-medium rounded-t-md transition-colors text-sm ${
+                          index === activeTab 
+                            ? 'bg-gray-800 text-white' 
+                            : 'bg-[#FFFFFF80] text-[#8D8DA1] border-t-1 border-r-1 border-l-1 border-white hover:bg-[#FFFFFFA0]'
+                        }`}
+                      >
+                        {type.label}
+                      </button>
+                    ))}
+                  </div>
 
                 {/* Location and Search Input */}
                 <div className="flex gap-3 mb-4 bg-white border border-[#C3C3C3] rounded-lg pr-1 pl-4">
@@ -104,14 +193,11 @@ const DesktopDashboard: React.FC = () => {
                     <img src="/svgs/address.svg" alt="location" className="w-4 h-4 mr-2" />
                     <Select
                       placeholder="Chọn vi trí"
-                      value={searchForm.location}
-                      onChange={(value) => handleInputChange('location', value)}
+                      value={searchForm.city}
+                      variant="borderless"
+                      onChange={(value) => handleInputChange('city', value)}
                       className="border-none bg-white w-30"
-                      options={[
-                        { value: 'hn', label: 'Hà Nội' },
-                        { value: 'hcm', label: 'TP. HCM' },
-                        { value: 'dn', label: 'Đà Nẵng' },
-                      ]}
+                      options={CITIES as any}
                     />
                   </div>
                   
@@ -146,11 +232,7 @@ const DesktopDashboard: React.FC = () => {
                     size="small"
                     onChange={(value) => handleInputChange('propertyType', value)}
                     className="w-full placeholder:text-[#8D8DA1] bg-white border-[#C3C3C3] rounded-lg"
-                    options={[
-                      { value: 'apartment', label: 'Chung cư' },
-                      { value: 'house', label: 'Nhà riêng' },
-                      { value: 'villa', label: 'Biệt thự' },
-                    ]}
+                    options={PROPERTY_TYPES as any}
                   />
                   <Select
                     placeholder="Mức giá"
@@ -158,11 +240,7 @@ const DesktopDashboard: React.FC = () => {
                     size="small"
                     onChange={(value) => handleInputChange('priceRange', value)}
                     className="w-full placeholder:text-[#8D8DA1] bg-white border-[#C3C3C3] rounded-lg"
-                    options={[
-                      { value: 'under-3', label: 'Dưới 3 tỷ' },
-                      { value: '3-5', label: '3-5 tỷ' },
-                      { value: 'over-5', label: 'Trên 5 tỷ' },
-                    ]}
+                    options={PRICE_RANGES as any}
                   />
                   <Select
                     placeholder="Diện tích"
@@ -170,11 +248,7 @@ const DesktopDashboard: React.FC = () => {
                     size="small"
                     onChange={(value) => handleInputChange('area', value)}
                     className="w-full placeholder:text-[#8D8DA1] bg-white border-[#C3C3C3] rounded-lg"
-                    options={[
-                      { value: 'under-50', label: 'Dưới 50 m²' },
-                      { value: '50-80', label: '50-80 m²' },
-                      { value: 'over-80', label: 'Trên 80 m²' },
-                    ]}
+                    options={AREA_RANGES as any}
                   />
                 </div>
               </div>
@@ -220,22 +294,27 @@ const DesktopDashboard: React.FC = () => {
                   opacity: 0.9,
                 }}></div>
               {/* Header */}
-              <div className="text-center mb-6 border-b border-[#C3C3C3] pb-6 relative z-10">
-                <h3 className="text-xl font-medium mb-2">
-                  Thị trường nhà đất hôm nay 19/04/2024
-                </h3>
+               <div className="text-center mb-6 border-b border-[#C3C3C3] pb-6 relative z-10">
+                 <h3 className="text-lg font-medium mb-2">
+                   Thị trường nhà đất hôm nay {statistics?.data.date || new Date().toLocaleDateString('vi-VN')}
+                 </h3>
+                {error && (
+                  <div className="mb-4 p-2 bg-red-500/20 border border-red-500/30 rounded text-sm text-red-200">
+                    {error}
+                  </div>
+                )}
                 <div className="space-y-1 text-sm text-left">
                   <div className="flex items-center justify-start gap-2">
                     <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
-                    <span>Nhà bán với giá trị thực tế: <span className="font-bold text-[#FFAA22]">19,000</span></span>
+                    <span>Nhà bán với giá trị thực tế: <span className="font-bold text-[#FFAA22]">{loading ? '...' : statistics?.data.market.real_value.toLocaleString() || '19,000'}</span></span>
                   </div>
                   <div className="flex items-center justify-start gap-2">
                     <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
-                    <span>Khoảng cách giao với giá thực tế: <span className="font-bold text-[#FFAA22]">5,000</span></span>
+                    <span>Khoảng cách giao với giá thực tế: <span className="font-bold text-[#FFAA22]">{loading ? '...' : statistics?.data.market.transaction_gap.toLocaleString() || '5,000'}</span></span>
                   </div>
                   <div className="flex items-center justify-start gap-2">
                     <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
-                    <span>Mức độ quan tâm: Tăng <span className="font-bold text-[#FFAA22]">18%</span> so với hôm qua</span>
+                    <span>Mức độ quan tâm: {loading ? '...' : statistics?.data.market.interest_rate_change || '+18%'} so với hôm qua</span>
                   </div>
                 </div>
               </div>
@@ -247,11 +326,15 @@ const DesktopDashboard: React.FC = () => {
                   <h4 className="text-lg font-medium mb-2">Các con số ấn tượng</h4>
                   <div className="grid grid-cols-2">
                     <div className="text-center p-4 border-r border-b border-dashed border-[#C3C3C3]">
-                      <div className="text-xl font-medium text-[#FFAA22] mb-2">1 triệu</div>
+                      <div className="text-xl font-medium text-[#FFAA22] mb-2">
+                        {loading ? '...' : statistics?.data.highlights.buyers.toLocaleString() || '1 triệu'}
+                      </div>
                       <div className="text-xs">Tin mua bán/ cho thuê nhà trọ</div>
                     </div>
                     <div className="text-center p-4 border-b border-dashed border-[#C3C3C3]">
-                      <div className="text-xl font-medium text-[#FFAA22] mb-2">100,000</div>
+                      <div className="text-xl font-medium text-[#FFAA22] mb-2">
+                        {loading ? '...' : statistics?.data.highlights.potential_customers.toLocaleString() || '100,000'}
+                      </div>
                       <div className="text-xs">Khách hàng tiềm năng</div>
                     </div>
                   </div>
@@ -261,11 +344,15 @@ const DesktopDashboard: React.FC = () => {
                 <div className="text-center">
                   <div className="grid grid-cols-2">
                     <div className="text-center p-4 border-r border-dashed border-[#C3C3C3]">
-                      <div className="text-xl font-medium text-[#FFAA22] mb-2">100%</div>
+                      <div className="text-xl font-medium text-[#FFAA22] mb-2">
+                        {loading ? '...' : statistics?.data.highlights.ai_matching_accuracy || '100%'}
+                      </div>
                       <div className="text-xs">Ứng dụng AI tìm nhà phù hợp theo yêu cầu</div>
                     </div>
                     <div className="text-center p-4 border-dashed border-[#C3C3C3]">
-                      <div className="text-xl font-medium text-[#FFAA22] mb-2">1 giây</div>
+                      <div className="text-xl font-medium text-[#FFAA22] mb-2">
+                        {loading ? '...' : statistics?.data.highlights.matching_speed || '1s'}
+                      </div>
                       <div className="text-xs">Hiển thị kết quả phù hợp với bạn</div>
                     </div>
                   </div>

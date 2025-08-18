@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import RegisterModal from '@/components/features/auth/register/RegisterModal';
 import LoginModal from '@/components/features/auth/login/LoginModal';
 import Button from '@/components/ui/buttons/Button';
+import { API_CONFIG } from '@/utils/env';
 
 export default function RegisterDemoPage() {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -34,7 +35,7 @@ export default function RegisterDemoPage() {
         <div className="mt-6 p-4 bg-gray-50 rounded">
           <h3 className="font-semibold mb-2">API Endpoint:</h3>
           <code className="text-sm bg-gray-200 p-2 rounded block">
-            POST https://api-v1.prosai.vn/auth/register
+            POST {API_CONFIG.baseUrl}/auth/register
           </code>
           
           <h4 className="font-semibold mt-4 mb-2">Required Fields:</h4>

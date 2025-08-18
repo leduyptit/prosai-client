@@ -15,9 +15,9 @@ interface ProfileFormProps {
 
 const ProfileForm: React.FC<ProfileFormProps> = ({
   initialData = {
-    fullName: 'user4499682',
-    email: 'nguyenvana@gmail.com',
-    phone: '0901234567'
+    fullName: '',
+    email: '',
+    phone: ''
   },
   onUpdate,
   className = ''
@@ -40,7 +40,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
   };
 
   return (
-    <div className={`bg-white overflow-hidden px-4 border-b-1 border-gray-200 ${className}`}>
+    <div className={`bg-white overflow-hidden px-4 mb-0 ${className}`}>
       <div className="overflow-hidden">
         <h3 className="text-2xl font-font-medium mb-4">
           Thông tin cá nhân
@@ -79,6 +79,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({
               size="middle"
               placeholder="Nhập email"
               className="rounded-md"
+              disabled
             />
           </Form.Item>
 

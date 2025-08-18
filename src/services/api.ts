@@ -1,12 +1,10 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getSession } from 'next-auth/react';
-
-// API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api-v1.prosai.vn';
+import { API_CONFIG } from '@/utils/env';
 
 // Create axios instance with CORS-friendly configuration
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_CONFIG.baseUrl,
   timeout: 10000,
   // Don't set Content-Type globally to avoid preflight requests
   // It will be set automatically for JSON data
@@ -32,15 +30,26 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // Debug: Log all errors
+    console.error('API Error:', {
+      url: error.config?.url,
+      method: error.config?.method,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+
     // Handle 401 errors (unauthorized)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       
       // Try to refresh token or redirect to login
       const session = await getSession();
+      console.log('Session on 401 error:', session);
+      
       if (session?.user && 'refreshToken' in session && session.refreshToken) {
         try {
-          const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+          const response = await axios.post(`${API_CONFIG.baseUrl}/auth/refresh`, {
             refreshToken: session.refreshToken,
           });
           
@@ -52,11 +61,14 @@ apiClient.interceptors.response.use(
         } catch (refreshError: unknown) {
           // Refresh failed, redirect to login
           console.error('Token refresh failed:', refreshError);
-          window.location.href = '/auth/signin';
+          // Temporarily disable redirect for debugging
+          // window.location.href = '/auth/signin';
         }
       } else {
         // No refresh token, redirect to login
-        window.location.href = '/auth/signin';
+        console.log('No refresh token found, would redirect to signin');
+        // Temporarily disable redirect for debugging
+        // window.location.href = '/auth/signin';
       }
     }
 
@@ -74,12 +86,10 @@ export interface ApiResponse<T = unknown> {
 
 export interface PaginatedResponse<T> {
   data: T[];
-  meta: {
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-  };
+  count: number;
+  page: number;
+  total: number;
+  pageCount: number;
 }
 
 // Generic API methods
@@ -114,7 +124,7 @@ export const api = new ApiService();
 
 // Special CORS-friendly client for registration/login (no preflight)
 export const corsApiClient: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_CONFIG.baseUrl,
   timeout: 10000,
   withCredentials: false, // Don't send cookies to avoid preflight
 });
@@ -145,20 +155,7 @@ class CorsApiService {
     }
   }
 
-  // POST request with simple content type to avoid preflight
-  async postSimple<T>(url: string, data: unknown): Promise<T> {
-    try {
-      const response = await corsApiClient.post(url, JSON.stringify(data), {
-        headers: {
-          'Content-Type': 'text/plain', // Simple content type, no preflight
-        }
-      });
-      return response.data;
-    } catch (error: unknown) {
-      this.handleCorsError(error);
-      throw error;
-    }
-  }
+
 
   // POST request as URL encoded to avoid preflight
   async postUrlEncoded<T>(url: string, data: Record<string, unknown> | { [key: string]: unknown }): Promise<T> {
@@ -177,6 +174,39 @@ class CorsApiService {
           'Content-Type': 'application/x-www-form-urlencoded',
         }
       });
+      return response.data;
+    } catch (error: unknown) {
+      this.handleCorsError(error);
+      throw error;
+    }
+  }
+
+  // GET request for social login
+  async get<T>(url: string): Promise<T> {
+    try {
+      const response = await corsApiClient.get(url);
+      return response.data;
+    } catch (error: unknown) {
+      this.handleCorsError(error);
+      throw error;
+    }
+  }
+
+  // POST request
+  async post<T>(url: string, data?: unknown): Promise<T> {
+    try {
+      const response = await corsApiClient.post(url, data);
+      return response.data;
+    } catch (error: unknown) {
+      this.handleCorsError(error);
+      throw error;
+    }
+  }
+
+  // PUT request
+  async put<T>(url: string, data?: unknown): Promise<T> {
+    try {
+      const response = await corsApiClient.put(url, data);
       return response.data;
     } catch (error: unknown) {
       this.handleCorsError(error);

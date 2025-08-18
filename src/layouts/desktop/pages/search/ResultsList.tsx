@@ -7,29 +7,40 @@ import { Pagination } from 'antd';
 interface ResultsListProps {
   items: SearchItem[];
   pageSize?: number;
+  pagination?: {
+    current: number;
+    total: number;
+    pageCount: number;
+    count: number;
+  };
+  onPageChange?: (page: number) => void;
 }
 
-const ResultsList: React.FC<ResultsListProps> = ({ items, pageSize = 8 }) => {
-  const [page, setPage] = useState(1);
-  const start = (page - 1) * pageSize;
-  const current = items.slice(start, start + pageSize);
+const ResultsList: React.FC<ResultsListProps> = ({ 
+  items, 
+  pageSize = 20, 
+  pagination,
+  onPageChange 
+}) => {
 
   return (
     <div>
       <div>
-        {current.map((item) => (
+        {items.map((item) => (
           <ResultItem key={item.id} item={item} />
         ))}
       </div>
-      <div className="flex justify-center mt-4">
-        <Pagination
-          current={page}
-          total={items.length}
-          pageSize={pageSize}
-          onChange={setPage}
-          showSizeChanger={false}
-        />
-      </div>
+      {pagination && (
+        <div className="flex justify-center mt-4">
+          <Pagination
+            current={pagination.current}
+            total={pagination.total}
+            pageSize={pageSize}
+            onChange={onPageChange}
+            showSizeChanger={false}
+          />
+        </div>
+      )}
     </div>
   );
 };

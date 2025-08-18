@@ -10,6 +10,7 @@ export const APP_CONFIG = {
   environment: process.env.NEXT_PUBLIC_APP_ENV || 'development',
   debug: process.env.NEXT_PUBLIC_DEBUG === 'true',
   logLevel: process.env.NEXT_PUBLIC_LOG_LEVEL || 'info',
+  homeUrl: process.env.NEXT_PUBLIC_HOME_URL || 'http://localhost:3000',
 } as const;
 
 // API Configuration

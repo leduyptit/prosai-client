@@ -38,6 +38,26 @@ class PropertyService {
     return response.data;
   }
 
+  // Search properties with ProSai API format
+  async searchPropertyProSai(params: {
+    page?: number;
+    limit?: number;
+    city?: string;
+    property_type?: number;
+    listing_type?: number;
+    legal_status?: number;
+    keyword?: string;
+    min_price?: number;
+    max_price?: number;
+    min_area?: number;
+    max_area?: number;
+    bedrooms?: number;
+    bathrooms?: number;
+  } = {}): Promise<PaginatedResponse<Property>> {
+    const response = await api.get<PaginatedResponse<Property>>('/search-property', { params });
+    return response;
+  }
+
   // Get featured properties
   async getFeaturedProperties(limit: number = 10): Promise<Property[]> {
     const response = await api.get<Property[]>(`/properties/featured?limit=${limit}`);

@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ProSai Client - Project Management",
-  description: "Modern project management application built with Next.js and Ant Design",
+  title: "ProSai Client",
+  description: "Property Management System",
 };
 
 export default function RootLayout({

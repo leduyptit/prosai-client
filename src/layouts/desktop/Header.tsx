@@ -17,6 +17,7 @@ import { useSession, signOut } from 'next-auth/react';
 import LoginModal from '@/components/features/auth/login/LoginModal';
 import RegisterModal from '@/components/features/auth/register/RegisterModal';
 import ForgotPasswordModal from '@/components/features/auth/forgot-password/ForgotPasswordModal';
+import { APP_CONFIG } from '@/utils/env';
 
 const { Header: AntHeader } = Layout;
 
@@ -109,7 +110,9 @@ const DesktopHeader: React.FC = () => {
       <div className="flex items-center space-x-8">
         {/* Logo */}
         <div className="flex items-center space-x-3">
-          <Link href="#"><Image src="/svgs/top_logo.svg" alt="PROSAI Logo" width={160} height={40} className="w-40" /></Link>
+          {/* Logo */}
+          {/* utils env APP_CONFIG.name */}
+          <Link href={APP_CONFIG.homeUrl}><Image src="/svgs/top_logo.svg" alt={APP_CONFIG.name} width={160} height={40} className="w-40" /></Link>
         </div>
 
         {/* Navigation Menu */}
@@ -184,7 +187,7 @@ const DesktopHeader: React.FC = () => {
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
               <div className="flex items-center">
                 <Avatar
-                  src={session.user?.image}
+                  src={session.user?.avatar_url}
                   icon={<UserOutlined />}
                   size="default"
                   className="bg-blue-500"

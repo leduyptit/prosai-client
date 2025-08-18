@@ -11,7 +11,11 @@ const ResponsiveDashboard: React.FC = () => {
 
   // Show loading while detecting device
   if (isLoading) {
-    return <Loading text="Loading..." />;
+    return <Loading 
+      size="large" 
+      text="Loading..." 
+      variant="fullscreen"
+    />;
   }
 
   // Desktop Dashboard

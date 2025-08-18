@@ -1,12 +1,30 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Input, Button } from 'antd';
 import Select from '@/components/ui/forms/Select';
 import { HeartOutlined } from '@ant-design/icons';
+import { 
+  CITIES, 
+  PROPERTY_TYPES, 
+  PRICE_RANGES, 
+  AREA_RANGES, 
+  BEDROOM_OPTIONS,
+  BATHROOM_OPTIONS
+} from '@/constants';
 
 interface FiltersBarProps {
-  onSearch?: () => void;
+  onSearch?: (params: any) => void;
+  initialFilters?: {
+    city?: string;
+    keyword?: string;
+    propertyType?: string;
+    priceRange?: string;
+    areaRange?: string;
+    bedrooms?: string;
+    bathrooms?: string;
+    legalStatus?: string;
+  };
 }
 
 const iconClass = 'inline-block align-middle';
@@ -26,7 +44,76 @@ const MapIcon = () => (
   </svg>
 );
 
-const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch }) => {
+const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => {
+  const [filters, setFilters] = useState({
+    city: initialFilters?.city || 'all',
+    keyword: initialFilters?.keyword || '',
+    propertyType: initialFilters?.propertyType || 'all',
+    priceRange: initialFilters?.priceRange || 'all',
+    areaRange: initialFilters?.areaRange || 'all',
+    bedrooms: initialFilters?.bedrooms || 'all',
+    bathrooms: initialFilters?.bathrooms || 'all',
+    legalStatus: initialFilters?.legalStatus || 'all'
+  });
+
+  const handleFilterChange = (key: string, value: string) => {
+    const newFilters = { ...filters, [key]: value };
+    setFilters(newFilters);
+    
+    // Convert filters to API params
+    const apiParams: any = {};
+    
+    // City mapping - only include if not default
+    if (newFilters.city !== 'all') {
+      apiParams.city = newFilters.city;
+    }
+    
+    // Keyword - only include if not empty
+    if (newFilters.keyword && newFilters.keyword.trim() !== '') {
+      apiParams.keyword = newFilters.keyword;
+    }
+    
+    // Property type - only include if not 'all'
+    if (newFilters.propertyType !== 'all') {
+      apiParams.property_type = newFilters.propertyType;
+    }
+    
+    // Price range - only include if not 'all'
+    if (newFilters.priceRange !== 'all') {
+      const [min, max] = newFilters.priceRange.split('-');
+      if (min) apiParams.from_price = parseInt(min);
+      if (max && max !== '+') apiParams.to_price = parseInt(max);
+    }
+    
+    // Area range - only include if not 'all'
+    if (newFilters.areaRange !== 'all') {
+      const [min, max] = newFilters.areaRange.split('-');
+      if (min) apiParams.from_area = parseInt(min);
+      if (max && max !== '+') apiParams.to_area = parseInt(max);
+    }
+    
+    // Bedrooms - only include if not 'all'
+    if (newFilters.bedrooms !== 'all') {
+      apiParams.bedrooms = parseInt(newFilters.bedrooms);
+    }
+    
+    // Bathrooms - only include if not 'all'
+    if (newFilters.bathrooms !== 'all') {
+      apiParams.bathrooms = parseInt(newFilters.bathrooms);
+    }
+    
+    // Legal status - only include if not 'all'
+    if (newFilters.legalStatus !== 'all') {
+      apiParams.legal_status = newFilters.legalStatus;
+    }
+    
+    onSearch?.(apiParams);
+  };
+
+  const handleSearchClick = () => {
+    handleFilterChange('keyword', filters.keyword);
+  };
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
       {/* Row 1 */}
@@ -35,33 +122,38 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch }) => {
           {/* Location */}
           <div className="flex items-center gap-2 rounded-lg px-3 h-10 text-gray-700 min-w-[160px]">
             <img src="/svgs/address.svg" alt="location" className="h-4 w-4" />
-            <Select
-              size="small"
-              className="w-[120px]"
-              variant="borderless"
-              defaultValue="hn"
-              options={[
-                { value: 'hn', label: 'Hà Nội' },
-                { value: 'hcm', label: 'TP. HCM' },
-                { value: 'dn', label: 'Đà Nẵng' },
-              ]}
-              popupMatchSelectWidth={160}
-            />
+                         <Select
+               size="small"
+               className="w-[120px]"
+               variant="borderless"
+               value={filters.city}
+               onChange={(value) => handleFilterChange('city', value)}
+               options={
+                [
+                  { value: 'all', label: 'Tất cả' },
+                  ...CITIES as any
+                ]
+              }
+               popupMatchSelectWidth={160}
+             />
         </div>
         
         {/* Keyword + Search */}
         <div className="flex items-stretch flex-1 min-w-[320px]">
-          <Input
-            allowClear
-            placeholder="Nhập địa điểm, dự án, quận, huyện..."
-            variant="borderless"
-          />
-          <Button
-            type="primary"
-            className="rounded-l-none bg-blue-600 hover:bg-blue-700 text-white m-1"
-            size="small"
-            onClick={onSearch}
-          >
+                     <Input
+             allowClear
+             placeholder="Nhập địa điểm, dự án, quận, huyện..."
+             variant="borderless"
+             value={filters.keyword}
+             onChange={(e) => setFilters({ ...filters, keyword: e.target.value })}
+             onPressEnter={handleSearchClick}
+           />
+           <Button
+             type="primary"
+             className="rounded-l-none bg-blue-600 hover:bg-blue-700 text-white m-1"
+             size="small"
+             onClick={handleSearchClick}
+           >
             <span className="font-medium">Tìm kiếm</span>
           </Button>
         </div>
@@ -82,34 +174,86 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch }) => {
 
       {/* Row 2 */}
       <div className="mt-3 grid grid-cols-2 md:grid-cols-6 gap-3">
-        <Select size="small" placeholder="Loại hình" className="w-full" variant="outlined" options={[
-          { value: 'all', label: 'Loại hình' },
-        ]} />
-        <Select size="small" placeholder="Nhà riêng" className="w-full" variant="outlined" options={[
-          { value: 'house', label: 'Nhà riêng' },
-          { value: 'apartment', label: 'Chung cư' },
-          { value: 'street', label: 'Nhà mặt tiền' },
-        ]} />
-        <Select size="small" placeholder="Dưới 3 tỷ" className="w-full" variant="outlined" options={[
-          { value: '3ty', label: 'Dưới 3 tỷ' },
-          { value: '5ty', label: 'Dưới 5 tỷ' },
-          { value: '10ty', label: 'Dưới 10 tỷ' },
-        ]} />
-        <Select size="small" placeholder="Dưới 50 m2" className="w-full" variant="outlined" options={[
-          { value: '50', label: 'Dưới 50 m2' },
-          { value: '80', label: 'Dưới 80 m2' },
-          { value: '100', label: 'Dưới 100 m2' },
-        ]} />
-        <Select size="small" placeholder="Số phòng ngủ" className="w-full" variant="outlined" options={[
-          { value: 1, label: '1 phòng ngủ' },
-          { value: 2, label: '2 phòng ngủ' },
-          { value: 3, label: '3 phòng ngủ' },
-        ]} />
-        <Select size="small" placeholder="Pháp lý" className="w-full" options={[
-          { value: 'sổ đỏ', label: 'Sổ đỏ' },
-          { value: 'hđmb', label: 'HĐMB' },
-          { value: 'khác', label: 'Khác' },
-        ]} />
+                 <Select 
+           size="small" 
+           placeholder="Loại hình" 
+           className="w-full" 
+           variant="outlined" 
+           value={filters.propertyType}
+           onChange={(value) => handleFilterChange('propertyType', value)}
+           options={[
+             { value: 'all', label: 'Tất cả loại hình' },
+             ...PROPERTY_TYPES as any
+           ]} 
+         />
+                 <Select 
+           size="small" 
+           placeholder="Giá" 
+           className="w-full" 
+           variant="outlined" 
+           value={filters.priceRange}
+           onChange={(value) => handleFilterChange('priceRange', value)}
+           options={
+            [
+              { value: 'all', label: 'Tất cả' },
+              ...PRICE_RANGES as any
+            ]
+          } 
+         />
+                 <Select 
+           size="small" 
+           placeholder="Diện tích" 
+           className="w-full" 
+           variant="outlined" 
+           value={filters.areaRange}
+           onChange={(value) => handleFilterChange('areaRange', value)}
+           options={
+            [
+              { value: 'all', label: 'Tất cả' },
+              ...AREA_RANGES as any
+            ]
+          } 
+         />
+                 <Select 
+           size="small" 
+           placeholder="Số phòng ngủ" 
+           className="w-full" 
+           variant="outlined" 
+           value={filters.bedrooms}
+           onChange={(value) => handleFilterChange('bedrooms', value)}
+           options={
+            [
+              { value: 'all', label: 'Tất cả' },
+              ...BEDROOM_OPTIONS as any
+            ]
+          } 
+         />
+                 <Select 
+           size="small" 
+           placeholder="Số phòng tắm" 
+           className="w-full" 
+           variant="outlined" 
+           value={filters.bathrooms}
+           onChange={(value) => handleFilterChange('bathrooms', value)}
+           options={[
+             { value: 'all', label: 'Tất cả' },
+             ...BATHROOM_OPTIONS as any
+           ]} 
+         />
+                 <Select 
+           size="small" 
+           placeholder="Pháp lý" 
+           className="w-full" 
+           variant="outlined"
+           value={filters.legalStatus}
+           onChange={(value) => handleFilterChange('legalStatus', value)}
+           options={[
+             { value: 'all', label: 'Tất cả' },
+             { value: 'sổ đỏ', label: 'Sổ đỏ' },
+             { value: 'hđmb', label: 'HĐMB' },
+             { value: 'khác', label: 'Khác' },
+           ]} 
+         />
       </div>
     </div>
   );

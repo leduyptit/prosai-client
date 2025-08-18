@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { Menu } from 'antd';
-import { UserOutlined, CrownOutlined, FileTextOutlined, SettingOutlined } from '@ant-design/icons';
-import { Card } from '@/components/ui';
+import { UserOutlined, CrownOutlined, FileTextOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import { useLogout } from '@/hooks/useLogout';
+import { useSession } from 'next-auth/react';
 
 interface AccountSidebarProps {
   activeKey?: string;
@@ -15,6 +16,9 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({
   activeKey = 'overview',
   className = '' 
 }) => {
+  const { logout, isLoading } = useLogout();
+  const { data: session } = useSession();
+  
   const menuItems = [
     {
       key: 'membership',
@@ -38,11 +42,19 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({
       {/* User Profile Section */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex flex-col items-center text-center">
-          <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mb-3">
-            <UserOutlined className="text-white text-2xl" />
+          <div className="w-16 h-16 rounded-full bg-gray-200 border border-gray-300 flex items-center justify-center mb-3">
+            {(session?.user?.avatar_url || session?.user?.image) ? (
+              <img 
+                src={session.user.avatar_url || session.user.image} 
+                alt={session.user.name || 'User'} 
+                className="w-16 h-16 rounded-full object-cover"
+              />
+            ) : (
+              <UserOutlined className="text-white text-2xl" />
+            )}
           </div>
-          <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full font-font-medium">
-            User 6367949
+          <span className="text-sm px-3 py-1 rounded-full font-font-medium">
+            {session?.user?.name || session?.user?.email || 'User'}
           </span>
         </div>
       </div>
@@ -61,14 +73,16 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({
         />
       </div>
 
-      {/* Contact Support Link */}
+      {/* Logout Button */}
       <div className="p-4 border-t border-gray-200 flex justify-center">
-        <Link 
-          href="/logout" 
-          className="text-sm flex items-center gap-2 font-font-medium logout-button"
+        <button 
+          onClick={() => logout('/')}
+          disabled={isLoading}
+          className="text-sm flex items-center gap-2 font-font-medium text-red-600 hover:text-red-700 transition-colors logout-button disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span>Đăng xuất</span>
-        </Link>
+          <LogoutOutlined />
+          <span>{isLoading ? 'Đang đăng xuất...' : 'Đăng xuất'}</span>
+        </button>
       </div>
     </div>
   );

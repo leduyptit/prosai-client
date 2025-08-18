@@ -3,8 +3,9 @@
 import React from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Card, Typography, Button, Spin } from 'antd';
+import { Card, Typography, Button } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
+import { Loading } from '@/components/ui/feedback';
 
 const { Title, Text } = Typography;
 
@@ -24,14 +25,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (status === 'loading') {
     return fallback || (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Spin size="large" />
-          <div className="mt-4">
-            <Text>Đang kiểm tra quyền truy cập...</Text>
-          </div>
-        </div>
-      </div>
+      <Loading 
+        size="large" 
+        text="Loading..." 
+        variant="fullscreen"
+      />
     );
   }
 

@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/overlay/Modal';
 import Input from '@/components/ui/forms/Input';
 import Button from '@/components/ui/buttons/Button';
-import SocialLoginButton from '../shared/SocialLoginButton';
+import { SocialLoginButton } from '../shared';
 import { Divider, message } from 'antd';
 
 interface LoginModalProps {
@@ -114,76 +114,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
     }
   };
 
-  const handleSocialLogin = async (provider: string) => {
-    setIsLoading(true);
-    try {
-      const result = await signIn(provider, {
-        callbackUrl: '/account-overview',
-        redirect: false,
-      });
-      
-      if (result?.error) {
-        console.error('❌ Social login failed:', result.error);
-        
-        let errorMessage = 'Đăng nhập không thành công';
-        let description = '';
-        
-        switch (result.error) {
-          case 'OAuthSignin':
-            errorMessage = 'Lỗi đăng nhập mạng xã hội';
-            description = `Không thể khởi tạo đăng nhập với ${provider}. Vui lòng thử lại.`;
-            break;
-          case 'OAuthCallback':
-            errorMessage = 'Lỗi xử lý đăng nhập';
-            description = `Có lỗi khi xử lý đăng nhập với ${provider}. Vui lòng thử lại.`;
-            break;
-          case 'OAuthCreateAccount':
-            errorMessage = 'Không thể tạo tài khoản';
-            description = 'Email có thể đã được sử dụng với phương thức đăng nhập khác.';
-            break;
-          case 'OAuthAccountNotLinked':
-            errorMessage = 'Tài khoản chưa được liên kết';
-            description = 'Email này đã được đăng ký với phương thức khác. Vui lòng đăng nhập bằng email/mật khẩu.';
-            break;
-          default:
-            errorMessage = 'Đăng nhập không thành công';
-            description = `Đã có lỗi xảy ra khi đăng nhập với ${provider}. Vui lòng thử lại sau.`;
-        }
-        
-        message.error({
-          content: (
-            <div>
-              <div className="font-medium">{errorMessage}</div>
-              <div className="text-sm text-gray-600 mt-1">{description}</div>
-            </div>
-          ),
-          duration: 6,
-        });
-      } else if (result?.url) {
-        // Redirect will happen automatically
-        message.success({
-          content: `Đăng nhập với ${provider} thành công!`,
-          duration: 2,
-        });
-      }
-    } catch (error: unknown) {
-      console.error('❌ Social login exception:', error);
-      
-      message.error({
-        content: (
-          <div>
-            <div className="font-medium">Đăng nhập không thành công</div>
-            <div className="text-sm text-gray-600 mt-1">
-              Không thể đăng nhập với {provider}. Vui lòng kiểm tra kết nối mạng và thử lại.
-            </div>
-          </div>
-        ),
-        duration: 5,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
 
   const handleOpenForgotPassword = () => {
     if (onOpenForgotPassword) {
@@ -309,18 +240,9 @@ const LoginModal: React.FC<LoginModalProps> = ({
             <div className="mb-6">
               <Divider style={{ borderColor: '#C3C3C3'}}>Hoặc</Divider>
               <div className="space-y-3">
-                <SocialLoginButton
-                  provider="google"
-                  onClick={() => handleSocialLogin('google')}
-                />
-                <SocialLoginButton
-                  provider="facebook"
-                  onClick={() => handleSocialLogin('facebook')}
-                />
-                <SocialLoginButton
-                  provider="zalo"
-                  onClick={() => handleSocialLogin('zalo')}
-                />
+                <SocialLoginButton provider="google" mode="login" />
+                <SocialLoginButton provider="facebook" mode="login" />
+                <SocialLoginButton provider="zalo" mode="login" />
               </div>
             </div>
 

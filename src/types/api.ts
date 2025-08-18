@@ -1,4 +1,123 @@
-// Property Types
+export interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: string;
+  errors?: Record<string, string[]>;
+}
+
+export interface PaginatedResponse<T = any> extends ApiResponse<T[]> {
+  pagination: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    from: number;
+    to: number;
+  };
+}
+
+export interface ApiError {
+  message: string;
+  status: number;
+  errors?: Record<string, string[]>;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+  [key: string]: unknown;
+}
+
+export interface RegisterRequest {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  phone: string;
+  [key: string]: unknown;
+}
+
+export interface AuthResponse {
+  success: boolean;
+  user: {
+    id: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone: string;
+    avatar?: string;
+    balance: string;
+    role: string;
+    created_at: string;
+    updated_at: string;
+  };
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface SocialLoginRequest {
+  access_token: string;
+  provider: 'FACEBOOK' | 'GOOGLE';
+}
+
+export interface SocialLoginResponse {
+  success: boolean;
+  user: {
+    id: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone: string;
+    avatar?: string;
+    balance: string;
+    role: string;
+    created_at: string;
+    updated_at: string;
+  };
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  avatar?: string;
+  balance: string;
+  role: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UpdateProfileRequest {
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
+  avatar?: string;
+  [key: string]: unknown;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+  [key: string]: unknown;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+  [key: string]: unknown;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  password: string;
+  confirmPassword: string;
+  [key: string]: unknown;
+}
+
 export interface Property {
   id: string;
   title: string;
@@ -8,141 +127,168 @@ export interface Property {
   bedrooms: number;
   bathrooms: number;
   address: string;
-  district: string;
   city: string;
-  propertyType: PropertyType;
-  listingType: ListingType;
-  images: PropertyImage[];
-  features: string[];
-  contactInfo: ContactInfoData;
-  aiRating?: AIRating;
-  views: number;
-  isActive: boolean;
-  isFeatured: boolean;
-  createdAt: string;
-  updatedAt: string;
-  userId: string;
+  district: string;
+  property_type: string;
+  status: string;
+  images: string[];
+  created_at: string;
+  updated_at: string;
+  phone_message: string[];
+  phone_user: string;
+  user_name_social: string;
 }
 
-export type PropertyType = 'apartment' | 'house' | 'villa' | 'office' | 'land' | 'warehouse';
-export type ListingType = 'sale' | 'rent';
-
-export interface PropertyImage {
-  id: string;
-  url: string;
-  alt?: string;
-  isPrimary: boolean;
-}
-
-export interface ContactInfoData {
-  name: string;
-  phone: string;
-  email?: string;
-  whatsapp?: string;
-  zalo?: string;
-}
-
-export interface AIRating {
-  overall: number;
-  price: number;
-  location: number;
-  amenities: number;
-  legal: number;
-  investment: number;
-  description: string;
-}
-
-// Search & Filter Types
-export interface PropertyFilters {
-  propertyType?: PropertyType[];
-  listingType?: ListingType;
-  priceMin?: number;
-  priceMax?: number;
-  areaMin?: number;
-  areaMax?: number;
+export interface PropertySearchParams {
+  keyword?: string;
+  city?: string;
+  district?: string;
+  property_type?: string;
+  min_price?: number;
+  max_price?: number;
+  min_area?: number;
+  max_area?: number;
   bedrooms?: number;
   bathrooms?: number;
-  district?: string[];
-  city?: string;
-  features?: string[];
-  sortBy?: 'price' | 'area' | 'created_at' | 'views';
-  sortOrder?: 'asc' | 'desc';
-}
-
-export interface SearchParams extends PropertyFilters {
-  query?: string;
   page?: number;
-  limit?: number;
+  per_page?: number;
 }
 
-// Post Management Types
-export interface UserPost {
-  id: string;
-  property: Property;
-  status: PostStatus;
-  expiresAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
+export interface PropertySearchResponse extends PaginatedResponse<Property> {}
 
-export type PostStatus = 'active' | 'inactive' | 'expired' | 'pending' | 'rejected';
-
-export interface PostStats {
-  totalPosts: number;
-  activePosts: number;
-  expiredPosts: number;
-  totalViews: number;
-  totalContacts: number;
-}
-
-// News Types
-export interface NewsArticle {
+export interface News {
   id: string;
   title: string;
-  excerpt: string;
   content: string;
-  image: string;
-  category: NewsCategory;
-  tags: string[];
-  author: {
-    name: string;
-    avatar?: string;
-  };
-  publishedAt: string;
-  views: number;
-  isPublished: boolean;
+  summary: string;
+  image?: string;
+  author: string;
+  published_at: string;
+  created_at: string;
+  updated_at: string;
 }
 
-export type NewsCategory = 'market' | 'legal' | 'investment' | 'tips' | 'trends';
+export interface NewsSearchParams {
+  keyword?: string;
+  category?: string;
+  page?: number;
+  per_page?: number;
+}
 
-// Notification Types
+export interface NewsSearchResponse extends PaginatedResponse<News> {}
+
+export interface ContactForm {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  property_id?: string;
+}
+
+export interface ContactResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface MembershipPlan {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  duration: number; // in days
+  features: string[];
+  max_properties: number;
+  max_images_per_property: number;
+  priority_support: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Subscription {
+  id: string;
+  user_id: string;
+  plan_id: string;
+  plan: MembershipPlan;
+  status: 'active' | 'expired' | 'cancelled';
+  start_date: string;
+  end_date: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaymentMethod {
+  id: string;
+  type: 'credit_card' | 'bank_transfer' | 'momo' | 'vnpay';
+  name: string;
+  description: string;
+  icon: string;
+  is_active: boolean;
+}
+
+export interface PaymentRequest {
+  subscription_id: string;
+  payment_method: string;
+  amount: number;
+}
+
+export interface PaymentResponse {
+  success: boolean;
+  payment_url?: string;
+  transaction_id?: string;
+  message: string;
+}
+
 export interface Notification {
   id: string;
+  user_id: string;
   title: string;
   message: string;
-  type: NotificationType;
-  isRead: boolean;
-  createdAt: string;
-  data?: Record<string, unknown>;
+  type: 'info' | 'success' | 'warning' | 'error';
+  is_read: boolean;
+  data?: Record<string, any>;
+  created_at: string;
+  updated_at: string;
 }
 
-export type NotificationType = 'info' | 'success' | 'warning' | 'error' | 'property' | 'system';
+export interface NotificationResponse extends PaginatedResponse<Notification> {}
 
-// Statistics Types
-export interface DashboardStats {
-  properties: {
-    total: number;
-    active: number;
-    views: number;
-    contacts: number;
-  };
-  membership: {
-    plan: string;
-    expiresAt: string;
-    postsRemaining: number;
-  };
-  recent: {
-    properties: Property[];
-    notifications: Notification[];
-  };
+export interface MarkNotificationReadRequest {
+  notification_ids: string[];
+}
+
+export interface MarkNotificationReadResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface DeleteNotificationRequest {
+  notification_ids: string[];
+}
+
+export interface DeleteNotificationResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface ApiConfig {
+  baseURL: string;
+  timeout: number;
+  headers: Record<string, string>;
+}
+
+export interface RequestConfig {
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  url: string;
+  data?: any;
+  params?: Record<string, any>;
+  headers?: Record<string, string>;
+  timeout?: number;
+}
+
+export interface ResponseConfig {
+  data: any;
+  status: number;
+  statusText: string;
+  headers: Record<string, string>;
+  config: RequestConfig;
 }

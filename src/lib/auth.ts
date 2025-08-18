@@ -1,10 +1,68 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import FacebookProvider from 'next-auth/providers/facebook';
+import ZaloProvider from './providers/zalo';
 import { corsApi } from '@/services/api';
 import { ProSaiAuthResponse } from '@/types/prosai-api';
 
+// Helper function to handle social login callback
+async function handleSocialLoginCallback(
+  user: { 
+    id?: string; 
+    email?: string; 
+    name?: string; 
+    avatar_url?: string; 
+    balance?: string; 
+    role?: string; 
+    accessToken?: string; 
+    refreshToken?: string; 
+    provider?: 'google' | 'facebook' | 'zalo' | 'credentials';
+  }, 
+  accessToken: string, 
+  provider: 'GOOGLE' | 'FACEBOOK' | 'ZALO'
+): Promise<boolean> {
+  try {
+    console.log(`🔐 ${provider} sign in callback, calling ProSai social login API`);
+    
+    // Call ProSai backend API for social login
+    const response = await corsApi.get<ProSaiAuthResponse>(`/auth/social-login?access_token=${encodeURIComponent(accessToken)}&provider=${provider}`);
+    
+          if (response && response.access_token && response.user) {
+        // Update user object with ProSai data from backend
+        user.id = response.user.id;
+        user.email = response.user.email;
+        user.name = response.user.full_name || response.user.first_name || response.user.email;
+        user.avatar_url = response.user.avatar || undefined;
+        user.balance = response.user.balance;
+        user.role = response.user.role;
+        user.accessToken = response.access_token;
+        user.refreshToken = response.refresh_token;
+        user.provider = provider.toLowerCase() as 'google' | 'facebook' | 'zalo';
+      
+      // Return true to allow NextAuth to continue with the updated user data
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error: unknown) {
+    return false;
+  }
+}
+
 export const authOptions: NextAuthOptions = {
+  // Cookie configuration for PKCE support
+  cookies: {
+    pkceCodeVerifier: {
+      name: 'next-auth.pkce.code_verifier',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: false, // Set to false for development, true for production
+      },
+    },
+  },
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -13,19 +71,11 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
-        console.log('🔐 NextAuth authorize() called with:', { 
-          email: credentials?.email, 
-          hasPassword: !!credentials?.password 
-        });
-
         if (!credentials?.email || !credentials?.password) {
-          console.error('❌ Missing credentials');
           return null;
         }
 
         try {
-          console.log('🚀 Calling ProSai API via CORS-friendly method:', '/auth/login');
-          
           // Try URL encoded format first
           let response: ProSaiAuthResponse;
           try {
@@ -46,50 +96,25 @@ export const authOptions: NextAuthOptions = {
             }
           }
 
-          console.log('📡 ProSai API Response:', response);
-
           // ProSai API returns access_token and user directly
           if (response && response.access_token && response.user) {
             const user = {
               id: response.user.id,
               email: response.user.email,
               name: response.user.full_name || response.user.first_name || response.user.email,
-              image: response.user.avatar || undefined, // Use undefined instead of null
+              avatar_url: response.user.avatar || undefined, // Add avatar_url for custom usage
               balance: response.user.balance, // Include balance
               role: response.user.role, // Include role
               accessToken: response.access_token,
               refreshToken: response.refresh_token,
+              provider: 'credentials' as const, // Set provider for credentials login
             };
-            console.log('✅ NextAuth authorize success:', user);
             return user;
           } else {
-            console.error('❌ ProSai API response missing access_token or user');
             return null;
           }
         } catch (error: unknown) {
-          const axiosError = error as { message?: string; response?: { status?: number; data?: unknown }; config?: { url?: string } };
-          console.error('❌ Authentication error:', {
-            message: axiosError.message,
-            status: axiosError.response?.status,
-            data: axiosError.response?.data,
-            url: axiosError.config?.url
-          });
-          
-          // Log specific error messages for debugging
-          if (axiosError.response?.status === 401) {
-            console.error('❌ Login failed: Email hoặc mật khẩu không chính xác');
-          } else if (axiosError.response?.status === 403) {
-            console.error('❌ Login failed: Tài khoản đã bị khóa hoặc chưa được xác thực');
-          } else if (axiosError.response?.status === 429) {
-            console.error('❌ Login failed: Quá nhiều lần thử, vui lòng thử lại sau');
-          } else if (axiosError.response?.status && axiosError.response.status >= 500) {
-            console.error('❌ Login failed: Lỗi server, vui lòng thử lại sau');
-          } else if ((axiosError as { code?: string }).code === 'NETWORK_ERROR' || !axiosError.response) {
-            console.error('❌ Login failed: Không thể kết nối đến server');
-          } else {
-            console.error('❌ Login failed: Đã có lỗi xảy ra, vui lòng thử lại');
-          }
-          
+          console.error('❌ Login failed:', error);
           return null;
         }
       }
@@ -98,24 +123,86 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
     }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID || '',
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || '',
+    }),
+    ZaloProvider({
+      clientId: process.env.ZALO_APP_ID || '',
+      clientSecret: process.env.ZALO_APP_SECRET || '',
+    }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Handle social login callbacks - bypass NextAuth credentials flow
+      if (account?.provider === 'google' && account.access_token) {
+        // Set provider before calling callback
+        (user as any).provider = 'google';
+        return await handleSocialLoginCallback(user, account.access_token, 'GOOGLE');
+      }
+      
+      // Handle Facebook login callback - bypass NextAuth credentials flow
+      if (account?.provider === 'facebook' && account.access_token) {
+        // Set provider before calling callback
+        (user as any).provider = 'facebook';
+        return await handleSocialLoginCallback(user, account.access_token, 'FACEBOOK');
+      }
+      
+      // Handle Zalo login callback - bypass NextAuth credentials flow
+      if (account?.provider === 'zalo' && account.access_token) {
+        // Set provider before calling callback
+        (user as any).provider = 'zalo';
+        return await handleSocialLoginCallback(user, account.access_token, 'ZALO');
+      }
+      
+      // For credentials login, continue with normal flow
+      if (account?.provider === 'credentials') {
+        (user as any).provider = 'credentials';
+        return true;
+      }
+      
+      return true;
+    },
     async jwt({ token, user, account }) {
       // Initial sign in
       if (account && user) {
-        return {
-          ...token,
-          accessToken: user.accessToken,
-          refreshToken: user.refreshToken,
-          user: {
+        // For social login, user data is already updated in signIn callback
+        if (account.provider === 'google' || account.provider === 'facebook' || account.provider === 'zalo') {
+          const userData = {
             id: user.id,
             email: user.email,
             name: user.name,
-            image: user.image,
-            balance: user.balance, // Include balance in JWT
-            role: user.role, // Include role in JWT
-          },
-        };
+            avatar_url: (user as any).avatar_url || user.image, // Add avatar_url for custom usage
+            balance: user.balance,
+            role: user.role,
+            provider: user.provider || account.provider, // Use user.provider if available, fallback to account.provider
+          };
+          return {
+            ...token,
+            accessToken: user.accessToken,
+            refreshToken: user.refreshToken,
+            user: userData,
+          } as any;
+        }
+        
+        // For credentials login, use data from ProSai API response
+        if (account.provider === 'credentials') {
+          const userData = {
+            id: user.id,
+            email: user.email,
+            name: user.name,  
+            avatar_url: (user as any).avatar_url, // Add avatar_url for custom usage
+            balance: user.balance,
+            role: user.role,
+            provider: user.provider || 'credentials', // Use user.provider if available, fallback to 'credentials'
+          };
+          return {
+            ...token,
+            accessToken: user.accessToken,
+            refreshToken: user.refreshToken,
+            user: userData,
+          };
+        }
       }
 
       // Return previous token if the access token has not expired yet
