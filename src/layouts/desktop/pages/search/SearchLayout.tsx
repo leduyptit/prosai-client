@@ -10,6 +10,7 @@ import { Property } from '@/types/api';
 import { Loading } from '@/components/ui/feedback';
 import { SearchItem } from './ResultItem';
 import { EmptyState } from '@/components/shared/empty-states';
+import { formatPrice, formatArea, formatRelativeTime } from '@/utils/format';
 
 const SearchLayout: React.FC = () => {
   const router = useRouter();
@@ -97,17 +98,17 @@ const SearchLayout: React.FC = () => {
     return properties.map(property => ({
       id: property.id,
       title: property.title,
-      priceLabel: `${property.price} tỷ`,
-      areaBadge: `${property.area} m²`,
-      pricePerM2: property.price && property.area ? `${Math.round(property.price * 1000 / property.area)} tr/m²` : undefined,
+      priceLabel: property.price_all ? formatPrice(property.price_all) : 'Liên hệ',
+      areaBadge: property.area ? formatArea(property.area) : 'Liên hệ',
+      pricePerM2: property.price_all && property.area ? `${Math.round(property.price_all * 1000 / property.area)} tr/m²` : undefined,
       bedrooms: property.bedrooms,
       bathrooms: property.bathrooms,
       address: property.address,
       imageUrl: property.images?.[0] || '/images/imgdemo_new@2x.png',
       imagesCount: property.images?.length,
       postedBy: property.user_name_social ? property.user_name_social : 'Người đăng',
-      postedAt: 'Đăng 2 ngày trước',
-      rating: 4,
+      postedAt: property.created_at ? formatRelativeTime(property.created_at) : '',
+      rating: property.ranking_score ? property.ranking_score : 0,
       phone: property.phone_user ? property.phone_user : property.phone_message?.[0] || '',
       isFavorite: false
     }));

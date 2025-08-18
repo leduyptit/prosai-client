@@ -1,17 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Tag, Rate } from 'antd';
-import { InfoItem, Rating } from '@/components/ui';
 import { AIRatingSection, PropertyDetailsGrid } from './';
-import { 
-  HomeOutlined, 
-  ExpandOutlined, 
-  CarOutlined,
-  CalendarOutlined,
-  EnvironmentOutlined,
-  DollarOutlined
-} from '@ant-design/icons';
 
 interface PropertyData {
   id: string;
@@ -24,7 +14,6 @@ interface PropertyData {
   type: string;
   yearBuilt?: string;
   description: string;
-  features: string[];
   rating?: number;
   reviewCount?: number;
   pricePerSquareMeter?: string;
@@ -36,6 +25,7 @@ interface PropertyData {
   propertyType?: string;
   currentFloor?: string;
   paymentMethod?: string;
+  furniture_details?: string;
 }
 
 interface PropertyInfoProps {
@@ -55,9 +45,9 @@ const PropertyInfo: React.FC<PropertyInfoProps> = ({
     type: 'Chung cư',
     yearBuilt: '2023',
     description: 'Căn hộ The Nelson Private Residences tọa lạc tại trung tâm quận Ba Đình, thiết kế hiện đại với đầy đủ tiện ích...',
-    features: ['Nội thất cao cấp', 'View đẹp', 'An ninh 24/7', 'Hồ bơi', 'Gym', 'Parking'],
     rating: 4.8,
-    reviewCount: 12
+    reviewCount: 12,
+    furniture_details: 'Nội thất cao cấp, View đẹp, An ninh 24/7, Hồ bơi, Gym, Parking'
   },
   className = ''
 }) => {
@@ -75,109 +65,109 @@ const PropertyInfo: React.FC<PropertyInfoProps> = ({
       <PropertyDetailsGrid
         items={[
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_vitri.svg",
             iconAlt: "Location",
             label: "Vị trí",
             value: property.address
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_phaply.svg",
             iconAlt: "Legal",
             label: "Pháp lý",
             value: property.type
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_tongsotang.svg",
             iconAlt: "Floors",
             label: "Tổng số tầng",
             value: property.yearBuilt || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_gia.svg",
             iconAlt: "Price",
             label: "Giá",
             value: property.price || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_noithat.svg",
             iconAlt: "Furniture",
             label: "Nội thất",
-            value: property.features?.join(', ') || 'N/A'
+            value: property.furniture_details || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_namxaydung.svg",
             iconAlt: "YearBuilt",
             label: "Năm xây dựng",
             value: property.yearBuilt || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_giam2.svg",
             iconAlt: "PricePerSquareMeter",
             label: "Giá/m2",
             value: property.pricePerSquareMeter || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_mota.svg",
             iconAlt: "FurnitureDescription",
             label: "Mô tả nội thất",
             value: property.furnitureDescription || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_thangmay.svg",
             iconAlt: "Elevator",
             label: "Thang máy",
             value: property.elevator || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_dientich.svg",
             iconAlt: "Area",
             label: "Diện tích",
             value: property.area || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_maduan.svg",
             iconAlt: "ProjectCode",
             label: "Mã dự án",
             value: property.projectCode || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_chodauxe.svg",
             iconAlt: "Parking",
             label: "Chỗ đậu xe",
             value: property.parking || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_phongngu.svg",
             iconAlt: "Bedrooms",
             label: "Phòng ngủ",
             value: property.bedrooms || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_tenduan.svg",
             iconAlt: "ProjectName",
             label: "Tên dự án",
             value: property.projectName || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_loaibds.svg",
             iconAlt: "PropertyType",
             label: "Loại BĐS",
             value: property.propertyType || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_phongtam.svg",
             iconAlt: "Bathrooms",
             label: "Phòng vệ sinh, phòng tắm",
             value: property.bathrooms || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_tanghientai.svg",
             iconAlt: "CurrentFloor",
             label: "Tầng hiện tại",
             value: property.currentFloor || 'N/A'
           },
           {
-            icon: "/svgs/address.svg",
+            icon: "/svgs/icon_hinhthuc.svg",
             iconAlt: "PaymentMethod",
             label: "Hình thức",
             value: property.paymentMethod || 'N/A'

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="icon_mota" transform="translate(-398 -977)">
+    <rect id="Rectangle_624" data-name="Rectangle 624" width="24" height="24" transform="translate(398 977)" fill="none"/>
+    <g id="essentials_alerts_info-circle" data-name="essentials/alerts/info-circle" transform="translate(399 977.997)">
+      <path id="Fill-66" d="M11.256,8.824a.974.974,0,1,1,.974-.974.975.975,0,0,1-.974.974m.974,6.821H10.282a.487.487,0,1,1,0-.974h.487v-3.9h-.487a.487.487,0,1,1,0-.974h.974a.487.487,0,0,1,.487.487V14.67h.487a.487.487,0,1,1,0,.974M11.256,2.978a8.282,8.282,0,1,0,8.282,8.282,8.292,8.292,0,0,0-8.282-8.282m0,17.539a9.257,9.257,0,1,1,9.257-9.257,9.268,9.268,0,0,1-9.257,9.257" transform="translate(0)" fill="#1d1d44" fill-rule="evenodd"/>
+    </g>
+  </g>
+</svg>

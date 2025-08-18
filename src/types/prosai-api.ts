@@ -46,15 +46,7 @@ export interface ProSaiProperty {
     phone: string;
     email?: string;
   };
-  ai_rating?: {
-    overall: number;
-    price: number;
-    location: number;
-    amenities: number;
-    legal: number;
-    investment: number;
-    description: string;
-  };
+  ranking_score: number;
   views: number;
   is_active: boolean;
   is_featured: boolean;

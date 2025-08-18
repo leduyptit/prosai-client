@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="icon_dientich" transform="translate(-398 -977)">
+    <rect id="Rectangle_624" data-name="Rectangle 624" width="24" height="24" transform="translate(398 977)" fill="none"/>
+    <g id="Group_1692" data-name="Group 1692" transform="translate(387.264 967.263)">
+      <path id="Path_739" data-name="Path 739" d="M15.805,13.558a.349.349,0,1,0-.558-.419L14.07,14.71a.349.349,0,0,0,0,.419l1.177,1.57a.349.349,0,1,0,.558-.419l-.759-1.012H25.839l-.8,1a.349.349,0,0,0,.546.435l1.251-1.57a.349.349,0,0,0,0-.435l-1.251-1.57a.349.349,0,1,0-.546.435l.8,1H15.047Z" transform="translate(0 0)" fill="#1d1d44"/>
+      <path id="Path_740" data-name="Path 740" d="M14,41.2a.7.7,0,0,1,.7-.7H26.3a.7.7,0,0,1,.7.7V52.976a.7.7,0,0,1-.7.7H14.7a.7.7,0,0,1-.7-.7Zm12.3,0H14.7V52.976H26.3Z" transform="translate(0 -22.702)" fill="#1d1d44" fill-rule="evenodd"/>
+      <path id="Path_741" data-name="Path 741" d="M95.07,53.176a.349.349,0,0,1,.489-.07l1.012.759V43.073l-1,.8a.349.349,0,0,1-.435-.546l1.57-1.251a.349.349,0,0,1,.435,0l1.57,1.251a.349.349,0,0,1-.435.546l-1-.8V53.865l1.012-.759a.349.349,0,1,1,.419.558l-1.57,1.177a.349.349,0,0,1-.419,0l-1.57-1.177A.349.349,0,0,1,95.07,53.176Z" transform="translate(-66.867 -23.94)" fill="#1d1d44"/>
+    </g>
+  </g>
+</svg>

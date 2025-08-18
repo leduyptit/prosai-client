@@ -1,52 +1,70 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Breadcrumb } from '@/components/ui/navigation';
 import { ImageGallery } from '@/components/ui';
 import { ContactSidebar, PropertyInfo, PropertyMap, PropertyDetails, ContactInfo, RelatedProperties } from '@/components/features/property';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { getPropertyById } from '@/services/property';
+import { formatPrice, formatArea, formatRelativeTime, formatDateTime } from '@/utils/format';
+import { Loading } from '@/components/ui/feedback';
 
 const PropertyDetailPage: React.FC = () => {
   const params = useParams();
   const propertyId = params?.id as string;
+  
+  const [property, setProperty] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock data - replace with actual API call
-  const mockProperty = {
-    date_posted: '2023-01-01',
-    date_end: '2023-01-01',
-    id: propertyId,
-    title: 'Căn chung cư hoa chung và sang chảy - Chất khỏi cần tìm The Nelson Private Residences',
-    price: '5.2 tỷ',
-    area: '85 m²',
-    bedrooms: 3,
-    bathrooms: 2,
-    address: 'Phố Trần Duy Hưng, Ba Đình, Hà Nội',
-    type: 'Chung cư',
-    yearBuilt: '2023',
-    description: 'Căn hộ The Nelson Private Residences tọa lạc tại vị trí đắc địa trung tâm quận Ba Đình, Hà Nội. Với thiết kế hiện đại, tinh tế và đầy đủ tiện ích cao cấp, đây là lựa chọn hoàn hảo cho những gia đình trẻ muốn sống trong môi trường đẳng cấp và tiện nghi.',
-    features: [
-      'Nội thất cao cấp',
-      'View thành phố tuyệt đẹp',
-      'An ninh 24/7',
-      'Hồ bơi vô cực',
-      'Phòng gym hiện đại',
-      'Chỗ đậu xe riêng',
-      'Gần trung tâm thương mại',
-      'Khu vui chơi trẻ em'
-    ],
-    rating: 4.8,
-    reviewCount: 12
-  };
+  useEffect(() => {
+    const fetchProperty = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getPropertyById(propertyId);
+        setProperty(data);
+      } catch (err: any) {
+        console.error('Error fetching property:', err);
+        setError(err.message || 'Không thể tải thông tin bất động sản');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (propertyId) {
+      fetchProperty();
+    }
+  }, [propertyId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loading className="bg-white" size="large" text="Đang tải thông tin..." />
+      </div>
+    );
+  }
+
+  if (error || !property) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-medium text-gray-900 mb-2">Không tìm thấy thông tin</h2>
+          <p className="text-gray-600 mb-4">{error || 'Bất động sản không tồn tại'}</p>
+          <Link href="/search" className="text-blue-600 hover:text-blue-800">
+            Quay lại tìm kiếm
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const mockImages = [
     '/images/imgdemo_new@2x.png',
-    '/images/img_basic@2x.png',
-    '/images/img_gold@2x.png',
-    '/images/img_silver@2x.png',
     '/images/imgdemo_new@2x.png',
-    '/images/img_basic@2x.png',
-    '/images/img_gold@2x.png'
+    '/images/imgdemo_new@2x.png',
+    '/images/imgdemo_new@2x.png',
   ];
 
   const mockContact = {
@@ -141,37 +159,56 @@ const PropertyDetailPage: React.FC = () => {
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-9">
             <h1 className="text-2xl md:text-3xl font-font-medium text-gray-900 mb-3 leading-tight">
-              {mockProperty.title}
+              {property.title}
             </h1>
             <div className="flex items-center gap-2 mb-3 text-[#8D8DA1]">
-              <span className="font-medium">Ngày đăng: <span className="text-gray-500 font-normal">{mockProperty.date_posted}</span></span>
+              <span className="font-medium">Ngày đăng: <span className="text-gray-500 font-normal">{formatDateTime(property.created_at)}</span></span>
               <span className="text-gray-500 ">|</span>
-              <span className="font-medium">Ngày hết hạn: <span className="text-gray-500 font-normal">{mockProperty.date_end}</span></span> 
+              <span className="font-medium">Cập nhật: <span className="text-gray-500 font-normal">{formatDateTime(property.updated_at)}</span></span> 
             </div>
             {/* Image Gallery */}
              <ImageGallery 
-               images={mockImages}
-               title={mockProperty.title}
+               images={property.images?.length > 0 ? property.images : mockImages}
+               title={property.title}
                className="mb-4"
              />
 
              {/* Property Details */}
              <PropertyDetails
-               price={mockProperty.price}
-               area={mockProperty.area}
-               bedrooms={mockProperty.bedrooms}
-               bathrooms={mockProperty.bathrooms}
-               rating={mockProperty.rating}
+               price={property.price ? formatPrice(property.price[0]) : 'Liên hệ'}
+               area={property.area ? formatArea(property.area[0]) : 'Liên hệ'}
+               bedrooms={property.bedrooms || 0}
+               bathrooms={property.bathrooms || 0}
+               rating={property.ranking_score || 0}
                className="mb-"
              />
 
              {/* Property Info */}
             <div className="bg-white py-6">
-              <PropertyInfo property={mockProperty} />
+              <PropertyInfo property={{
+                ...property,
+                price: property.price ? formatPrice(property.price[0]) : 'Liên hệ',
+                area: property.area ? formatArea(property.area[0]) : 'Liên hệ',
+                description: property.description || '',
+                features: [
+                  `Loại BĐS: ${property.property_type || 'Không xác định'}`,
+                  `Trạng thái: ${property.listing_type || 'Không xác định'}`,
+                  `Pháp lý: ${property.legal_status || 'Không xác định'}`,
+                  `Địa chỉ: ${property.address || 'Không xác định'}`,
+                  `Quận/Huyện: ${property.district || 'Không xác định'}`,
+                  `Thành phố: ${property.city || 'Không xác định'}`,
+                  property.total_floors ? `Số tầng: ${property.total_floors}` : null,
+                  property.year_built ? `Năm xây dựng: ${property.year_built}` : null,
+                ].filter(Boolean)
+              }} />
             </div>
 
             {/* Map */}
-            <PropertyMap mapData={mockMapData}/>
+            <PropertyMap mapData={{
+              address: property.address || '',
+              lat: 21.0285, // Default coordinates for Hanoi
+              lng: 105.8542
+            }}/>
 
             {/* Contact Info */}
             <div className="bg-white py-6">
@@ -183,7 +220,12 @@ const PropertyDetailPage: React.FC = () => {
           <div className="col-span-12 lg:col-span-3">
             <div className="sticky top-6">
               <ContactSidebar 
-                contactInfo={mockContact}
+                contactInfo={{
+                  name: property.user_name_social || 'Người đăng',
+                  phone: property.phone_user || property.phone_message?.[0] || '',
+                  avatar: '',
+                  isAgent: true
+                }}
                 propertyId={propertyId}
                 className="mb-6"
               />

@@ -146,3 +146,20 @@ class PropertyService {
 }
 
 export const propertyService = new PropertyService();
+
+// Fetch property details by ID
+export const getPropertyById = async (id: string): Promise<any> => {
+  try {
+    const response = await fetch(`https://api-v1.prosai.vn/search-property/${id}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching property details:', error);
+    throw error;
+  }
+};

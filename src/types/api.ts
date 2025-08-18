@@ -122,7 +122,7 @@ export interface Property {
   id: string;
   title: string;
   description: string;
-  price: number;
+  price_all: number;
   area: number;
   bedrooms: number;
   bathrooms: number;
@@ -137,6 +137,7 @@ export interface Property {
   phone_message: string[];
   phone_user: string;
   user_name_social: string;
+  ranking_score?: number;
 }
 
 export interface PropertySearchParams {
