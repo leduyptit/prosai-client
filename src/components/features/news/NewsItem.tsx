@@ -10,7 +10,8 @@ interface NewsItemProps {
 }
 
 const NewsItem: React.FC<NewsItemProps> = ({ article, className = '' }) => {
-  const formatDate = (date: Date) => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
     return new Intl.DateTimeFormat('vi-VN', {
       year: 'numeric',
       month: '2-digit',
@@ -20,7 +21,7 @@ const NewsItem: React.FC<NewsItemProps> = ({ article, className = '' }) => {
 
   return (
     <Link
-      href={article.url || `/news/${article.id}`}
+      href={`/news/${article.id}`}
       className={`block hover:bg-gray-50 transition-colors duration-200 ${className}`}
     >
       <div className="flex gap-4 py-4 border-b border-gray-100 grid grid-cols-12 items-center">
@@ -39,12 +40,12 @@ const NewsItem: React.FC<NewsItemProps> = ({ article, className = '' }) => {
 
         {/* Content */}
         <div className="flex-1 min-w-0 col-span-8">
-          <span className="text-sm text-[#8D8DA1]">Ngày đăng: {formatDate(article.publishedAt)}</span>
+          <span className="text-sm text-[#8D8DA1]">Ngày đăng: {formatDate(article.published_at)}</span>
           <h3 className="text-base font-font-medium text-[#1D1D44] transition-colors py-3">
             {article.title}
           </h3>
           <p className="text-sm text-[#1D1D44] mb-3 line-clamp-3 leading-relaxed">
-            {article.excerpt}
+            {article.summary}
           </p>
         </div>
       </div>

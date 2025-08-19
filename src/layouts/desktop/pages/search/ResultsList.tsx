@@ -26,9 +26,15 @@ const ResultsList: React.FC<ResultsListProps> = ({
   return (
     <div>
       <div>
-        {items.map((item) => (
-          <ResultItem key={item.id} item={item} />
-        ))}
+        {items && items.length > 0 ? (
+          items.map((item) => (
+            <ResultItem key={item.id} item={item} />
+          ))
+        ) : (
+          <div className="text-center py-8 text-gray-500">
+            Không có dữ liệu để hiển thị
+          </div>
+        )}
       </div>
       {pagination && (
         <div className="flex justify-center mt-4">

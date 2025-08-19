@@ -85,7 +85,7 @@ const PropertyDetailPage: React.FC = () => {
       id: '1',
       title: 'Căn hộ Vinhomes Metropolis',
       price: '9.8 tỷ',
-      area: '90m²',
+      area: 90,
       location: 'Quận Ba Đình',
       url: '/property/vinhomes-metropolis-1'
     },
@@ -93,7 +93,7 @@ const PropertyDetailPage: React.FC = () => {
       id: '2',
       title: 'Căn hộ D\'. El Dorado Tây Hồ',
       price: '7.5 tỷ',
-      area: '78m²',
+      area: 78,
       location: 'Quận Tây Hồ',
       url: '/property/el-dorado-tay-ho-2'
     },
@@ -101,7 +101,7 @@ const PropertyDetailPage: React.FC = () => {
       id: '3',
       title: 'Chung cư Lancaster Núi Trúc',
       price: '8.9 tỷ',
-      area: '85m²',
+      area: 85,
       location: 'Quận Đống Đa',
       url: '/property/lancaster-nui-truc-3'
     },
@@ -109,7 +109,7 @@ const PropertyDetailPage: React.FC = () => {
       id: '4',
       title: 'Căn hộ Vinhomes Metropolis',
       price: '9.8 tỷ',
-      area: '90m²',
+      area: 90,
       location: 'Quận Ba Đình',
       url: '/property/vinhomes-metropolis-4'
     },
@@ -117,7 +117,7 @@ const PropertyDetailPage: React.FC = () => {
       id: '5',
       title: 'Căn hộ D\'. El Dorado Tây Hồ',
       price: '7.5 tỷ',
-      area: '78m²',
+      area: 78,
       location: 'Quận Tây Hồ',
       url: '/property/el-dorado-tay-ho-5'
     },
@@ -125,7 +125,7 @@ const PropertyDetailPage: React.FC = () => {
       id: '6',
       title: 'Chung cư Lancaster Núi Trúc',
       price: '8.9 tỷ',
-      area: '85m²',
+      area: 85,
       location: 'Quận Đống Đa',
       url: '/property/lancaster-nui-truc-6'
     }

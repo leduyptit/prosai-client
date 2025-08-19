@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  prosai-client-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: prosai-client-prod
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    env_file:
+      - .env.production
+      - .env
+    networks:
+      - prosai-network-prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  prosai-network-prod:
+    driver: bridge

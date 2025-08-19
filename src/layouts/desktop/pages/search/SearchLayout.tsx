@@ -95,23 +95,31 @@ const SearchLayout: React.FC = () => {
 
   // Convert Property to SearchItem
   const convertToSearchItems = (properties: Property[]): SearchItem[] => {
-    return properties.map(property => ({
-      id: property.id,
-      title: property.title,
-      priceLabel: property.price_all ? formatPrice(property.price_all) : 'Liên hệ',
-      areaBadge: property.area ? formatArea(property.area) : 'Liên hệ',
-      pricePerM2: property.price ? `${formatPrice(property.price).replace('triệu', '')} tr/m²` : 'Liên hệ',
-      bedrooms: property.bedrooms,
-      bathrooms: property.bathrooms,
-      address: property.address,
-      imageUrl: property.images?.[0] || '/images/imgdemo_new@2x.png',
-      imagesCount: property.images?.length,
-      postedBy: property.user_name_social ? property.user_name_social : 'Người đăng',
-      postedAt: property.created_at ? formatRelativeTime(property.created_at) : '',
-      rating: property.ranking_score ? property.ranking_score : 0,
-      phone: property.phone_user ? property.phone_user : property.phone_message?.[0] || '',
-      isFavorite: false
-    }));
+    const items = properties.map(property => {
+      // Handle price_all and price which can be arrays
+      const priceAll = Array.isArray(property.price_all) ? property.price_all[0] : property.price_all;
+      const price = Array.isArray(property.price) ? property.price[0] : property.price;
+      const area = Array.isArray(property.area) ? property.area[0] : property.area;
+      
+      return {
+        id: property.id,
+        title: property.title,
+        priceLabel: priceAll ? formatPrice(priceAll) : 'Liên hệ',
+        areaBadge: area ? formatArea(area) : 'Liên hệ',
+        pricePerM2: price ? `${formatPrice(price).replace('triệu', '')} tr/m²` : 'Liên hệ',
+        bedrooms: property.bedrooms,
+        bathrooms: property.bathrooms,
+        address: property.address || 'Địa chỉ đang cập nhật',
+        imageUrl: property.images?.[0] || '/images/imgdemo_new@2x.png',
+        imagesCount: property.images?.length || 0,
+        postedBy: property.user_name_social ? property.user_name_social : 'Người đăng',
+        postedAt: property.created_at ? formatRelativeTime(property.created_at) : '',
+        rating: property.ranking_score ? property.ranking_score : 0,
+        phone: property.phone_user ? property.phone_user : property.phone_message?.[0] || '',
+        isFavorite: false
+      };
+    });
+    return items;
   };
 
   const fetchProperties = async (params = searchParams) => {
@@ -119,8 +127,11 @@ const SearchLayout: React.FC = () => {
       setLoading(true);
       setError(null);
       
+      console.log('Fetching properties with params:', params);
       const response = await propertyService.searchPropertyProSai(params);
-      console.log('response', response);
+      console.log('API Response:', response);
+      console.log('Properties count:', response.data?.length);
+      
       setProperties(response.data || []);
       setTotalCount(response.total || 0);
       setPagination({
@@ -207,6 +218,9 @@ const SearchLayout: React.FC = () => {
     };
     setSearchParams(newSearchParams);
   }, [searchParamsFromUrl]);
+
+  // Debug logs for render
+  console.log('Render state - loading:', loading, 'properties length:', properties.length, 'totalCount:', totalCount);
 
   return (
     <div className="search-layout">

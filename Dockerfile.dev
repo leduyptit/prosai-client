@@ -1,0 +1,33 @@
+FROM node:18-alpine
+
+# Install dependencies for development
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json yarn.lock* package-lock.json* ./
+
+# Install dependencies with npm warnings suppressed
+RUN \
+  if [ -f yarn.lock ]; then yarn install --silent; \
+  elif [ -f package-lock.json ]; then npm ci --silent --no-audit --no-fund; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --silent; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Set environment variables
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV npm_config_update_notifier=false
+ENV npm_config_audit=false
+ENV npm_config_fund=false
+
+# Start development server
+CMD ["npm", "run", "dev"]

@@ -55,7 +55,7 @@ const AuthButton: React.FC = () => {
     <Dropdown menu={{ items: menuItems }} placement="bottomRight">
       <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
         <Avatar 
-          src={user?.avatar} 
+          src={user?.avatar_url || user?.image} 
           icon={<UserOutlined />} 
           size="small" 
         />

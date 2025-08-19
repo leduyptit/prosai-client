@@ -15,92 +15,112 @@ const NewsPage: React.FC = () => {
     {
       id: '1',
       title: 'Bất động sản Hà Nội tháng 2020: Những biến động mạnh mẽ trên thị trường Bắc Ninh',
-      excerpt: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      summary: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
       image: '/images/imgdemo_new@2x.png',
-      publishedAt: new Date('2024-01-15'),
-      category: 'Thị trường',
-      author: 'Nguyễn Văn A'
+      published_at: '2024-01-15',
+      author: 'Nguyễn Văn A',
+      content: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      created_at: '2024-01-15',
+      updated_at: '2024-01-15'
     },
     {
       id: '2',
       title: 'Bất động sản Hà Nội tháng 2020: Những biến động mạnh mẽ trên thị trường Bắc Ninh',
-      excerpt: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      summary: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
       image: '/images/imgdemo_new@2x.png',
-      publishedAt: new Date('2024-01-14'),
-      category: 'Phân tích',
-      author: 'Trần Thị B'
+      published_at: '2024-01-14',
+      author: 'Trần Thị B',
+      content: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      created_at: '2024-01-14',
+      updated_at: '2024-01-14'
     },
     {
       id: '3',
       title: 'Bất động sản Hà Nội tháng 2020: Những biến động mạnh mẽ trên thị trường Bắc Ninh',
-      excerpt: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      summary: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
       image: '/images/imgdemo_new@2x.png',
-      publishedAt: new Date('2024-01-13'),
-      category: 'Xu hướng',
-      author: 'Lê Văn C'
+      published_at: '2024-01-13',
+      author: 'Lê Văn C',
+      content: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      created_at: '2024-01-13',
+      updated_at: '2024-01-13'
     },
     {
       id: '4',
       title: 'Bất động sản Hà Nội tháng 2020: Những biến động mạnh mẽ trên thị trường Bắc Ninh',
-      excerpt: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      summary: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
       image: '/images/imgdemo_new@2x.png',
-      publishedAt: new Date('2024-01-12'),
-      category: 'Thị trường',
-      author: 'Phạm Thị D'
+      published_at: '2024-01-12',
+      author: 'Phạm Thị D',
+      content: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      created_at: '2024-01-12',
+      updated_at: '2024-01-12'
     },
     {
       id: '5',
       title: 'Bất động sản Hà Nội tháng 2020: Những biến động mạnh mẽ trên thị trường Bắc Ninh',
-      excerpt: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      summary: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
       image: '/images/imgdemo_new@2x.png',
-      publishedAt: new Date('2024-01-11'),
-      category: 'Đầu tư',
-      author: 'Hoàng Văn E'
+      published_at: '2024-01-11',
+      author: 'Hoàng Văn E',
+      content: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      created_at: '2024-01-11',
+      updated_at: '2024-01-11'
     },
     {
       id: '6',
       title: 'Bất động sản Hà Nội tháng 2020: Những biến động mạnh mẽ trên thị trường Bắc Ninh',
-      excerpt: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      summary: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
       image: '/images/imgdemo_new@2x.png',
-      publishedAt: new Date('2024-01-10'),
-      category: 'Phân tích',
-      author: 'Vũ Thị F'
+      published_at: '2024-01-10',
+      author: 'Vũ Thị F',
+      content: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      created_at: '2024-01-10',
+      updated_at: '2024-01-10'
     },
     {
       id: '7',
       title: 'Bất động sản Hà Nội tháng 2020: Những biến động mạnh mẽ trên thị trường Bắc Ninh',
-      excerpt: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      summary: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
       image: '/images/imgdemo_new@2x.png',
-      publishedAt: new Date('2024-01-07'),
-      category: 'Thị trường',
-      author: 'Đỗ Văn G'
+      published_at: '2024-01-07',
+      author: 'Đỗ Văn G',
+      content: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      created_at: '2024-01-07',
+      updated_at: '2024-01-07'
     },
     {
       id: '8',
       title: 'Bất động sản Hà Nội tháng 2020: Những biến động mạnh mẽ trên thị trường Bắc Ninh',
-      excerpt: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      summary: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
       image: '/images/imgdemo_new@2x.png',
-      publishedAt: new Date('2024-01-06'),
-      category: 'Xu hướng',
-      author: 'Bùi Thị H'
+      published_at: '2024-01-06',
+      author: 'Bùi Thị H',
+      content: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      created_at: '2024-01-06',
+      updated_at: '2024-01-06'
     },
     {
       id: '9',
       title: 'Bất động sản Hà Nội tháng 2020: Những biến động mạnh mẽ trên thị trường Bắc Ninh',
-      excerpt: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      summary: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
       image: '/images/imgdemo_new@2x.png',
-      publishedAt: new Date('2024-01-05'),
-      category: 'Đầu tư',
-      author: 'Ngô Văn I'
+      published_at: '2024-01-05',
+      author: 'Ngô Văn I',
+      content: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      created_at: '2024-01-05',
+      updated_at: '2024-01-05'
     },
     {
       id: '10',
       title: 'Bất động sản Hà Nội tháng 2020: Những biến động mạnh mẽ trên thị trường Bắc Ninh',
-      excerpt: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      summary: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
       image: '/images/imgdemo_new@2x.png',
-      publishedAt: new Date('2024-01-04'),
-      category: 'Thị trường',
-      author: 'Đinh Thị J'
+      published_at: '2024-01-04',
+      author: 'Đinh Thị J',
+      content: 'Thị trường bất động sản Hà Nội trong tháng 2020 ghi nhận những biến động mạnh mẽ với nhiều dự án mới được công bố và giá cả có xu hướng tăng nhẹ so với cùng kỳ năm trước...',
+      created_at: '2024-01-04',
+      updated_at: '2024-01-04'
     }
   ];
 

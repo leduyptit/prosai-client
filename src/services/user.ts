@@ -1,11 +1,11 @@
 import { api, PaginatedResponse } from './api';
 import { User, MembershipPlanDetails, UserMembership } from '@/types/auth';
-import { Notification, DashboardStats } from '@/types/api';
+import { Notification } from '@/types/api';
 
 class UserService {
   // Get user dashboard statistics
-  async getDashboardStats(): Promise<DashboardStats> {
-    const response = await api.get<DashboardStats>('/user/dashboard');
+  async getDashboardStats(): Promise<any> {
+    const response = await api.get<any>('/user/dashboard');
     return response.data;
   }
 

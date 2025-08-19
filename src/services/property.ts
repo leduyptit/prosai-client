@@ -1,9 +1,9 @@
-import { api, PaginatedResponse } from './api';
-import { Property, PropertyFilters, SearchParams, UserPost, PostStats } from '@/types/api';
+import { api, apiClient, PaginatedResponse } from './api';
+import { Property, PropertySearchParams } from '@/types/api';
 
 class PropertyService {
   // Get properties with filters and pagination
-  async getProperties(params: SearchParams = {}): Promise<PaginatedResponse<Property>> {
+  async getProperties(params: PropertySearchParams = {}): Promise<PaginatedResponse<Property>> {
     const response = await api.get<PaginatedResponse<Property>>('/properties', { params });
     return response.data;
   }
@@ -32,7 +32,7 @@ class PropertyService {
   }
 
   // Search properties
-  async searchProperties(query: string, filters: PropertyFilters = {}): Promise<PaginatedResponse<Property>> {
+  async searchProperties(query: string, filters: PropertySearchParams = {}): Promise<PaginatedResponse<Property>> {
     const params = { query, ...filters };
     const response = await api.get<PaginatedResponse<Property>>('/properties/search', { params });
     return response.data;
@@ -54,8 +54,9 @@ class PropertyService {
     bedrooms?: number;
     bathrooms?: number;
   } = {}): Promise<PaginatedResponse<Property>> {
-    const response = await api.get<PaginatedResponse<Property>>('/search-property', { params });
-    return response;
+    // Use direct axios call to avoid API service wrapper issues
+    const response = await apiClient.get<PaginatedResponse<Property>>('/search-property', { params });
+    return response.data;
   }
 
   // Get featured properties
@@ -91,14 +92,14 @@ class PropertyService {
   }
 
   // Get user's properties
-  async getUserProperties(params: { page?: number; limit?: number; status?: string } = {}): Promise<PaginatedResponse<UserPost>> {
-    const response = await api.get<PaginatedResponse<UserPost>>('/user/properties', { params });
+  async getUserProperties(params: { page?: number; limit?: number; status?: string } = {}): Promise<PaginatedResponse<Property>> {
+    const response = await api.get<PaginatedResponse<Property>>('/user/properties', { params });
     return response.data;
   }
 
   // Get user's property statistics
-  async getUserStats(): Promise<PostStats> {
-    const response = await api.get<PostStats>('/user/properties/stats');
+  async getUserStats(): Promise<any> {
+    const response = await api.get<any>('/user/properties/stats');
     return response.data;
   }
 

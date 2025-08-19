@@ -6,15 +6,12 @@ export interface ApiResponse<T = any> {
   errors?: Record<string, string[]>;
 }
 
-export interface PaginatedResponse<T = any> extends ApiResponse<T[]> {
-  pagination: {
-    current_page: number;
-    last_page: number;
-    per_page: number;
-    total: number;
-    from: number;
-    to: number;
-  };
+export interface PaginatedResponse<T = any> {
+  data: T[];
+  count: number;
+  page: number;
+  total: number;
+  pageCount: number;
 }
 
 export interface ApiError {
@@ -120,25 +117,53 @@ export interface ResetPasswordRequest {
 
 export interface Property {
   id: string;
+  id_social?: string;
   title: string;
   description: string;
-  price_all: number;
-  price: number;
-  area: number;
+  price_all: number | number[];
+  price: number | number[];
+  area: number | number[];
   bedrooms: number;
   bathrooms: number;
-  address: string;
-  city: string;
-  district: string;
-  property_type: string;
-  status: string;
+  address: string | null;
+  city: string | null;
+  district: string | null;
+  property_type: number;
+  listing_type: number;
+  legal_status: number;
+  interior_status: number;
+  status: string | null;
   images: string[];
   created_at: string;
   updated_at: string;
   phone_message: string[];
-  phone_user: string;
+  phone_user: string | null;
   user_name_social: string;
   ranking_score?: number;
+  project_name?: string;
+  smart_score?: string;
+  attribuite_score?: string;
+  explain?: string;
+  sentiment_score?: number;
+  note_1?: number;
+  note_2?: number | null;
+  note_3?: number | null;
+  note_4?: number | null;
+  note_5?: number | null;
+  note_6?: number | null;
+  note_7?: number | null;
+  note_8?: number | null;
+  note_9?: number | null;
+  note_10?: number | null;
+}
+
+export interface PropertySummary {
+  id: string;
+  title: string;
+  price: string;
+  area: number;
+  location: string;
+  url?: string;
 }
 
 export interface PropertySearchParams {
@@ -158,7 +183,7 @@ export interface PropertySearchParams {
 
 export interface PropertySearchResponse extends PaginatedResponse<Property> {}
 
-export interface News {
+export interface NewsArticle {
   id: string;
   title: string;
   content: string;
@@ -170,6 +195,13 @@ export interface News {
   updated_at: string;
 }
 
+export interface NewsSummary {
+  id: string;
+  title: string;
+  url?: string;
+  publishedAt: Date;
+}
+
 export interface NewsSearchParams {
   keyword?: string;
   category?: string;
@@ -177,7 +209,15 @@ export interface NewsSearchParams {
   per_page?: number;
 }
 
-export interface NewsSearchResponse extends PaginatedResponse<News> {}
+export interface NewsSearchResponse extends PaginatedResponse<NewsArticle> {}
+
+export interface NewsCategory {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export interface ContactForm {
   name: string;
