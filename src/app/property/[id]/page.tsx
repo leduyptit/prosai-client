@@ -190,16 +190,7 @@ const PropertyDetailPage: React.FC = () => {
                 price: property.price ? formatPrice(property.price[0]) : 'Liên hệ',
                 area: property.area ? formatArea(property.area[0]) : 'Liên hệ',
                 description: property.description || '',
-                features: [
-                  `Loại BĐS: ${property.property_type || 'Không xác định'}`,
-                  `Trạng thái: ${property.listing_type || 'Không xác định'}`,
-                  `Pháp lý: ${property.legal_status || 'Không xác định'}`,
-                  `Địa chỉ: ${property.address || 'Không xác định'}`,
-                  `Quận/Huyện: ${property.district || 'Không xác định'}`,
-                  `Thành phố: ${property.city || 'Không xác định'}`,
-                  property.total_floors ? `Số tầng: ${property.total_floors}` : null,
-                  property.year_built ? `Năm xây dựng: ${property.year_built}` : null,
-                ].filter(Boolean)
+                attribuite_score: property.attribuite_score ? JSON.parse(property.attribuite_score) : {}
               }} />
             </div>
 
@@ -212,7 +203,12 @@ const PropertyDetailPage: React.FC = () => {
 
             {/* Contact Info */}
             <div className="bg-white py-6">
-              <ContactInfo />
+              <ContactInfo 
+                contactInfo={{
+                  name: property.user_name_social || 'Người đăng',
+                  phone: property.phone_user || property.phone_message?.[0] || '',
+                }}
+              />
             </div>
           </div>
 

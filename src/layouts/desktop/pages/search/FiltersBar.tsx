@@ -117,14 +117,14 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
       {/* Row 1 */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2 flex-1 border border-gray-200 rounded-lg h-10 text-gray-700 min-w-[160px]">
+      <div className="md:flex md:flex-wrap items-center md:gap-3">
+        <div className="mb-3 md:mb-0 md:flex items-center gap-2 flex-1 border border-gray-200 rounded-lg md:h-10 text-gray-700 min-w-[160px]">
           {/* Location */}
-          <div className="flex items-center gap-2 rounded-lg px-3 h-10 text-gray-700 min-w-[160px]">
+          <div className="flex items-center gap-2 rounded-lg px-3 h-10 text-gray-700 md:min-w-[160px]">
             <img src="/svgs/address.svg" alt="location" className="h-4 w-4" />
                          <Select
                size="small"
-               className="w-[120px]"
+               className="w-full md:w-[120px]"
                variant="borderless"
                value={filters.city}
                onChange={(value) => handleFilterChange('city', value)}
@@ -139,14 +139,15 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         </div>
         
         {/* Keyword + Search */}
-        <div className="flex items-stretch flex-1 min-w-[320px]">
-                     <Input
+        <div className="md:flex items-stretch md:flex-1 md:min-w-[320px] mb-3 md:mb-0 ">
+            <Input
              allowClear
              placeholder="Nhập địa điểm, dự án, quận, huyện..."
              variant="borderless"
              value={filters.keyword}
              onChange={(e) => setFilters({ ...filters, keyword: e.target.value })}
              onPressEnter={handleSearchClick}
+             className="w-full md:w-auto"
            />
            <Button
              type="primary"
@@ -160,13 +161,13 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         </div>
 
         {/* Save filter */}
-        <Button className="h-10 px-4 border-gray-300 flex items-center gap-2" size="middle">
+        <Button className="h-10 px-4 border-gray-300 flex items-center gap-2 w-full md:w-auto" size="middle">
           <HeartOutlined />
           <span className="font-medium">Lưu bộ lọc</span>
         </Button>
 
         {/* View map */}
-        <Button className="h-10 px-4 bg-orange-500 hover:bg-orange-600 text-white border-none flex items-center gap-2 map-button" size="middle">
+        <Button className="h-10 px-4 bg-orange-500 hover:bg-orange-600 text-white border-none flex items-center gap-2 map-button w-full md:w-auto md:py-2 my-3 md:my-0" size="middle">
           <img src="/svgs/icon_map.svg" alt="map" className="h-4 w-4" />
           <span className="font-medium" >Xem bản đồ</span>
         </Button>
@@ -195,7 +196,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
            onChange={(value) => handleFilterChange('priceRange', value)}
            options={
             [
-              { value: 'all', label: 'Tất cả' },
+              { value: 'all', label: 'Tất cả giá' },
               ...PRICE_RANGES as any
             ]
           } 
@@ -209,7 +210,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
            onChange={(value) => handleFilterChange('areaRange', value)}
            options={
             [
-              { value: 'all', label: 'Tất cả' },
+              { value: 'all', label: 'Tất cả diện tích' },
               ...AREA_RANGES as any
             ]
           } 
@@ -223,7 +224,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
            onChange={(value) => handleFilterChange('bedrooms', value)}
            options={
             [
-              { value: 'all', label: 'Tất cả' },
+              { value: 'all', label: 'Tất cả phòng ngủ' },
               ...BEDROOM_OPTIONS as any
             ]
           } 
@@ -236,7 +237,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
            value={filters.bathrooms}
            onChange={(value) => handleFilterChange('bathrooms', value)}
            options={[
-             { value: 'all', label: 'Tất cả' },
+             { value: 'all', label: 'Tất cả phòng tắm' },
              ...BATHROOM_OPTIONS as any
            ]} 
          />
@@ -248,7 +249,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
            value={filters.legalStatus}
            onChange={(value) => handleFilterChange('legalStatus', value)}
            options={[
-             { value: 'all', label: 'Tất cả' },
+             { value: 'all', label: 'Tất cả pháp lý' },
              { value: 'sổ đỏ', label: 'Sổ đỏ' },
              { value: 'hđmb', label: 'HĐMB' },
              { value: 'khác', label: 'Khác' },

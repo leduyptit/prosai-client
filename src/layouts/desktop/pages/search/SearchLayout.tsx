@@ -100,7 +100,7 @@ const SearchLayout: React.FC = () => {
       title: property.title,
       priceLabel: property.price_all ? formatPrice(property.price_all) : 'Liên hệ',
       areaBadge: property.area ? formatArea(property.area) : 'Liên hệ',
-      pricePerM2: property.price_all && property.area ? `${Math.round(property.price_all * 1000 / property.area)} tr/m²` : undefined,
+      pricePerM2: property.price ? `${formatPrice(property.price).replace('triệu', '')} tr/m²` : 'Liên hệ',
       bedrooms: property.bedrooms,
       bathrooms: property.bathrooms,
       address: property.address,

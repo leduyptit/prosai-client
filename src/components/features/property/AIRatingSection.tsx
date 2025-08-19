@@ -25,7 +25,7 @@ const AIRatingSection: React.FC<AIRatingSectionProps> = ({
   return (
     <div className={`mb-6 ${className}`}>
       <h3 className="text-lg font-font-medium text-gray-900 mb-3">{title}</h3>
-      <div className="grid grid-cols-4 gap-4 px-15 py-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:px-15 py-2">
         {ratings.map((item, index) => (
           <AIRatingItem
             key={index}

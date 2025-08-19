@@ -42,7 +42,7 @@ const PropertyDetailsGrid: React.FC<PropertyDetailsGridProps> = ({
   return (
     <div className={`mb-6 ${className}`}>
       <h3 className="text-lg font-font-medium text-gray-900 mb-3">{title}</h3>
-      <div className={`grid ${getGridClass()} gap-4`}>
+      <div className={`grid grid-cols-2 md:${getGridClass()} gap-4`}>
         {items.map((item, index) => (
           <InfoItem
             key={index}

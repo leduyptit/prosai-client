@@ -117,7 +117,7 @@ const MobileHeader: React.FC = () => {
         open={drawerVisible}
         className="mobile-drawer"
       >
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-1 px-6 py-6">
           <Link href="/" onClick={onClose} className="text-gray-700 py-2">
             Trang chủ
           </Link>

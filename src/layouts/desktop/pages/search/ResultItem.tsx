@@ -5,6 +5,7 @@ import { Button, message } from 'antd';
 import Rating from '@/components/ui/data-display/Rating';
 import { HeartFilled, HeartOutlined } from '@ant-design/icons';
 import PhoneButton from '@/components/ui/buttons/PhoneButton';
+import Link from 'next/link';
 
 export interface SearchItem {
   id: string;
@@ -33,12 +34,12 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
   return (
     <>
       <div className="mb-4 rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="flex items-stretch">
+        <div className="md:flex items-stretch">
           {/* Image */}
-          <div className="relative w-60 min-h-[112px] self-stretch overflow-hidden rounded-md flex-shrink-0 bg-gray-100">
-            <img src={item.imageUrl} alt={item.title} className="absolute inset-0 w-full h-full object-cover" />
+          <div className="md:relative w-full md:w-60 md:min-h-[112px] self-stretch overflow-hidden rounded-md flex-shrink-0 bg-gray-100">
+            <img src={item.imageUrl} alt={item.title} className="md:absolute inset-0 w-full h-full object-cover" />
             {item.imagesCount ? (
-              <div className="absolute bottom-2 left-2 text-white text-xs bg-black/60 px-2 py-0.5 rounded-sm flex items-center gap-1">
+              <div className="md:absolute bottom-2 left-2 text-white text-xs bg-black/60 px-2 py-0.5 rounded-sm flex items-center md:gap-1">
                 <img src="/svgs/icon_picture.svg" alt="images" className="h-4 w-4" />
                 <span className="font-medium text-white">{item.imagesCount}</span>
               </div>
@@ -49,7 +50,9 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
           <div className="flex-1 min-w-0 p-4">
             {/* Title */}
             <div className="font-medium text-gray-900 text-[15px] leading-5 line-clamp-2 pr-2">
-              {item.title}
+              <Link href={`/property/${item.id}`} className="hover:text-blue-600 transition-colors">
+                {item.title}
+              </Link>
             </div>
 
             {/* Badges Row */}

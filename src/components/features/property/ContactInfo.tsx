@@ -10,7 +10,6 @@ interface ContactInfoProps {
     phone: string;
     email?: string;
     website?: string;
-    isAgent?: boolean;
   };
   propertyId?: string;
   className?: string;
@@ -20,9 +19,8 @@ const ContactInfo: React.FC<ContactInfoProps> = ({
   contactInfo = {
     name: 'Nguyễn Văn A',
     phone: '0962 560 xxx',
-    email: 'info@thenelsonresidences.com',
-    website: 'thenelsonresidences.com',
-    isAgent: true
+    email: 'info@prosai.vn',
+    website: 'prosai.vn',
   },
   className = ''
 }) => {
