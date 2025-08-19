@@ -11,7 +11,7 @@ const DesktopFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <AntFooter className="prosai-footer bg-[#F7F7F7] border-t border-[#E0E0E0] px-8 py-12 mt-10">
+    <AntFooter className="prosai-footer bg-[#F7F7F7] border-t border-[#E0E0E0] px-8 py-12">
       <div className="max-w-7xl mx-auto pt-1">
         <Row gutter={[32, 24]}>
           {/* Company Info */}

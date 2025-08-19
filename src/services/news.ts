@@ -1,61 +1,83 @@
-import { api, PaginatedResponse } from './api';
-import { NewsArticle, NewsCategory } from '@/types/api';
+import { apiClient } from './api';
 
-class NewsService {
-  // Get news articles with pagination
-  async getNews(params: {
-    page?: number;
-    limit?: number;
-    category?: NewsCategory;
-    search?: string;
-  } = {}): Promise<PaginatedResponse<NewsArticle>> {
-    const response = await api.get<PaginatedResponse<NewsArticle>>('/news', { params });
-    return response.data;
-  }
-
-  // Get single news article
-  async getArticle(id: string): Promise<NewsArticle> {
-    const response = await api.get<NewsArticle>(`/news/${id}`);
-    return response.data;
-  }
-
-  // Get featured news
-  async getFeaturedNews(limit: number = 5): Promise<NewsArticle[]> {
-    const response = await api.get<NewsArticle[]>(`/news/featured?limit=${limit}`);
-    return response.data;
-  }
-
-  // Get news by category
-  async getNewsByCategory(category: NewsCategory, params: {
-    page?: number;
-    limit?: number;
-  } = {}): Promise<PaginatedResponse<NewsArticle>> {
-    const response = await api.get<PaginatedResponse<NewsArticle>>(`/news/category/${category}`, { params });
-    return response.data;
-  }
-
-  // Get related news
-  async getRelatedNews(articleId: string, limit: number = 4): Promise<NewsArticle[]> {
-    const response = await api.get<NewsArticle[]>(`/news/${articleId}/related?limit=${limit}`);
-    return response.data;
-  }
-
-  // Search news
-  async searchNews(query: string, params: {
-    page?: number;
-    limit?: number;
-    category?: NewsCategory;
-  } = {}): Promise<PaginatedResponse<NewsArticle>> {
-    const searchParams = { query, ...params };
-    const response = await api.get<PaginatedResponse<NewsArticle>>('/news/search', { params: searchParams });
-    return response.data;
-  }
-
-  // Get news categories
-  async getCategories(): Promise<{ category: NewsCategory; name: string; count: number }[]> {
-    const response = await api.get<{ category: NewsCategory; name: string; count: number }[]>('/news/categories');
-    return response.data;
-  }
+export interface NewsCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  image_url: string;
+  sort_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string | null;
 }
 
-export const newsService = new NewsService();
+export interface NewsArticle {
+  id: string;
+  title: string;
+  slug: string;
+  summary: string;
+  content: string;
+  featured_image: string;
+  images: string[];
+  author: string;
+  view_count: number;
+  like_count: number;
+  is_featured: boolean;
+  is_published: boolean;
+  is_active: boolean;
+  published_at: string;
+  meta_tags: {
+    title: string;
+    keywords: string;
+    description: string;
+  };
+  category_id: string;
+  category: NewsCategory;
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface NewsResponse {
+  data: NewsArticle[];
+  total: number;
+  page: number;
+  pageCount: number;
+}
+
+// Fetch active news categories
+export const fetchNewsCategories = async (): Promise<NewsCategory[]> => {
+  try {
+    const response = await apiClient.get<NewsCategory[]>('/news-categories/active/all');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch news categories:', error);
+    throw new Error('Không thể tải danh mục tin tức');
+  }
+};
+
+// Fetch news by category
+export const fetchNewsByCategory = async (categoryId: string, page: number = 1, limit: number = 3, sortType: string = 'latest'): Promise<NewsResponse> => {
+  try {
+    const response = await apiClient.get<NewsResponse>(`/news/category/${categoryId}`, {
+      params: { page, limit, sort_type: sortType }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch news by category:', error);
+    throw new Error('Không thể tải tin tức');
+  }
+};
+
+// Fetch all news
+export const fetchAllNews = async (page: number = 1, limit: number = 7): Promise<NewsResponse> => {
+  try {
+    const response = await apiClient.get<NewsResponse>('/news', {
+      params: { page, limit }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch all news:', error);
+    throw new Error('Không thể tải tin tức');
+  }
+};

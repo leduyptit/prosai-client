@@ -165,7 +165,7 @@ const NewsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pb-10">
         {/* Breadcrumb */}
         <div className="bg-gray-50 p-3">
             <div className="responsive-container mx-auto px-4">
