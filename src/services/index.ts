@@ -1,9 +1,10 @@
-// Export all services
-export { api, apiClient } from './api';
+// Export services
 export { authService } from './auth';
 export { propertyService } from './property';
-export { newsService } from './news';
 export { userService } from './user';
 
+// Export news functions
+export { fetchNewsCategories, fetchNewsByCategory, fetchAllNews } from './news';
+
 // Export types
-export type { ApiResponse, PaginatedResponse } from './api';
+export type { NewsCategory, NewsArticle, NewsResponse } from './news';

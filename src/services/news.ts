@@ -70,10 +70,22 @@ export const fetchNewsByCategory = async (categoryId: string, page: number = 1, 
 };
 
 // Fetch all news
-export const fetchAllNews = async (page: number = 1, limit: number = 7): Promise<NewsResponse> => {
+export const fetchAllNews = async (
+  page: number = 1, 
+  limit: number = 10, 
+  sortType: string = 'LATEST',
+  isFeatured: boolean = false,
+  isPublished: boolean = true
+): Promise<NewsResponse> => {
   try {
     const response = await apiClient.get<NewsResponse>('/news', {
-      params: { page, limit }
+      params: { 
+        page, 
+        limit, 
+        sort_type: sortType,
+        is_featured: isFeatured,
+        is_published: isPublished
+      }
     });
     return response.data;
   } catch (error) {

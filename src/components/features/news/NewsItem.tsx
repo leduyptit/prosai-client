@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { NewsArticle } from '@/types';
+import { NewsArticle } from '@/services/news';
 
 interface NewsItemProps {
   article: NewsArticle;
@@ -28,7 +28,7 @@ const NewsItem: React.FC<NewsItemProps> = ({ article, className = '' }) => {
         {/* Image */}
         <div className="flex-shrink-0 col-span-4">
           <img
-            src={article.image || '/images/imgdemo_new@2x.png'}
+            src={article.featured_image || '/images/imgdemo_new@2x.png'}
             alt={article.title}
             className="w-full h-full object-cover rounded-lg"
             onError={(e) => {

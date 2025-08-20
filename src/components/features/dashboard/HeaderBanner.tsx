@@ -1,0 +1,291 @@
+'use client';
+
+import React from 'react';
+import { Input, Button } from 'antd';
+import Select from '@/components/ui/forms/Select';
+import { useRouter } from 'next/navigation';
+import { 
+  CITIES, 
+  PROPERTY_TYPES, 
+  PRICE_RANGES, 
+  AREA_RANGES, 
+  LISTING_TYPES
+} from '@/constants';
+import { StatisticsResponse } from '@/services/statistics';
+
+interface HeaderBannerProps {
+  activeTab: number;
+  searchForm: {
+    city: string;
+    keyword: string;
+    propertyType?: string;
+    listingType?: string;
+    priceRange?: string;
+    area?: string;
+    bedrooms?: string;
+    legal?: string;
+  };
+  statistics: StatisticsResponse | null;
+  loading: boolean;
+  error: string | null;
+  onTabChange: (index: number) => void;
+  onInputChange: (field: string, value: string | undefined) => void;
+  onSearch: () => void;
+}
+
+const HeaderBanner: React.FC<HeaderBannerProps> = ({
+  activeTab,
+  searchForm,
+  statistics,
+  loading,
+  error,
+  onTabChange,
+  onInputChange,
+  onSearch
+}) => {
+  const router = useRouter();
+
+  return (
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Video Background */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            // Fallback to image if video fails
+            const target = e.target as HTMLVideoElement;
+            target.style.display = 'none';
+            const fallbackDiv = target.nextElementSibling as HTMLDivElement;
+            if (fallbackDiv) {
+              fallbackDiv.style.display = 'block';
+            }
+          }}
+        >
+          <source src="/videos/bg_video.mp4" type="video/mp4" />
+          <source src="/videos/bg_video.webm" type="video/webm" />
+        </video>
+        
+        {/* Fallback Background Image */}
+        <div 
+          className="hidden w-full h-full bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/images/imgdemo_new@2x.png)'
+          }}
+        />
+        
+        {/* Overlay */}
+        <div className="absolute w-full h-full bg-black bg-opacity-50"></div>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen">
+        <div className="responsive-container mx-auto grid grid-cols-12 py-40 space-x-5">
+          {/* Left Content - Search Form */}
+          <div className="col-span-8 flex justify-center">
+            <div className="w-full max-w-2xl">
+              {/* Search Form Container */}
+              <div className="rounded-2xl shadow-lg p-8 mb-8 bg-[#DAE3EC] border-5 border-white">
+                <h2 className="text-2xl font-medium mb-6 text-left">
+                  Tìm kiếm BĐS
+                </h2>
+                {/* Listing Type Tabs */}
+                <div className="flex mb-6 border-b-2 border-white space-x-2">
+                  {LISTING_TYPES.map((type, index) => (
+                    <button
+                      key={type.value}
+                      onClick={() => onTabChange(index)}
+                      className={`flex-1 py-2 px-3 font-medium rounded-t-md transition-colors text-sm ${
+                        index === activeTab 
+                          ? 'bg-gray-800 text-white' 
+                          : 'bg-[#FFFFFF80] text-[#8D8DA1] border-t-1 border-r-1 border-l-1 border-white hover:bg-[#FFFFFFA0]'
+                      }`}
+                    >
+                      {type.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Location and Search Input */}
+                <div className="flex gap-3 mb-4 bg-white border border-[#C3C3C3] rounded-lg pr-1 pl-4">
+                  <div className="flex items-center">
+                    <img src="/svgs/address.svg" alt="location" className="w-4 h-4 mr-2" />
+                    <Select
+                      placeholder="Chọn vi trí"
+                      value={searchForm.city}
+                      variant="borderless"
+                      onChange={(value) => onInputChange('city', value)}
+                      className="border-none bg-white w-30"
+                      options={CITIES as any}
+                    />
+                  </div>
+                  
+                  <div className="flex-1 flex items-center">
+                    <img src="/svgs/icon_search.svg" className="w-5 h-5 mr-2" alt="search" />
+                    <Input
+                      placeholder="Nhập địa điểm, dự án, quận, huyện..."
+                      value={searchForm.keyword}
+                      onChange={(e) => onInputChange('keyword', e.target.value)}
+                      className="flex-1 rounded-r-none border-none bg-white focus:box-shadow-none"
+                      size="small"
+                      style={{
+                        border: 'none'
+                      }}
+                    />
+                    <Button
+                      type="primary"
+                      size="small"
+                      onClick={onSearch}
+                      className="rounded-l-none border-none text-white font-medium"
+                    >
+                      Tìm kiếm
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Filter Options */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  <Select
+                    placeholder="Loại hình"
+                    value={searchForm.propertyType}
+                    size="small"
+                    onChange={(value) => onInputChange('propertyType', value)}
+                    className="w-full placeholder:text-[#8D8DA1] bg-white border-[#C3C3C3] rounded-lg"
+                    options={PROPERTY_TYPES as any}
+                  />
+                  <Select
+                    placeholder="Mức giá"
+                    value={searchForm.priceRange}
+                    size="small"
+                    onChange={(value) => onInputChange('priceRange', value)}
+                    className="w-full placeholder:text-[#8D8DA1] bg-white border-[#C3C3C3] rounded-lg"
+                    options={PRICE_RANGES as any}
+                  />
+                  <Select
+                    placeholder="Diện tích"
+                    value={searchForm.area}
+                    size="small"
+                    onChange={(value) => onInputChange('area', value)}
+                    className="w-full placeholder:text-[#8D8DA1] bg-white border-[#C3C3C3] rounded-lg"
+                    options={AREA_RANGES as any}
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-4 justify-center">
+                <Button
+                  size="large"
+                  className="create-post-button text-white border-none px-8 py-3 font-medium"
+                  icon={<img src="/svgs/icon_post.svg" className="w-8 h-8" alt="create-post" />}
+                  style={{
+                    background: 'transparent linear-gradient(270deg, #FFAA22 0%, #FC7400 100%) 0% 0% no-repeat padding-box',
+                    color: '#FFFFFF',
+                    height: '56px',
+                    minWidth: '172px',
+                  }}
+                >
+                  Đăng tin bán
+                </Button>
+                <Button
+                  size="large"
+                  className="ai-consult-button text-white border-none px-8 py-3 font-medium"
+                  icon={<img src="/svgs/icon_ai.svg" className="w-8 h-8" alt="ai-consult" />}
+                  style={{
+                    background: 'transparent linear-gradient(270deg, #007AFF 0%, #0056B3 100%) 0% 0% no-repeat padding-box',
+                    color: '#FFFFFF',
+                    height: '56px',
+                    minWidth: '172px',
+                  }}
+                >
+                  Tư vấn AI
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar - Statistics */}
+          <div className="col-span-4">
+            <div className="rounded-xl p-5 text-white relative">
+                <div className="absolute top-0 left-0 w-full h-full bg-blue-600 rounded-xl px-10 py-6 text-white border-3 border-[#0080FF] z-0" style={{
+                  background: 'transparent linear-gradient(180deg, #0080FF 0%, #0056B3 100%) 0% 0% no-repeat padding-box',
+                  color: '#FFFFFF',
+                  opacity: 0.9,
+                }}></div>
+              {/* Header */}
+              <div className="text-center mb-6 border-b border-[#C3C3C3] pb-6 relative z-10">
+                <h3 className="text-lg font-medium mb-2">
+                  Thị trường nhà đất hôm nay {statistics?.data.date || new Date().toLocaleDateString('vi-VN')}
+                </h3>
+                {error && (
+                  <div className="mb-4 p-2 bg-red-500/20 border border-red-500/30 rounded text-sm text-red-200">
+                    {error}
+                  </div>
+                )}
+                <div className="space-y-1 text-sm text-left">
+                  <div className="flex items-center justify-start gap-2">
+                    <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
+                    <span>Nhà bán với giá trị thực tế: <span className="font-bold text-[#FFAA22]">{loading ? '...' : statistics?.data.market.real_value.toLocaleString() || '19,000'}</span></span>
+                  </div>
+                  <div className="flex items-center justify-start gap-2">
+                    <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
+                    <span>Khoảng cách giao với giá thực tế: <span className="font-bold text-[#FFAA22]">{loading ? '...' : statistics?.data.market.transaction_gap.toLocaleString() || '5,000'}</span></span>
+                  </div>
+                  <div className="flex items-center justify-start gap-2">
+                    <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
+                    <span>Mức độ quan tâm: {loading ? '...' : statistics?.data.market.interest_rate_change || '+18%'} so với hôm qua</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Statistics Cards */}
+              <div className="mb-2 relative z-10">
+                {/* Card 1 */}
+                <div className="text-center mb-0">
+                  <h4 className="text-lg font-medium mb-2">Các con số ấn tượng</h4>
+                  <div className="grid grid-cols-2">
+                    <div className="text-center p-4 border-r border-b border-dashed border-[#C3C3C3]">
+                      <div className="text-xl font-medium text-[#FFAA22] mb-2">
+                        {loading ? '...' : statistics?.data.highlights.buyers.toLocaleString() || '1 triệu'}
+                      </div>
+                      <div className="text-xs">Tin mua bán/ cho thuê nhà trọ</div>
+                    </div>
+                    <div className="text-center p-4 border-b border-dashed border-[#C3C3C3]">
+                      <div className="text-xl font-medium text-[#FFAA22] mb-2">
+                        {loading ? '...' : statistics?.data.highlights.potential_customers.toLocaleString() || '100,000'}
+                      </div>
+                      <div className="text-xs">Khách hàng tiềm năng</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 2 */}
+                <div className="text-center">
+                  <div className="grid grid-cols-2">
+                    <div className="text-center p-4 border-r border-dashed border-[#C3C3C3]">
+                      <div className="text-xl font-medium text-[#FFAA22] mb-2">
+                        {loading ? '...' : statistics?.data.highlights.ai_matching_accuracy || '100%'}
+                      </div>
+                      <div className="text-xs">Ứng dụng AI tìm nhà phù hợp theo yêu cầu</div>
+                    </div>
+                    <div className="text-center p-4 border-dashed border-[#C3C3C3]">
+                      <div className="text-xl font-medium text-[#FFAA22] mb-2">
+                        {loading ? '...' : statistics?.data.highlights.matching_speed || '1s'}
+                      </div>
+                      <div className="text-xs">Hiển thị kết quả phù hợp với bạn</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HeaderBanner;

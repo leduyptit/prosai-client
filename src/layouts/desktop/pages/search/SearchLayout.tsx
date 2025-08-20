@@ -223,7 +223,7 @@ const SearchLayout: React.FC = () => {
   console.log('Render state - loading:', loading, 'properties length:', properties.length, 'totalCount:', totalCount);
 
   return (
-    <div className="search-layout">
+    <div className="search-layout pb-10">
       <div className="full-width bg-[#FAFAFA] py-8 mb-5">
         <div className="responsive-container">
           {/* Filters section (top) */}

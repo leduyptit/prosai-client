@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
   prosai-client-dev:
     build:
       context: .
       dockerfile: Dockerfile.dev
     container_name: prosai-client-dev
-    ports:
-      - "3001:3000"
+    # ports:
+    #   - "3001:3000"
     volumes:
       - .:/app
       - /app/node_modules
@@ -17,32 +15,14 @@ services:
       - NEXT_TELEMETRY_DISABLED=1
     env_file:
       - .env.local
-      - .env
     networks:
-      - prosai-network
+      prosai-network:
+        ipv4_address: 10.10.10.60
     restart: unless-stopped
     stdin_open: true
     tty: true
 
-  # Optional: Add a database service if needed
-  # postgres:
-  #   image: postgres:15-alpine
-  #   container_name: prosai-postgres
-  #   environment:
-  #     POSTGRES_DB: prosai
-  #     POSTGRES_USER: prosai_user
-  #     POSTGRES_PASSWORD: prosai_password
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   networks:
-  #     - prosai-network
-  #   restart: unless-stopped
-
 networks:
   prosai-network:
-    driver: bridge
-
-# volumes:
-#   postgres_data:
+    external: true
+    name: prosai-network 

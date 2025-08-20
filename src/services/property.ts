@@ -1,5 +1,5 @@
 import { api, apiClient, PaginatedResponse } from './api';
-import { Property, PropertySearchParams } from '@/types/api';
+import { Property, PropertySearchParams, PropertyRankingItem } from '@/types/api';
 
 class PropertyService {
   // Get properties with filters and pagination
@@ -143,6 +143,73 @@ class PropertyService {
       contactInfo,
     });
     return response.data;
+  }
+
+  // Get property ranking data from ProSai API
+  async getPropertyRanking(type: 'latest_sale' | 'latest_rent', limit: number = 8): Promise<PropertyRankingItem[]> {
+    try {
+      const response = await apiClient.get(`/property-ranking/realestate-for-you`, {
+        params: { type, limit }
+      });
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Error fetching property ranking:', error);
+      throw error;
+    }
+  }
+
+  // Get top properties ranking with pagination
+  async getTopProperties(page: number = 1, limit: number = 8): Promise<{ data: PropertyRankingItem[]; total: number; page: number; pageCount: number }> {
+    try {
+      const response = await apiClient.get(`/property-ranking/realestate-top`, {
+        params: { page, limit }
+      });
+      return {
+        data: response.data.data || [],
+        total: response.data.total || 0,
+        page: response.data.page || page,
+        pageCount: response.data.pageCount || 0
+      };
+    } catch (error) {
+      console.error('Error fetching top properties:', error);
+      throw error;
+    }
+  }
+
+  // Get high-rated properties ranking with pagination
+  async getHighRatedProperties(page: number = 1, limit: number = 8): Promise<{ data: PropertyRankingItem[]; total: number; page: number; pageCount: number }> {
+    try {
+      const response = await apiClient.get(`/property-ranking/realestate-highrated`, {
+        params: { page, limit }
+      });
+      return {
+        data: response.data.data || [],
+        total: response.data.total || 0,
+        page: response.data.page || page,
+        pageCount: response.data.pageCount || 0
+      };
+    } catch (error) {
+      console.error('Error fetching high-rated properties:', error);
+      throw error;
+    }
+  }
+
+  // Get AI suggested properties ranking with pagination
+  async getAISuggestedProperties(page: number = 1, limit: number = 8): Promise<{ data: PropertyRankingItem[]; total: number; page: number; pageCount: number }> {
+    try {
+      const response = await apiClient.get(`/property-ranking/realestate-ai-suggest`, {
+        params: { page, limit }
+      });
+      return {
+        data: response.data.data || [],
+        total: response.data.total || 0,
+        page: response.data.page || page,
+        pageCount: response.data.pageCount || 0
+      };
+    } catch (error) {
+      console.error('Error fetching AI suggested properties:', error);
+      throw error;
+    }
   }
 }
 

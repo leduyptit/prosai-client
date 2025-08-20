@@ -334,3 +334,20 @@ export interface ResponseConfig {
   headers: Record<string, string>;
   config: RequestConfig;
 }
+
+export interface PropertyRankingItem {
+  id: string;
+  id_social: string;
+  user_id_social: string;
+  user_name_social: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+  user_id: string | null;
+  title: string;
+  price: number[];
+  price_all: number[];
+  area: number[];
+  address: string | null;
+  images: string[];
+}

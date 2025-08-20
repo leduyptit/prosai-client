@@ -1,11 +1,14 @@
-// Auth features
+// Auth components
 export * from './auth';
 
-// Property features  
-export * from './property';
-
-// Account features
+// Account components
 export * from './account';
 
-// News features
+// Property components
+export * from './property';
+
+// News components
 export * from './news';
+
+// Dashboard components
+export * from './dashboard';
