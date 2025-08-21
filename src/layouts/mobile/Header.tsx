@@ -13,6 +13,7 @@ import {
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import type { MenuProps } from 'antd';
+import { APP_CONFIG } from '@/utils/env';
 
 const { Header: AntHeader } = Layout;
 
@@ -62,7 +63,7 @@ const MobileHeader: React.FC = () => {
 
   return (
     <>
-      <AntHeader className="bg-white border-b border-gray-200 px-4 h-16 flex items-center justify-between">
+      <AntHeader className="bg-white border-b border-gray-200 px-4 h-16 flex items-center justify-between space-x-5" style={{ padding: '0 15px' }}>
         {/* Left - Menu */}
         <Button
           type="text"
@@ -72,7 +73,7 @@ const MobileHeader: React.FC = () => {
         />
 
         {/* Center - Logo */}
-        <Link href="/">
+        <Link href={APP_CONFIG.homeUrl}>
           <img src="/svgs/top_logo.svg" alt="logo" className="h-8" />
         </Link>
 
@@ -118,7 +119,7 @@ const MobileHeader: React.FC = () => {
         className="mobile-drawer"
       >
         <div className="flex flex-col space-y-1 px-6 py-6">
-          <Link href="/" onClick={onClose} className="text-gray-700 py-2">
+          <Link href={APP_CONFIG.homeUrl} onClick={onClose} className="text-gray-700 py-2">
             Trang chủ
           </Link>
           <Link href="/property" onClick={onClose} className="text-gray-700 py-2">

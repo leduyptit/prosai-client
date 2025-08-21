@@ -9,7 +9,6 @@ import { fetchStatistics, StatisticsResponse } from '@/services/statistics';
 import { fetchNewsCategories, fetchNewsByCategory, NewsCategory, NewsArticle } from '@/services/news';
 import { propertyService } from '@/services/property';
 import { PropertyRankingItem } from '@/types/api';
-import { formatRelativeTime } from '@/utils/format';
 
 // Import dashboard components
 import {

@@ -19,6 +19,7 @@ import RegisterModal from '@/components/features/auth/register/RegisterModal';
 import ForgotPasswordModal from '@/components/features/auth/forgot-password/ForgotPasswordModal';
 import { APP_CONFIG } from '@/utils/env';
 
+
 const { Header: AntHeader } = Layout;
 
 const DesktopHeader: React.FC = () => {
@@ -112,38 +113,38 @@ const DesktopHeader: React.FC = () => {
         <div className="flex items-center space-x-3">
           {/* Logo */}
           {/* utils env APP_CONFIG.name */}
-          <Link href={APP_CONFIG.homeUrl}><Image src="/svgs/top_logo.svg" alt={APP_CONFIG.name} width={160} height={40} className="w-40" /></Link>
+          <Link href={APP_CONFIG.homeUrl}><Image src="/svgs/top_logo.svg" alt={APP_CONFIG.name} width={120} height={40} className="w-30" /></Link>
         </div>
 
         {/* Navigation Menu */}
-        <div className="flex items-center space-0">
-          <Button type="text" className="font-medium">
+        <div className="flex items-center space-x-5">
+          <Link href="/search?type=sale" type="text" className="font-medium">
             Rao bán
-          </Button>
-          <Button type="text" className="font-medium px-0">
+          </Link>
+          <Link href="/search?type=rent" type="text" className="font-medium">
             Cho thuê
-          </Button>
-          <Button type="text" className="font-medium">
+          </Link>
+          <Link href="/search?type=rent" type="text" className="font-medium">
             Cần thuê
-          </Button>
-          <Button type="text" className="font-medium">
+          </Link>
+          <Link href="/search?type=sale" type="text" className="font-medium">
             Cần mua
-          </Button>
-          <Button type="text" className="font-medium">
+          </Link>
+          <Link href="/search?type=unknown" type="text" className="font-medium">
             Chưa rõ
-          </Button>
-          <Button type="text" className="font-medium">
+          </Link>
+          <Link href="/search?type=rating" type="text" className="font-medium">
             Xếp hạng
-          </Button>
-          <Button type="text" className="font-medium">
+          </Link>
+          <Link href="/news" type="text" className="font-medium">
             Tin tức
-          </Button>
-          <Button type="text" className="font-medium">
+          </Link>
+          <Link href="/project" type="text" className="font-medium">
             Dự án
-          </Button>
-          <Button type="text" className="font-medium">
+          </Link>
+          <Link href="/chat-ai" type="text" className="font-medium">
             Chat AI
-          </Button>
+          </Link>
         </div>
       </div>
 
@@ -204,6 +205,7 @@ const DesktopHeader: React.FC = () => {
             <Button 
               type="text" 
               className="bg-blue-600 hover:bg-blue-700 text-white"
+              style={{ margin: '0' }}
               onClick={handleOpenLoginModal}
             >
               Đăng nhập
@@ -211,12 +213,13 @@ const DesktopHeader: React.FC = () => {
             <Button 
               type="text" 
               className="bg-blue-600 hover:bg-blue-700 text-white"
+              style={{ margin: '0' }}
               onClick={handleOpenRegisterModal}
             >
               Đăng ký
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-              <Image src="/svgs/icon_download_app.svg" alt="download" width={20} height={20} className="h-5 mr-2" />
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white" style={{ margin: '0' }}>
+              <Image src="/svgs/icon_download_app.svg" alt="download" width={20} height={20} className="h-5" />
               Tải ứng dụng
             </Button>
           </>

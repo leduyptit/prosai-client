@@ -30,7 +30,7 @@ const useDevice = (): UseDeviceReturn => {
 
       if (width < 768) {
         setDeviceType('mobile');
-      } else if (width >= 768 && width < 1024) {
+      } else if (width >= 768 && width < 1280) {
         setDeviceType('tablet');
       } else {
         setDeviceType('desktop');
