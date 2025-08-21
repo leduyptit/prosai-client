@@ -4,12 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/buttons';
 import { Breadcrumb } from '@/components/ui/navigation';
-import { ProtectedRoute } from '@/components/shared';
+import { APP_CONFIG } from '@/utils/env';
 
 const AboutPage: React.FC = () => {
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white">
       {/* Hero Banner */}
       <div 
         className="relative h-[225px] overflow-hidden"
@@ -26,10 +25,7 @@ const AboutPage: React.FC = () => {
               className="text-sm"
               items={[
                 {
-                  title: <Link href="/" className="text-gray-600 hover:text-blue-600">Trang chủ</Link>,
-                },
-                {
-                  title: <Link href="/account-overview" className="text-gray-600 hover:text-blue-600">Tổng quan tài khoản</Link>,
+                  title: <Link href={APP_CONFIG.homeUrl} className="text-gray-600 hover:text-blue-600">Trang chủ</Link>,
                 },
                 {
                   title: <span className="text-gray-900">Giới thiệu</span>,
@@ -78,22 +74,21 @@ const AboutPage: React.FC = () => {
         </div>
       </div>
 
-        {/* CTA Button */}
-        <div className="pt-6 flex justify-center">
-            <Link href="/">
-                <Button 
-                    size="large"
-                    className="custom-button"
-                    style={{
-                        color: '#fff',
-                    }}
-                >
-                  VỀ TRANG CHỦ
-                </Button>
-            </Link>
-        </div>
+      {/* CTA Button */}
+      <div className="pt-6 flex justify-center">
+          <Link href="/">
+              <Button 
+                  size="large"
+                  className="custom-button"
+                  style={{
+                      color: '#fff',
+                  }}
+              >
+                VỀ TRANG CHỦ
+              </Button>
+          </Link>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 };
 

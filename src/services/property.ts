@@ -211,6 +211,51 @@ class PropertyService {
       throw error;
     }
   }
+
+  // Get related properties by owner
+  async getRelatedPropertiesByOwner(userId?: string, userIdSocial?: string, limit: number = 10): Promise<PropertyRankingItem[]> {
+    try {
+      const params: any = { limit };
+      
+      if (userId) {
+        params.user_id = userId;
+      }
+      
+      if (userIdSocial) {
+        params.user_id_social = userIdSocial;
+      }
+
+      const response = await apiClient.get(`/property-related/realestate-by-owner`, {
+        params
+      });
+      
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Error fetching related properties by owner:', error);
+      throw error;
+    }
+  }
+
+  // Get recommended properties based on property characteristics
+  async getRecommendedProperties(params: {
+    num_bedrooms?: number;
+    property_type?: number;
+    listing_type?: number;
+    legal_status?: number;
+    city?: string;
+    limit?: number;
+  } = {}): Promise<PropertyRankingItem[]> {
+    try {
+      const response = await apiClient.get(`/property-related/realestate-recommend`, {
+        params
+      });
+      
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Error fetching recommended properties:', error);
+      throw error;
+    }
+  }
 }
 
 export const propertyService = new PropertyService();

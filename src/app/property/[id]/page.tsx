@@ -6,9 +6,10 @@ import { ImageGallery } from '@/components/ui';
 import { ContactSidebar, PropertyInfo, PropertyMap, PropertyDetails, ContactInfo, RelatedProperties } from '@/components/features/property';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { getPropertyById } from '@/services/property';
-import { formatPrice, formatArea, formatRelativeTime, formatDateTime } from '@/utils/format';
+import { getPropertyById, propertyService } from '@/services/property';
+import { formatPrice, formatArea, formatDateTime } from '@/utils/format';
 import { Loading } from '@/components/ui/feedback';
+import { APP_CONFIG } from '@/utils/env';
 
 const PropertyDetailPage: React.FC = () => {
   const params = useParams();
@@ -17,6 +18,10 @@ const PropertyDetailPage: React.FC = () => {
   const [property, setProperty] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [relatedProperties, setRelatedProperties] = useState<any[]>([]);
+  const [relatedPropertiesLoading, setRelatedPropertiesLoading] = useState(false);
+  const [recommendedProperties, setRecommendedProperties] = useState<any[]>([]);
+  const [recommendedPropertiesLoading, setRecommendedPropertiesLoading] = useState(false);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -37,6 +42,90 @@ const PropertyDetailPage: React.FC = () => {
       fetchProperty();
     }
   }, [propertyId]);
+
+  // Load related properties when property data is available
+  useEffect(() => {
+    const fetchRelatedProperties = async () => {
+      if (!property) return;
+      
+      try {
+        setRelatedPropertiesLoading(true);
+        
+        // Get related properties by owner using user_id and user_id_social from property
+        const relatedData = await propertyService.getRelatedPropertiesByOwner(
+          property.user_id,
+          property.user_id_social,
+          10
+        );
+        
+        setRelatedProperties(relatedData);
+      } catch (error) {
+        console.error('Error fetching related properties:', error);
+        // Set empty array on error to prevent undefined errors
+        setRelatedProperties([]);
+      } finally {
+        setRelatedPropertiesLoading(false);
+      }
+    };
+
+    const fetchRecommendedProperties = async () => {
+      if (!property) return;
+      
+      try {
+        setRecommendedPropertiesLoading(true);
+        
+        // Extract property characteristics for recommendation
+        const recommendationParams: any = {
+          limit: 10
+        };
+        
+        // Add bedrooms if available
+        // if (property.bedrooms) {
+        //   recommendationParams.num_bedrooms = property.bedrooms;
+        // }
+        
+        // Add property type if available (assuming property has property_type field)
+        if (property.property_type) {
+          recommendationParams.property_type = property.property_type;
+        }
+        
+        // Add listing type if available (assuming property has listing_type field)
+        if (property.listing_type) {
+          recommendationParams.listing_type = property.listing_type;
+        }
+        
+        // Add legal status if available (assuming property has legal_status field)
+        if (property.legal_status) {
+          recommendationParams.legal_status = property.legal_status;
+        }
+        
+        // Add city if available
+        if (property.city) {
+          recommendationParams.city = property.city;
+        } else if (property.address) {
+          // Try to extract city from address
+          const addressParts = property.address.split(',');
+          if (addressParts.length > 0) {
+            recommendationParams.city = addressParts[addressParts.length - 1].trim();
+          }
+        }
+        
+        // Get recommended properties based on property characteristics
+        const recommendedData = await propertyService.getRecommendedProperties(recommendationParams);
+        
+        setRecommendedProperties(recommendedData);
+      } catch (error) {
+        console.error('Error fetching recommended properties:', error);
+        // Set empty array on error to prevent undefined errors
+        setRecommendedProperties([]);
+      } finally {
+        setRecommendedPropertiesLoading(false);
+      }
+    };
+
+    fetchRelatedProperties();
+    fetchRecommendedProperties();
+  }, [property]);
 
   if (loading) {
     return (
@@ -67,70 +156,6 @@ const PropertyDetailPage: React.FC = () => {
     '/images/imgdemo_new@2x.png',
   ];
 
-  const mockContact = {
-    name: 'Nguyễn Văn Minh',
-    phone: '0901234567',
-    avatar: '',
-    isAgent: true
-  };
-
-  const mockMapData = {
-    address: 'Phố Trần Duy Hưng, Ba Đình, Hà Nội',
-    lat: 21.0285,
-    lng: 105.8542
-  };
-
-  const mockRelatedProperties = [
-    {
-      id: '1',
-      title: 'Căn hộ Vinhomes Metropolis',
-      price: '9.8 tỷ',
-      area: 90,
-      location: 'Quận Ba Đình',
-      url: '/property/vinhomes-metropolis-1'
-    },
-    {
-      id: '2',
-      title: 'Căn hộ D\'. El Dorado Tây Hồ',
-      price: '7.5 tỷ',
-      area: 78,
-      location: 'Quận Tây Hồ',
-      url: '/property/el-dorado-tay-ho-2'
-    },
-    {
-      id: '3',
-      title: 'Chung cư Lancaster Núi Trúc',
-      price: '8.9 tỷ',
-      area: 85,
-      location: 'Quận Đống Đa',
-      url: '/property/lancaster-nui-truc-3'
-    },
-    {
-      id: '4',
-      title: 'Căn hộ Vinhomes Metropolis',
-      price: '9.8 tỷ',
-      area: 90,
-      location: 'Quận Ba Đình',
-      url: '/property/vinhomes-metropolis-4'
-    },
-    {
-      id: '5',
-      title: 'Căn hộ D\'. El Dorado Tây Hồ',
-      price: '7.5 tỷ',
-      area: 78,
-      location: 'Quận Tây Hồ',
-      url: '/property/el-dorado-tay-ho-5'
-    },
-    {
-      id: '6',
-      title: 'Chung cư Lancaster Núi Trúc',
-      price: '8.9 tỷ',
-      area: 85,
-      location: 'Quận Đống Đa',
-      url: '/property/lancaster-nui-truc-6'
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
@@ -141,7 +166,7 @@ const PropertyDetailPage: React.FC = () => {
             className="text-sm"
             items={[
               {
-                title: <Link href="/" className="text-gray-600 hover:text-blue-600">Trang chủ</Link>,
+                title: <Link href={APP_CONFIG.homeUrl} className="text-gray-600 hover:text-blue-600">Trang chủ</Link>,
               },
               {
                 title: <Link href="/search" className="text-gray-600 hover:text-blue-600">Tìm kiếm</Link>,
@@ -226,17 +251,19 @@ const PropertyDetailPage: React.FC = () => {
                 className="mb-6"
               />
               
-              {/* Related Properties */}
+              {/* Recommended Properties */}
               <RelatedProperties 
                 className="mb-6"
                 title="BĐS gợi ý tương tự"
-                properties={mockRelatedProperties}
+                properties={recommendedProperties}
+                loading={recommendedPropertiesLoading}
               />
 
-              {/* Related Properties - Similar */}
+              {/* Related Properties - Same Owner */}
               <RelatedProperties 
                 title="BĐS cùng chủ sở hữu"
-                properties={mockRelatedProperties.slice(0, 3)}
+                properties={relatedProperties.slice(0, 3)}
+                loading={relatedPropertiesLoading}
               />
             </div>
           </div>

@@ -5,6 +5,7 @@ import { AccountSidebar, PostFilters, PostsTable } from '@/components/features/a
 import { Breadcrumb } from '@/components/ui/navigation';
 import { ProtectedRoute } from '@/components/shared';
 import Link from 'next/link';
+import { APP_CONFIG } from '@/utils/env';
 
 interface PostData {
   id: string;
@@ -98,7 +99,7 @@ const PostManagerPage: React.FC = () => {
             className="text-sm"
             items={[
               {
-                title: <Link href="/" className="text-gray-600 hover:text-blue-600">Trang chủ</Link>,
+                title: <Link href={APP_CONFIG.homeUrl} className="text-gray-600 hover:text-blue-600">Trang chủ</Link>,
               },
               {
                 title: <Link href="/account-overview" className="text-gray-600 hover:text-blue-600">Tổng quan tài khoản</Link>,

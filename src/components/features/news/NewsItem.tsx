@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { NewsArticle } from '@/services/news';
+import { ShortIdUtil } from '@/utils/uuid';
 
 interface NewsItemProps {
   article: NewsArticle;
@@ -21,10 +22,10 @@ const NewsItem: React.FC<NewsItemProps> = ({ article, className = '' }) => {
 
   return (
     <Link
-      href={`/news/${article.id}`}
+      href={`/news/${article.slug}-${ShortIdUtil.encode(article.id)}`}
       className={`block hover:bg-gray-50 transition-colors duration-200 ${className}`}
     >
-      <div className="flex gap-4 py-4 border-b border-gray-100 grid grid-cols-12 items-center">
+      <div className="flex gap-4 py-4 grid grid-cols-12 items-center">
         {/* Image */}
         <div className="flex-shrink-0 col-span-4">
           <img

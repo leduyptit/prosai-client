@@ -5,6 +5,7 @@ import { AccountSidebar, MembershipPlanCard } from '@/components/features/accoun
 import { Breadcrumb } from '@/components/ui/navigation';
 import { ProtectedRoute } from '@/components/shared';
 import Link from 'next/link';
+import { APP_CONFIG } from '@/utils/env';
 
 const MembershipPage: React.FC = () => {
   const membershipPlans = [
@@ -60,7 +61,7 @@ const MembershipPage: React.FC = () => {
             className="text-sm"
             items={[
               {
-                title: <Link href="/" className="text-gray-600 hover:text-blue-600">Trang chủ</Link>,
+                title: <Link href={APP_CONFIG.homeUrl} className="text-gray-600 hover:text-blue-600">Trang chủ</Link>,
               },
               {
                 title: <Link href="/account-overview" className="text-gray-600 hover:text-blue-600">Tổng quan tài khoản</Link>,

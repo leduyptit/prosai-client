@@ -5,6 +5,7 @@ import { AccountSidebar, MembershipCard, StatsOverview } from '@/components/feat
 import { Breadcrumb } from '@/components/ui/navigation';
 import { ProtectedRoute } from '@/components/shared';
 import Link from 'next/link';
+import { APP_CONFIG } from '@/utils/env';
 
 const AccountOverviewPage: React.FC = () => {
   return (
@@ -18,7 +19,7 @@ const AccountOverviewPage: React.FC = () => {
                     className="text-sm"
                     items={[
                         {
-                            title: <Link href="/" className="text-gray-600 hover:text-blue-600">Trang chủ</Link>,
+                            title: <Link href={APP_CONFIG.homeUrl} className="text-gray-600 hover:text-blue-600">Trang chủ</Link>,
                         },
                         {
                             title: <span className="text-gray-900">Hồ sơ tài khoản</span>,

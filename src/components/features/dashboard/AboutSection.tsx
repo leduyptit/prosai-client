@@ -41,7 +41,7 @@ const AboutSection: React.FC = () => {
                 {/* CTA Button */}
                 <div className="flex justify-end">
                   <Link
-                    href="/account-overview/about"
+                    href="/about"
                     className="border-none flex items-center gap-2 text-white"
                     style={{
                       color: '#FFFFFF',

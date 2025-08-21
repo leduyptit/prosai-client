@@ -22,6 +22,7 @@ export interface NewsArticle {
   images: string[];
   author: string;
   view_count: number;
+  views?: number; // Alternative field name for view count
   like_count: number;
   is_featured: boolean;
   is_published: boolean;
@@ -91,5 +92,29 @@ export const fetchAllNews = async (
   } catch (error) {
     console.error('Failed to fetch all news:', error);
     throw new Error('Không thể tải tin tức');
+  }
+};
+
+// Fetch most viewed news
+export const fetchMostViewedNews = async (limit: number = 10): Promise<NewsArticle[]> => {
+  try {
+    const response = await apiClient.get<NewsArticle[]>('/news/most-viewed', {
+      params: { limit }
+    });
+    return response.data || [];
+  } catch (error) {
+    console.error('Failed to fetch most viewed news:', error);
+    throw new Error('Không thể tải tin tức xem nhiều nhất');
+  }
+};
+
+// Fetch news detail by ID
+export const fetchNewsDetail = async (articleId: string): Promise<NewsArticle> => {
+  try {
+    const response = await apiClient.get<NewsArticle>(`/news/${articleId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch news detail:', error);
+    throw new Error('Không thể tải chi tiết bài viết');
   }
 };

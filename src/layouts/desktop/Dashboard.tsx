@@ -111,7 +111,7 @@ const DesktopDashboard: React.FC = () => {
     }
     
     // Navigate to search page with parameters
-    const searchUrl = `/demos/search-demo${params.toString() ? `?${params.toString()}` : ''}`;
+    const searchUrl = `/search${params.toString() ? `?${params.toString()}` : ''}`;
     router.push(searchUrl);
   };
 

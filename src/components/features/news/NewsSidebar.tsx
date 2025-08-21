@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { NewsSummary } from '@/types';
+import { ShortIdUtil } from '@/utils/uuid';
 
 interface NewsSidebarProps {
   title?: string;
@@ -39,7 +40,7 @@ const NewsSidebar: React.FC<NewsSidebarProps> = ({
           return (
             <Link
               key={article.id}
-              href={article.url || `/news/${article.id}`}
+              href={article.url || `/news/${ShortIdUtil.encode(article.id)}`}
               className="block hover:bg-gray-50 p-2 rounded transition-colors duration-200"
             >
             <div className={`flex items-start gap-1 ${border} pb-2`}>
@@ -48,6 +49,7 @@ const NewsSidebar: React.FC<NewsSidebarProps> = ({
                 <h4 className="text-sm font-medium text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors mb-1">
                   {article.title}
                 </h4>
+                <p className="text-xs text-[#8D8DA1]">Ngày đăng: {formatDate(new Date(article.publishedAt))}</p>
               </div>
             </div>
           </Link>

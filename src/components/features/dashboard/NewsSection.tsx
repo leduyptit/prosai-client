@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { NewsCategory, NewsArticle } from '@/services/news';
 import { formatRelativeTime } from '@/utils/format';
 import { EmptyState } from '@/components/shared/empty-states';
+import { ShortIdUtil } from '@/utils/uuid';
 
 interface NewsSectionProps {
   activeNewsTab: number;
@@ -131,7 +132,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({
                 </div>
                 <div className="py-6">
                   <h3 className="text-xl font-medium mb-2">
-                    <Link href={`/news/${newsData[activeNewsTab]?.[0]?.id}`}>
+                    <Link href={`/news/${newsData[activeNewsTab]?.[0]?.slug}-${ShortIdUtil.encode(newsData[activeNewsTab]?.[0]?.id || '')}`}>
                       {newsData[activeNewsTab]?.[0]?.title || 'Tiêu đề đang cập nhật...'}
                     </Link>
                   </h3>
@@ -160,7 +161,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({
                   <div key={index}>
                     <div className="items-center border-b border-gray-200">
                       <h4 className="text-lg font-medium line-clamp-2">
-                        <Link href={`/news/${article.id}`}>
+                        <Link href={`/news/${article.slug}-${ShortIdUtil.encode(article.id)}`}>
                           {article.title}
                         </Link>
                       </h4>

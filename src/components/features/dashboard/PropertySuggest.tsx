@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { PropertyRankingItem } from '@/types/api';
 import { formatPrice, formatRelativeTime } from '@/utils/format';
+import Link from 'next/link';
 
 interface PropertySuggestProps {
   activePropertySliderTab: 'sale' | 'rent';
@@ -129,9 +130,11 @@ const PropertySuggest: React.FC<PropertySuggestProps> = ({
                       </div>
                     </div>
                     <div className="p-4">
-                      <h3 className="text-lg font-medium mb-2 line-clamp-2 text-[#1D1D44]">
-                        {displayProperty.title}
-                      </h3>
+                      <Link href={`/property/${displayProperty.id}`}>
+                        <h3 className="text-lg font-medium mb-2 line-clamp-2 text-[#1D1D44]">
+                          {displayProperty.title}
+                        </h3>
+                      </Link>
                       <div className="text-sm mb-3">
                         {displayProperty.price} • {displayProperty.area}
                       </div>

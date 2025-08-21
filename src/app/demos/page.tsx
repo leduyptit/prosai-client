@@ -26,7 +26,7 @@ const demos = [
   {
     title: 'Search Demo',
     description: 'Demo tính năng tìm kiếm',
-    path: '/demos/search-demo',
+    path: '/search',
     category: 'Features',
     icon: '🔍'
   },
@@ -85,7 +85,7 @@ const demos = [
     path: '/demos/direct-api-demo',
     category: 'Development',
     icon: '🔌'
-  }
+  },
 ];
 
 const categories = ['All', 'Authentication', 'UI/UX', 'Features', 'Components', 'Development'];
