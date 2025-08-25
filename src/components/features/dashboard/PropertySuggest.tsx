@@ -52,7 +52,7 @@ const PropertySuggest: React.FC<PropertySuggestProps> = ({
     <div className="full-width bg-gray-50 py-16">
       <div className="responsive-container">
         {/* Section Header with Title and Tabs */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="md:flex justify-between items-center mb-8">
           <div>
             <h2 className="text-3xl font-medium text-[#1D1D44] mb-2 border-l-5 border-[#1D1D44] pl-4">
               Bất động sản dành cho bạn
@@ -61,7 +61,7 @@ const PropertySuggest: React.FC<PropertySuggestProps> = ({
           </div>
           
           {/* Property Tabs */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center">
             <button
               onClick={() => onPropertySliderTabChange('sale')}
               disabled={propertySliderLoading}
@@ -73,7 +73,7 @@ const PropertySuggest: React.FC<PropertySuggestProps> = ({
             >
               Bán mới nhất
             </button>
-            <span className="text-gray-300">|</span>
+            <span className="text-gray-300 px-2">|</span>
             <button
               onClick={() => onPropertySliderTabChange('rent')}
               disabled={propertySliderLoading}
@@ -100,7 +100,7 @@ const PropertySuggest: React.FC<PropertySuggestProps> = ({
             </div>
           )}
           
-          <div className="grid grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {(activePropertySliderTab === 'sale' ? propertySliderSaleData : propertySliderRentData)
               .slice(propertySliderIndex, propertySliderIndex + 4)
               .map((property: PropertyRankingItem) => {

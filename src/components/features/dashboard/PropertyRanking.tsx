@@ -53,7 +53,7 @@ const PropertyRanking: React.FC<PropertyRankingProps> = ({
     <div className="full-width bg-white py-16">
       <div className="responsive-container">
         {/* Section Header with Title and Tabs */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="md:flex justify-between items-center mb-8">
           <div>
             <h2 className="text-3xl font-medium text-[#1D1D44] mb-2 border-l-5 border-[#1D1D44] pl-4">
               Bất động sản Ranking
@@ -94,7 +94,7 @@ const PropertyRanking: React.FC<PropertyRankingProps> = ({
             </div>
           )}
           
-          <div className="grid grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {rankingData[activeRankingTab]?.map((property: PropertyRankingItem) => {
               const displayProperty = convertPropertyToDisplayFormat(property);
               return (

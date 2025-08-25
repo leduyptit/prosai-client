@@ -18,9 +18,9 @@ const AboutSection: React.FC = () => {
         }}></div>
         
         <div className="responsive-container relative z-10">
-          <div className="grid grid-cols-12 gap-8 items-center py-30">
+          <div className="grid md:grid-cols-12 gap-8 items-center md:py-30 py-10">
             {/* Left Content */}
-            <div className="col-span-6">
+            <div className="md:col-span-6">
               <div className="text-white space-y-6">
                 {/* Logo and Tagline */}
                 <div className="flex items-center gap-3 mb-20">

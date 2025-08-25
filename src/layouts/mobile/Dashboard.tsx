@@ -481,7 +481,7 @@ const MobileDashboard: React.FC = () => {
       </div>
 
       {/* Property Ranking */}
-      <div className="mt-8">
+      <div className="md:mt-8">
         <PropertyRanking
           activeRankingTab={activeRankingTab}
           rankingLoading={rankingLoading}
@@ -494,7 +494,7 @@ const MobileDashboard: React.FC = () => {
       </div>
 
       {/* Property Suggest */}
-      <div className="mt-8">
+      <div className="md:mt-8">
         <PropertySuggest
           activePropertySliderTab={activePropertySliderTab}
           propertySliderLoading={propertySliderLoading}
@@ -508,7 +508,7 @@ const MobileDashboard: React.FC = () => {
       </div>
       
       {/* News Property */}
-      <div className="mt-8">
+      <div className="md:mt-8">
         <NewsSection
           activeNewsTab={activeNewsTab}
           newsLoading={newsLoading}
@@ -520,7 +520,7 @@ const MobileDashboard: React.FC = () => {
       </div>
        
       {/* About Home */}
-      <div className="mt-8">
+      <div className="md:mt-8">
         <AboutSection />
       </div>
     </div>

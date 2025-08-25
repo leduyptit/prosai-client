@@ -36,7 +36,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({
         </div>
         
         {/* News Tabs */}
-        <div className="flex border-b-1 border-gray-200 mb-8">
+        <div className="flex border-b-1 border-gray-200 mb-8 overflow-x-auto">
           {newsCategories.map((category, index) => (
             <button
               key={category.id}
@@ -65,7 +65,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({
             </div>
             
             {/* Main Article Skeleton */}
-            <div className="col-span-6">
+            <div className="md:col-span-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 <div className="relative">
                   <div className="w-full h-64 bg-gray-200 animate-pulse"></div>
@@ -85,7 +85,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({
             </div>
             
             {/* Side Articles Skeleton */}
-            <div className="col-span-6">
+            <div className="md:col-span-6">
               <div className="space-y-2 pl-4">
                 {Array.from({ length: 6 }).map((_, index) => (
                   <div key={index} className="rounded-lg shadow-sm border border-gray-200 p-4">
@@ -114,9 +114,9 @@ const NewsSection: React.FC<NewsSectionProps> = ({
           </div>
         ) : (
           // News content when data exists
-          <div className="grid grid-cols-12 gap-6">
+          <div className="grid md:grid-cols-12 gap-6">
             {/* Main Article */}
-            <div className="col-span-6">
+            <div className="md:col-span-6">
               <div className="rounded-lg overflow-hidden">
                 <div className="relative">
                   <Image
@@ -155,8 +155,8 @@ const NewsSection: React.FC<NewsSectionProps> = ({
             </div>
             
             {/* Side Articles */}
-            <div className="col-span-6">
-              <div className="space-y-2 pl-4">
+            <div className="md:col-span-6">
+              <div className="space-y-2 md:pl-4">
                 {(newsData[activeNewsTab] || []).slice(1, 7).map((article: NewsArticle, index: number) => (
                   <div key={index}>
                     <div className="items-center border-b border-gray-200">
