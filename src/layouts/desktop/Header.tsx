@@ -1,152 +1,246 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Layout, Button, Dropdown, Avatar } from 'antd';
+import { Button, Dropdown, Avatar, Badge } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import Image from 'next/image';
-import { 
-  UserOutlined, 
-  SettingOutlined, 
-  LogoutOutlined, 
-  DashboardOutlined,
-  BellOutlined,
-  HeartOutlined
-} from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
-import LoginModal from '@/components/features/auth/login/LoginModal';
-import RegisterModal from '@/components/features/auth/register/RegisterModal';
-import ForgotPasswordModal from '@/components/features/auth/forgot-password/ForgotPasswordModal';
-import { APP_CONFIG } from '@/utils/env';
+import { useSession } from 'next-auth/react';
+import { formatCurrency } from '@/utils/format';
+import { LoginModal } from '@/components/features/auth/login';
+import { RegisterModal } from '@/components/features/auth/register';
+import { ForgotPasswordModal } from '@/components/features/auth/forgot-password';
 
+// Favorites Dropdown Component
+const FavoritesDropdown: React.FC<{
+  visible: boolean;
+  onClose: () => void;
+}> = ({ visible, onClose }) => {
+  const [activeTab, setActiveTab] = useState(0);
 
-const { Header: AntHeader } = Layout;
+  if (!visible) return null;
 
-const DesktopHeader: React.FC = () => {
+  const favoriteItems = [
+    {
+      id: 1,
+      icon: '/images/imgdemo_new@2x.png',
+      title: 'Cần thuê căn hộ 45m2 - 3 phòng ngủ - gần các khu công nghiệp, bệ....',
+      time: 'Vừa lưu xong',
+      type: 'rent'
+    },
+    {
+      id: 2,
+      icon: '/images/imgdemo_new@2x.png',
+      title: 'Rao bán căn hộ 60m2 - 3 phòng ngủ - gần các khu công nghiệp, bệ...',
+      time: 'Lưu 16 phút trước',
+      type: 'sale'
+    },
+    {
+      id: 3,
+      icon: '/images/imgdemo_new@2x.png',
+      title: 'Quỹ căn nội bộ tăng đẹp - Giá niêm yết - Chiết khấu cao tại The ...',
+      time: 'Lưu 1 ngày trước',
+      type: 'internal'
+    }
+  ];
+
+  const savedFilters = [
+    {
+      id: 1,
+      name: 'Bộ lọc tìm kiếm 1',
+      description: 'Căn hộ 2-3 phòng ngủ, giá 500-800 triệu',
+      time: 'Lưu 2 ngày trước'
+    },
+    {
+      id: 2,
+      name: 'Bộ lọc tìm kiếm 2',
+      description: 'Nhà riêng 4-5 phòng ngủ, giá 1-2 tỷ',
+      time: 'Lưu 1 tuần trước'
+    }
+  ];
+
+  return (
+    <div className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 w-96">
+      {/* Tabs */}
+      <div className="flex border-b border-gray-200">
+        <button
+          onClick={() => setActiveTab(0)}
+          className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
+            activeTab === 0 
+              ? 'text-blue-600 border-b-2 border-blue-600' 
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          Tin yêu thích
+        </button>
+        <button
+          onClick={() => setActiveTab(1)}
+          className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
+            activeTab === 1 
+              ? 'text-blue-600 border-b-2 border-blue-600' 
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          Bộ lọc tìm kiếm đã lưu
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="max-h-96 overflow-y-auto">
+        {activeTab === 0 ? (
+          // Favorite Items Tab
+          <div className="p-4">
+            {favoriteItems.map((item) => (
+              <div key={item.id} className="flex items-start space-x-3 py-3 border-b border-gray-100 last:border-b-0">
+                <div className="flex-shrink-0">
+                  <img src={item.icon} alt="item" width={80} height={80} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-medium text-gray-900 truncate">
+                    {item.title}
+                  </h4>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {item.time}
+                  </p>
+                </div>
+              </div>
+            ))}
+            
+            {/* View All Link */}
+            <div className="mt-4 pt-3 border-t border-gray-200">
+              <button className="flex items-center justify-center w-full text-sm text-red-500 hover:text-red-600 font-medium">
+                Xem tất cả
+                <img src="/svgs/icon_arrow_right.svg" alt="arrow" width={16} height={16} className="ml-1" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          // Saved Filters Tab
+          <div className="p-4">
+            {savedFilters.map((filter) => (
+              <div key={filter.id} className="flex items-start space-x-3 py-3 border-b border-gray-100 last:border-b-0">
+                <div className="flex-shrink-0">
+                  <img src="/images/imgdemo_new@2x.png" alt="filter" width={80} height={80} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-medium text-gray-900">
+                    {filter.name}
+                  </h4>
+                  <p className="text-xs text-gray-600 mt-1">
+                    {filter.description}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {filter.time}
+                  </p>
+                </div>
+              </div>
+            ))}
+            
+            {/* View All Link */}
+            <div className="mt-4 pt-3 border-t border-gray-200">
+              <button className="flex items-center justify-center w-full text-sm text-red-500 hover:text-red-600 font-medium">
+                Xem tất cả
+                <img src="/svgs/icon_arrow_right.svg" alt="arrow" width={16} height={16} className="ml-1" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const Header: React.FC = () => {
   const { data: session, status } = useSession();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
+  const [isFavoritesDropdownOpen, setIsFavoritesDropdownOpen] = useState(false);
 
-  // Debug session changes
-  useEffect(() => {
-    console.log('🔄 Header session updated:', { status, user: session?.user?.name });
-  }, [session, status]);
-
-  // Format currency
-  const formatCurrency = (amount: string | number) => {
-    const num = typeof amount === 'string' ? parseFloat(amount) : amount;
-    return new Intl.NumberFormat('vi-VN').format(num);
-  };
-
-  const userMenuItems: MenuProps['items'] = [
-    {
-      key: 'dashboard',
-      icon: <DashboardOutlined />,
-      label: <Link href="/account-overview">Tổng quan tài khoản</Link>,
-    },
-    {
-      key: 'profile',
-      icon: <UserOutlined />,
-      label: <Link href="/account-overview/settings">Hồ sơ cá nhân</Link>,
-    },
-    {
-      key: 'membership',
-      icon: <SettingOutlined />,
-      label: <Link href="/account-overview/membership">Gói hội viên</Link>,
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'logout',
-      icon: <LogoutOutlined />,
-      label: 'Đăng xuất',
-      onClick: () => signOut({ callbackUrl: '/' }),
-    },
-  ];
-
-  const handleOpenLoginModal = () => {
-    setIsLoginModalOpen(true);
-  };
-
-  const handleCloseLoginModal = () => {
-    setIsLoginModalOpen(false);
-  };
+  const handleOpenLoginModal = () => setIsLoginModalOpen(true);
+  const handleCloseLoginModal = () => setIsLoginModalOpen(false);
+  const handleOpenRegisterModal = () => setIsRegisterModalOpen(true);
+  const handleCloseRegisterModal = () => setIsRegisterModalOpen(false);
+  const handleOpenForgotPasswordModal = () => setIsForgotPasswordModalOpen(true);
+  const handleCloseForgotPasswordModal = () => setIsForgotPasswordModalOpen(false);
 
   const handleSwitchToRegisterFromLogin = () => {
-    setIsLoginModalOpen(false);
-    setIsRegisterModalOpen(true);
-  };
-
-  const handleOpenRegisterModal = () => {
-    setIsRegisterModalOpen(true);
-  };
-
-  const handleCloseRegisterModal = () => {
-    setIsRegisterModalOpen(false);
+    handleCloseLoginModal();
+    handleOpenRegisterModal();
   };
 
   const handleSwitchToLoginFromRegister = () => {
-    setIsRegisterModalOpen(false);
-    setIsLoginModalOpen(true);
-  };
-
-  const handleOpenForgotPasswordModal = () => {
-    setIsForgotPasswordModalOpen(true);
-  };
-
-  const handleCloseForgotPasswordModal = () => {
-    setIsForgotPasswordModalOpen(false);
+    handleCloseRegisterModal();
+    handleOpenLoginModal();
   };
 
   const handleBackToLoginFromForgotPassword = () => {
-    setIsForgotPasswordModalOpen(false);
-    setIsLoginModalOpen(true);
+    handleCloseForgotPasswordModal();
+    handleOpenLoginModal();
   };
 
-  return (
-    <AntHeader className="prosai-header flex-between border-b border-gray-200 px-10 h-20 shadow-md relative" style={{ background: 'transparent' }}>
-      {/* Left Section */}
-      <div className="flex items-center space-x-8">
-        {/* Logo */}
-        <div className="flex items-center space-x-3">
-          {/* Logo */}
-          {/* utils env APP_CONFIG.name */}
-          <Link href={APP_CONFIG.homeUrl}><Image src="/svgs/top_logo.svg" alt={APP_CONFIG.name} width={120} height={40} className="w-30" /></Link>
-        </div>
+  const userMenuItems = [
+    {
+      key: 'profile',
+      label: 'Thông tin cá nhân',
+      icon: <UserOutlined />,
+    },
+    {
+      key: 'settings',
+      label: 'Cài đặt',
+      icon: <UserOutlined />,
+    },
+    {
+      key: 'logout',
+      label: 'Đăng xuất',
+      icon: <UserOutlined />,
+    },
+  ];
 
-        {/* Navigation Menu */}
-        <div className="flex items-center space-x-5">
-          <Link href="/search?type=sale" type="text" className="font-medium">
-            Rao bán
-          </Link>
-          <Link href="/search?type=rent" type="text" className="font-medium">
-            Cho thuê
-          </Link>
-          <Link href="/search?type=rent" type="text" className="font-medium">
-            Cần thuê
-          </Link>
-          <Link href="/search?type=sale" type="text" className="font-medium">
-            Cần mua
-          </Link>
-          <Link href="/search?type=unknown" type="text" className="font-medium">
-            Chưa rõ
-          </Link>
-          <Link href="/search?type=rating" type="text" className="font-medium">
-            Xếp hạng
-          </Link>
-          <Link href="/news" type="text" className="font-medium">
-            Tin tức
-          </Link>
-          <Link href="/project" type="text" className="font-medium">
-            Dự án
-          </Link>
-          <Link href="/chat-ai" type="text" className="font-medium">
-            Chat AI
-          </Link>
-        </div>
-      </div>
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.favorites-dropdown-container')) {
+        setIsFavoritesDropdownOpen(false);
+      }
+    };
+
+    if (isFavoritesDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isFavoritesDropdownOpen]);
+
+  return (
+    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+      <div className="responsive-container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Left Section */}
+          <div className="flex items-center space-x-8">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <img src="/svgs/top_logo.svg" alt="Logo" className="h-8" />
+            </div>
+
+            {/* Navigation */}
+            <nav className="hidden md:flex space-x-6">
+              <a href="/" className="text-gray-700 hover:text-blue-600 font-medium">
+                Trang chủ
+              </a>
+              <a href="/search" className="text-gray-700 hover:text-blue-600 font-medium">
+                Tìm kiếm
+              </a>
+              <a href="/news" className="text-gray-700 hover:text-blue-600 font-medium">
+                Tin tức
+              </a>
+              <a href="/about" className="text-gray-700 hover:text-blue-600 font-medium">
+                Giới thiệu
+              </a>
+            </nav>
+          </div>
 
       {/* Right Section */}
       <div className="flex items-center space-x-4">
@@ -156,28 +250,42 @@ const DesktopHeader: React.FC = () => {
           /* Logged In State */
           <>
             {/* Favorites */}
-            <Button 
-              type="text" 
-              icon={<HeartOutlined />}
-              className="text-gray-700 hover:text-red-500 text-lg"
-            />
+            <div className="relative favorites-dropdown-container" style={{ margin: '0' }}>
+              <Button 
+                type="text" 
+                icon={
+                  <div className="relative inline-flex items-center">
+                    <img src="/svgs/akar-heart.svg" alt="favorite" width={20} height={20} className="mt-2"/>
+                    <Badge count={5} size="small" className="absolute -top-1 right-1" />
+                  </div>
+                }
+                style={{ margin: '0' }}
+                className="text-gray-700 hover:text-red-500 text-lg mr-0 flex items-center"
+                onClick={() => setIsFavoritesDropdownOpen(!isFavoritesDropdownOpen)}
+              />
+              
+              <FavoritesDropdown
+                visible={isFavoritesDropdownOpen}
+                onClose={() => setIsFavoritesDropdownOpen(false)}
+              />
+            </div>
 
             {/* Notifications with Balance */}
             <div className="flex items-center space-x-1">
               <Button 
                 type="text" 
-                icon={<BellOutlined />}
+                icon={<img src="/svgs/icon_thongbao_tbmoi.svg" alt="notification" width={20} height={20} />}
                 className="text-gray-700 hover:text-blue-600"
               />
-              <span className="text-sm font-medium text-gray-700">Thông báo</span>
-              <span className="text-sm font-bold text-orange-600">
-                Số dư: {formatCurrency(session?.user?.balance || '0')}đ
+              {/* <span className="text-sm font-medium text-gray-700">Thông báo</span> */}
+              <span className="text-base">
+                Số dư: {formatCurrency(parseFloat(session?.user?.balance || '0'))}đ
               </span>
             </div>
 
             {/* Top up money */}
             <Button 
-              icon={<Image src="/svgs/icon_naptien.svg" alt="payment" width={16} height={16} />}
+              icon={<img src="/svgs/icon_naptien.svg" alt="payment" width={20} height={20} />}
               className="font-medium"
               style={{ border: '1px solid #D4D4D4', borderRadius: '20px' }}
             >
@@ -247,8 +355,10 @@ const DesktopHeader: React.FC = () => {
         onClose={handleCloseForgotPasswordModal}
         onBackToLogin={handleBackToLoginFromForgotPassword}
       />
-    </AntHeader>
+        </div>
+      </div>
+    </header>
   );
 };
 
-export default DesktopHeader;
+export default Header;
