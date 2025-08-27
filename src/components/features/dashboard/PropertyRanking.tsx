@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { PropertyRankingItem } from '@/types/api';
 import { formatPrice, formatRelativeTime } from '@/utils/format';
+import { FavoriteButton } from '@/components/features';
 
 interface PropertyRankingProps {
   activeRankingTab: number;
@@ -128,9 +129,20 @@ const PropertyRanking: React.FC<PropertyRankingProps> = ({
                       <span className="line-clamp-1">{displayProperty.location}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <button className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50">
-                        <img src="/svgs/btn_tindaluu.svg" alt="favorite" className="w-4 h-4" />
-                      </button>
+                      <FavoriteButton
+                        propertyId={property.id}
+                        title={property.title}
+                        description={property.title}
+                        images={property.images || []}
+                        price={property.price_all?.[0] || property.price?.[0] || 0}
+                        area={property.area?.[0] || 0}
+                        address={property.address || ''}
+                        city=""
+                        district=""
+                        ward=""
+                        className="w-8 h-8 rounded"
+                        size="small"
+                      />
                       <span className="text-xs text-[#C3C3C3]">{displayProperty.postedDate}</span>
                     </div>
                   </div>

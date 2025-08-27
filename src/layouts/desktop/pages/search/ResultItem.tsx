@@ -3,15 +3,14 @@
 import React, { useState } from 'react';
 import { Button, message } from 'antd';
 import Rating from '@/components/ui/data-display/Rating';
-import { HeartFilled, HeartOutlined } from '@ant-design/icons';
 import PhoneButton from '@/components/ui/buttons/PhoneButton';
+import { FavoriteButton } from '@/components/features';
 import Link from 'next/link';
 
 export interface SearchItem {
   id: string;
   title: string;
   priceLabel: string; // e.g., "2 tỷ"
-  areaBadge?: string; // e.g., "45 m²"
   pricePerM2?: string; // e.g., "44.44 tr/m²"
   bedrooms?: number;
   bathrooms?: number;
@@ -22,7 +21,14 @@ export interface SearchItem {
   postedAt?: string; // e.g., "Đăng 2 ngày trước"
   rating?: number; // 0-5
   phone?: string; // e.g., "0982560123"
-  isFavorite?: boolean;
+  // Additional fields for favorite functionality
+  description?: string;
+  images?: string[];
+  price?: number;
+  area?: number;
+  city?: string;
+  district?: string;
+  ward?: string;
 }
 
 interface ResultItemProps {
@@ -59,8 +65,8 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
             <div className="mt-2 flex flex-wrap items-center gap-5 text-sm">
               <div className="inline-flex rounded-md overflow-hidden">
                 <span className="px-2 py-0.5 bg-red-50 text-red-600 font-medium">{item.priceLabel}</span>
-                {item.areaBadge && (
-                  <span className="px-2 py-0.5 bg-[#F7F7F7] text-red-600 font-medium">{item.areaBadge}</span>
+                {item.area && (
+                  <span className="px-2 py-0.5 bg-[#F7F7F7] text-red-600 font-medium">{item.area} m²</span>
                 )}
               </div>
               {item.pricePerM2 && (
@@ -99,13 +105,20 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
                   phoneNumber={item.phone || ''}
                   className="px-4"
                 />
-                <Button className="h-9 rounded-full border-gray-300 favorite-button">
-                  {item.isFavorite ? (
-                    <HeartFilled className="text-red-500 text-lg" />
-                  ) : (
-                    <HeartOutlined className="text-lg" />
-                  )}
-                </Button>
+                <FavoriteButton
+                  propertyId={item.id}
+                  title={item.title}
+                  description={item.description || item.title}
+                  images={item.images || [item.imageUrl]}
+                  price={item.price || 0}
+                  area={item.area || 0}
+                  address={item.address}
+                  city={item.city || ''}
+                  district={item.district || ''}
+                  ward={item.ward || ''}
+                  className="rounded-full"
+                  size="middle"
+                />
               </div>
             </div>
           </div>

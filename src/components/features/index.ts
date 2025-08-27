@@ -1,14 +1,8 @@
-// Auth components
-export * from './auth';
-
-// Account components
+// Export all feature components
 export * from './account';
-
-// Property components
-export * from './property';
-
-// News components
-export * from './news';
-
-// Dashboard components
+export * from './auth';
 export * from './dashboard';
+export * from './favorite';
+export * from './news';
+export * from './property';
+export * from './search';

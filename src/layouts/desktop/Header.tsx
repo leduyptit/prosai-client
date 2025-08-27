@@ -11,148 +11,12 @@ import { RegisterModal } from '@/components/features/auth/register';
 import { ForgotPasswordModal } from '@/components/features/auth/forgot-password';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/utils/env';
-
-// Favorites Dropdown Component
-const FavoritesDropdown: React.FC<{
-  visible: boolean;
-  onClose: () => void;
-}> = ({ visible, onClose }) => {
-  const [activeTab, setActiveTab] = useState(0);
-
-  if (!visible) return null;
-
-  const favoriteItems = [
-    {
-      id: 1,
-      icon: '/images/imgdemo_new@2x.png',
-      title: 'Cần thuê căn hộ 45m2 - 3 phòng ngủ - gần các khu công nghiệp, bệ....',
-      time: 'Vừa lưu xong',
-      type: 'rent'
-    },
-    {
-      id: 2,
-      icon: '/images/imgdemo_new@2x.png',
-      title: 'Rao bán căn hộ 60m2 - 3 phòng ngủ - gần các khu công nghiệp, bệ...',
-      time: 'Lưu 16 phút trước',
-      type: 'sale'
-    },
-    {
-      id: 3,
-      icon: '/images/imgdemo_new@2x.png',
-      title: 'Quỹ căn nội bộ tăng đẹp - Giá niêm yết - Chiết khấu cao tại The ...',
-      time: 'Lưu 1 ngày trước',
-      type: 'internal'
-    }
-  ];
-
-  const savedFilters = [
-    {
-      id: 1,
-      name: 'Bộ lọc tìm kiếm 1',
-      description: 'Căn hộ 2-3 phòng ngủ, giá 500-800 triệu',
-      time: 'Lưu 2 ngày trước'
-    },
-    {
-      id: 2,
-      name: 'Bộ lọc tìm kiếm 2',
-      description: 'Nhà riêng 4-5 phòng ngủ, giá 1-2 tỷ',
-      time: 'Lưu 1 tuần trước'
-    }
-  ];
-
-  return (
-    <div className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 w-96">
-      {/* Tabs */}
-      <div className="flex border-b border-gray-200">
-        <button
-          onClick={() => setActiveTab(0)}
-          className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
-            activeTab === 0 
-              ? 'text-blue-600 border-b-2 border-blue-600' 
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          Tin yêu thích
-        </button>
-        <button
-          onClick={() => setActiveTab(1)}
-          className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
-            activeTab === 1 
-              ? 'text-blue-600 border-b-2 border-blue-600' 
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          Bộ lọc tìm kiếm đã lưu
-        </button>
-      </div>
-
-      {/* Content */}
-      <div className="max-h-96 overflow-y-auto">
-        {activeTab === 0 ? (
-          // Favorite Items Tab
-          <div className="p-4">
-            {favoriteItems.map((item) => (
-              <div key={item.id} className="flex items-start space-x-3 py-3 border-b border-gray-100 last:border-b-0">
-                <div className="flex-shrink-0">
-                  <img src={item.icon} alt="item" width={80} height={80} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-medium text-gray-900 truncate">
-                    {item.title}
-                  </h4>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {item.time}
-                  </p>
-                </div>
-              </div>
-            ))}
-            
-            {/* View All Link */}
-            <div className="mt-4 pt-3 border-t border-gray-200">
-              <button className="flex items-center justify-center w-full text-sm text-red-500 hover:text-red-600 font-medium">
-                Xem tất cả
-                <img src="/svgs/icon_arrow_right.svg" alt="arrow" width={16} height={16} className="ml-1" />
-              </button>
-            </div>
-          </div>
-        ) : (
-          // Saved Filters Tab
-          <div className="p-4">
-            {savedFilters.map((filter) => (
-              <div key={filter.id} className="flex items-start space-x-3 py-3 border-b border-gray-100 last:border-b-0">
-                <div className="flex-shrink-0">
-                  <img src="/images/imgdemo_new@2x.png" alt="filter" width={80} height={80} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-medium text-gray-900">
-                    {filter.name}
-                  </h4>
-                  <p className="text-xs text-gray-600 mt-1">
-                    {filter.description}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {filter.time}
-                  </p>
-                </div>
-              </div>
-            ))}
-            
-            {/* View All Link */}
-            <div className="mt-4 pt-3 border-t border-gray-200">
-              <button className="flex items-center justify-center w-full text-sm text-red-500 hover:text-red-600 font-medium">
-                Xem tất cả
-                <img src="/svgs/icon_arrow_right.svg" alt="arrow" width={16} height={16} className="ml-1" />
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
+import { useProfileStats } from '@/hooks';
+import { FavoritesDropdown } from '@/components/features';
 
 const Header: React.FC = () => {
   const { data: session, status } = useSession();
+  const { data: profileStats } = useProfileStats();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
@@ -275,7 +139,11 @@ const Header: React.FC = () => {
                 icon={
                   <div className="relative inline-flex items-center">
                     <img src="/svgs/akar-heart.svg" alt="favorite" width={20} height={20} className="mt-2"/>
-                    <Badge count={5} size="small" className="absolute -top-1 right-1" />
+                    <Badge 
+                      count={profileStats?.favorite_count || 0} 
+                      size="small" 
+                      className="absolute -top-1 right-1" 
+                    />
                   </div>
                 }
                 style={{ margin: '0' }}
@@ -286,6 +154,8 @@ const Header: React.FC = () => {
               <FavoritesDropdown
                 visible={isFavoritesDropdownOpen}
                 onClose={() => setIsFavoritesDropdownOpen(false)}
+                favoritesCount={profileStats?.favorite_count || 0}
+                bookmarkCount={profileStats?.bookmark_count || 0}
               />
             </div>
 
@@ -297,8 +167,8 @@ const Header: React.FC = () => {
                 className="text-gray-700 hover:text-blue-600"
               />
               {/* <span className="text-sm font-medium text-gray-700">Thông báo</span> */}
-              <span className="text-base">
-                Số dư: {formatCurrency(parseFloat(session?.user?.balance || '0'))}đ
+              <span className="font-medium text-sm">
+                Số dư: {formatCurrency(parseFloat(session?.user?.balance || '0 ₫'))}
               </span>
             </div>
 

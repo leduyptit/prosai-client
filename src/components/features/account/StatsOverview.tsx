@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { StatsCircle } from '@/components/ui';
+import { Loading } from '@/components/ui/feedback';
 
 interface StatsOverviewProps {
   activeListings?: number;
@@ -9,15 +10,46 @@ interface StatsOverviewProps {
   totalViews?: number;
   totalInquiries?: number;
   className?: string;
+  loading?: boolean;
+  error?: string | null;
 }
 
 const StatsOverview: React.FC<StatsOverviewProps> = ({ 
-  activeListings = 6,
-  expiredListings = 12,
-  totalViews = 3647,
-  totalInquiries = 86,
-  className = '' 
+  activeListings = 0,
+  expiredListings = 0,
+  totalViews = 0,
+  totalInquiries = 0,
+  className = '',
+  loading = false,
+  error = null
 }) => {
+  if (loading) {
+    return (
+      <div className={`${className} bg-white rounded-lg border border-gray-200 overflow-hidden`}>
+        <div className="overflow-hidden">
+          <h3 className="text-lg text-center font-font-medium bg-[#005EBC] py-4 text-white">Tổng quan tin đăng</h3>
+        </div>
+        <div className="py-12">
+          <Loading />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`${className} bg-white rounded-lg border border-gray-200 overflow-hidden`}>
+        <div className="overflow-hidden">
+          <h3 className="text-lg text-center font-font-medium bg-[#005EBC] py-4 text-white">Tổng quan tin đăng</h3>
+        </div>
+        <div className="py-12 text-center">
+          <div className="text-red-500 mb-2">⚠️</div>
+          <p className="text-gray-600 text-sm">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`${className} bg-white rounded-lg border border-gray-200 overflow-hidden`}>
       <div className="overflow-hidden">

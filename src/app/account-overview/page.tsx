@@ -6,8 +6,11 @@ import { Breadcrumb } from '@/components/ui/navigation';
 import { ProtectedRoute } from '@/components/shared';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/utils/env';
+import { usePropertyStats } from '@/hooks';
 
 const AccountOverviewPage: React.FC = () => {
+  const { data: propertyStats, loading, error } = usePropertyStats();
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-white">
@@ -54,10 +57,12 @@ const AccountOverviewPage: React.FC = () => {
                         <div className="col-span-12 lg:col-span-6">
                             {/* Stats Overview */}
                             <StatsOverview 
-                            activeListings={10}
-                            expiredListings={12}
-                            totalViews={3647}
-                            totalInquiries={86}
+                            activeListings={propertyStats?.data?.active_listings || 0}
+                            expiredListings={propertyStats?.data?.expired_listings || 0}
+                            totalViews={propertyStats?.data?.total_views || 0}
+                            totalInquiries={propertyStats?.data?.total_inquiries || 0}
+                            loading={loading}
+                            error={error}
                             />
                         </div>
                     </div>

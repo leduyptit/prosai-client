@@ -153,7 +153,7 @@ export const LISTING_TYPES = [
   { value: '2', label: 'Cho thuê' },
   { value: '4', label: 'Cần mua' },
   { value: '5', label: 'Cần thuê' },
-  // { value: '3', label: 'Không xác định' },
+  { value: '3', label: 'Chưa rõ' },
 ] as const;
 
 // Price ranges

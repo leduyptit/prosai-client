@@ -64,8 +64,8 @@ export const formatRelativeTime = (dateString: string | Date): string => {
 
 
 // Currency formatting
-export const formatCurrency = (amount: number, currency = 'USD'): string => {
-  return new Intl.NumberFormat('en-US', {
+export const formatCurrency = (amount: number, currency = 'VND'): string => {
+  return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency,
   }).format(amount);
