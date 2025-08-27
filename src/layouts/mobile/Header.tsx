@@ -122,17 +122,17 @@ const MobileHeader: React.FC = () => {
           <Link href={APP_CONFIG.homeUrl} onClick={onClose} className="text-gray-700 py-2">
             Trang chủ
           </Link>
-          <Link href="/property" onClick={onClose} className="text-gray-700 py-2">
-            Bất động sản
+          <Link href="/search" onClick={onClose} className="text-gray-700 py-2">
+            Tìm kiếm
+          </Link>
+          <Link href="/post-property" onClick={onClose} className="text-gray-700 py-2">
+            Đăng tin
           </Link>
           <Link href="/news" onClick={onClose} className="text-gray-700 py-2">
             Tin tức
           </Link>
           <Link href="/about" onClick={onClose} className="text-gray-700 py-2">
             Giới thiệu
-          </Link>
-          <Link href="/contact" onClick={onClose} className="text-gray-700 py-2">
-            Liên hệ
           </Link>
         </div>
       </Drawer>

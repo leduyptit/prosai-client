@@ -51,7 +51,7 @@ const DesktopDashboard: React.FC = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   
   const [searchForm, setSearchForm] = useState({
-    city: 'Tất cả',
+    city: 'Chọn vị trí',
     district: '',
     propertyType: undefined as string | undefined,
     listingType: undefined as string | undefined,
@@ -65,8 +65,8 @@ const DesktopDashboard: React.FC = () => {
     // Convert search form to URL parameters
     const params = new URLSearchParams();
     
-    // Add city parameter (only if not "Tất cả")
-    if (searchForm.city && searchForm.city !== 'Tất cả') {
+    // Add city parameter (only if not "Chọn vị trí")
+    if (searchForm.city && searchForm.city !== 'Chọn vị trí') {
       params.set('city', searchForm.city);
     }
     

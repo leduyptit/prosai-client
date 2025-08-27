@@ -2,13 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button, Dropdown, Avatar, Badge } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { CrownOutlined, LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { formatCurrency } from '@/utils/format';
 import { LoginModal } from '@/components/features/auth/login';
 import { RegisterModal } from '@/components/features/auth/register';
 import { ForgotPasswordModal } from '@/components/features/auth/forgot-password';
+import Link from 'next/link';
+import { APP_CONFIG } from '@/utils/env';
 
 // Favorites Dropdown Component
 const FavoritesDropdown: React.FC<{
@@ -181,18 +183,30 @@ const Header: React.FC = () => {
   const userMenuItems = [
     {
       key: 'profile',
-      label: 'Thông tin cá nhân',
+      label: <Link href="/account-overview">Thông tin cá nhân</Link>,
       icon: <UserOutlined />,
     },
     {
       key: 'settings',
-      label: 'Cài đặt',
-      icon: <UserOutlined />,
+      label: <Link href="/account-overview/settings">Cài đặt</Link>,
+      icon: <SettingOutlined />,
+    },
+    {
+      key: 'membership',
+      label: <Link href="/account-overview/membership">Gói hội viên</Link>,
+      icon: <CrownOutlined />,
+    },
+    {
+      type: 'divider' as const,
     },
     {
       key: 'logout',
       label: 'Đăng xuất',
-      icon: <UserOutlined />,
+      icon: <LogoutOutlined />,
+      onClick: () => {
+        // Handle logout logic here
+        console.log('Logout clicked');
+      },
     },
   ];
 
@@ -222,17 +236,22 @@ const Header: React.FC = () => {
           <div className="flex items-center space-x-8">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <img src="/svgs/top_logo.svg" alt="Logo" className="h-8" />
+              <Link href={APP_CONFIG.homeUrl}>
+                <img src="/svgs/top_logo.svg" alt="Logo" className="h-8" />
+              </Link>
             </div>
 
             {/* Navigation */}
             <nav className="hidden md:flex space-x-6">
-              <a href="/" className="text-gray-700 hover:text-blue-600 font-medium">
+              <Link href={APP_CONFIG.homeUrl} className="text-gray-700 hover:text-blue-600 font-medium">
                 Trang chủ
-              </a>
-              <a href="/search" className="text-gray-700 hover:text-blue-600 font-medium">
+              </Link>
+              <Link href="/search" className="text-gray-700 hover:text-blue-600 font-medium">
                 Tìm kiếm
-              </a>
+              </Link>
+              <Link href="/post-property" className="text-gray-700 hover:text-blue-600 font-medium">
+                Đăng tin
+              </Link>
               <a href="/news" className="text-gray-700 hover:text-blue-600 font-medium">
                 Tin tức
               </a>
@@ -293,7 +312,7 @@ const Header: React.FC = () => {
             </Button>
 
             {/* User Menu */}
-            <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+            <Dropdown menu={{ items: userMenuItems }} placement="bottomRight" className="cursor-pointer">
               <div className="flex items-center">
                 <Avatar
                   src={session.user?.avatar_url}
