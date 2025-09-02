@@ -1,19 +1,23 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Dropdown, Avatar, Drawer } from 'antd';
+import { Button, Dropdown, Avatar, Drawer, Layout } from 'antd';
 import { MenuOutlined, UserOutlined, SettingOutlined, LogoutOutlined, BellOutlined } from '@ant-design/icons';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { APP_CONFIG } from '@/utils/env';
 import { useLogout } from '@/hooks/useLogout';
+import { LoginModal } from '@/components/features/auth';
 
-const { Header: AntHeader } = require('antd/lib/layout');
+const { Header: AntHeader } = Layout;
 
 const MobileHeader: React.FC = () => {
   const { data: session, status } = useSession();
   const { logout, isLoading: isLoggingOut } = useLogout();
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const router = useRouter();
 
   const showDrawer = () => {
     setDrawerVisible(true);
@@ -23,19 +27,34 @@ const MobileHeader: React.FC = () => {
     setDrawerVisible(false);
   };
 
+  const handleOpenLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleCloseLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const handleSwitchToRegister = () => {
+    setIsLoginModalOpen(false);
+    // You can add register modal logic here if needed
+  };
+
   const userMenuItems = [
     {
       key: 'profile',
       icon: <UserOutlined />,
-      label: <Link href="/account-overview/settings">Hồ sơ cá nhân</Link>,
+      label: 'Hồ sơ cá nhân',
+      onClick: () => router.push('/account-overview/settings'),
     },
     {
       key: 'membership',
       icon: <SettingOutlined />,
-      label: <Link href="/account-overview/membership">Gói hội viên</Link>,
+      label: 'Gói hội viên',
+      onClick: () => router.push('/account-overview/membership'),
     },
     {
-      type: 'divider',
+      type: 'divider' as const,
     },
     {
       key: 'logout',
@@ -89,6 +108,7 @@ const MobileHeader: React.FC = () => {
               type="text"
               icon={<UserOutlined />}
               className="text-gray-700"
+              onClick={handleOpenLoginModal}
             />
           )}
         </div>
@@ -120,6 +140,13 @@ const MobileHeader: React.FC = () => {
           </Link>
         </div>
       </Drawer>
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={handleCloseLoginModal}
+        onSwitchToRegister={handleSwitchToRegister}
+      />
     </>
   );
 };
