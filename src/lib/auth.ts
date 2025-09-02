@@ -29,7 +29,7 @@ async function handleSocialLoginCallback(
     if (response && response.access_token && response.user) {
         user.id = response.user.id;
         user.email = response.user.email;
-        user.name = response.user.full_name || response.user.first_name || response.user.email;
+        user.name = response.user.full_name || response.user.email;
         user.avatar_url = response.user.avatar || undefined;
         user.balance = response.user.balance;
         user.role = response.user.role;
@@ -97,7 +97,7 @@ export const authOptions: NextAuthOptions = {
             const user = {
               id: response.user.id,
               email: response.user.email,
-              name: response.user.full_name || response.user.first_name || response.user.email,
+              name: response.user.full_name || response.user.email,
               avatar_url: response.user.avatar || undefined, // Add avatar_url for custom usage
               balance: response.user.balance, // Include balance
               role: response.user.role, // Include role
@@ -110,7 +110,6 @@ export const authOptions: NextAuthOptions = {
             return null;
           }
         } catch (error: unknown) {
-          console.error('❌ Login failed:', error);
           return null;
         }
       }

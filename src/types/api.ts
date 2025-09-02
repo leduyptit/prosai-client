@@ -27,8 +27,7 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  first_name: string;
-  last_name: string;
+  full_name: string;
   email: string;
   password: string;
   phone: string;
@@ -40,8 +39,7 @@ export interface AuthResponse {
   user: {
     id: string;
     email: string;
-    first_name: string;
-    last_name: string;
+    full_name: string;
     phone: string;
     avatar?: string;
     balance: string;
@@ -63,8 +61,7 @@ export interface SocialLoginResponse {
   user: {
     id: string;
     email: string;
-    first_name: string;
-    last_name: string;
+    full_name: string;
     phone: string;
     avatar?: string;
     balance: string;
@@ -79,8 +76,7 @@ export interface SocialLoginResponse {
 export interface UserProfile {
   id: string;
   email: string;
-  first_name: string;
-  last_name: string;
+  full_name: string;
   phone: string;
   avatar?: string;
   balance: string;
@@ -90,8 +86,7 @@ export interface UserProfile {
 }
 
 export interface UpdateProfileRequest {
-  first_name?: string;
-  last_name?: string;
+  full_name?: string;
   phone?: string;
   avatar?: string;
   [key: string]: unknown;

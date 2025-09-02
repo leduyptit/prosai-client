@@ -45,8 +45,6 @@ export interface AuthResponse {
     id: string;
     email: string;
     full_name: string;
-    first_name?: string;
-    last_name?: string;
     avatar?: string;
     balance: string;
     role: string;
@@ -65,8 +63,6 @@ export interface SocialLoginResponse {
     id: string;
     email: string;
     full_name: string;
-    first_name?: string;
-    last_name?: string;
     avatar?: string;
     balance: string;
     role: string;
@@ -77,8 +73,6 @@ export interface UserProfile {
   id: string;
   email: string;
   full_name: string;
-  first_name?: string;
-  last_name?: string;
   avatar?: string;
   balance: string;
   role: string;
@@ -88,8 +82,6 @@ export interface UserProfile {
 
 export interface UpdateProfileRequest {
   full_name?: string;
-  first_name?: string;
-  last_name?: string;
   avatar?: string;
 }
 

@@ -102,7 +102,7 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
           <div className="p-4">
             {favoritesLoading ? (
               <div className="flex justify-center items-center py-8">
-                <Loading />
+                <Loading className="bg-white" />
               </div>
             ) : favoritesError ? (
               <div className="text-center py-8 text-gray-500">
@@ -159,7 +159,7 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
           <div className="p-4">
             {bookmarksLoading ? (
               <div className="flex justify-center items-center py-8">
-                <Loading />
+                <Loading className="bg-white" />
               </div>
             ) : bookmarksError ? (
               <div className="text-center py-8 text-gray-500">

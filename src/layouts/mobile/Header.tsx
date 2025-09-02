@@ -1,30 +1,19 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Layout, Button, Drawer, Avatar, Dropdown } from 'antd';
-import { 
-  MenuOutlined,
-  BellOutlined,
-  UserOutlined,
-  LogoutOutlined,
-  DashboardOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Button, Dropdown, Avatar, Drawer } from 'antd';
+import { MenuOutlined, UserOutlined, SettingOutlined, LogoutOutlined, BellOutlined } from '@ant-design/icons';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
-import type { MenuProps } from 'antd';
 import { APP_CONFIG } from '@/utils/env';
+import { useLogout } from '@/hooks/useLogout';
 
-const { Header: AntHeader } = Layout;
+const { Header: AntHeader } = require('antd/lib/layout');
 
 const MobileHeader: React.FC = () => {
   const { data: session, status } = useSession();
+  const { logout, isLoading: isLoggingOut } = useLogout();
   const [drawerVisible, setDrawerVisible] = useState(false);
-
-  // Debug session changes
-  useEffect(() => {
-    console.log('🔄 Mobile Header session updated:', { status, user: session?.user?.name });
-  }, [session, status]);
 
   const showDrawer = () => {
     setDrawerVisible(true);
@@ -34,12 +23,7 @@ const MobileHeader: React.FC = () => {
     setDrawerVisible(false);
   };
 
-  const userMenuItems: MenuProps['items'] = [
-    {
-      key: 'dashboard',
-      icon: <DashboardOutlined />,
-      label: <Link href="/account-overview">Tổng quan tài khoản</Link>,
-    },
+  const userMenuItems = [
     {
       key: 'profile',
       icon: <UserOutlined />,
@@ -56,8 +40,8 @@ const MobileHeader: React.FC = () => {
     {
       key: 'logout',
       icon: <LogoutOutlined />,
-      label: 'Đăng xuất',
-      onClick: () => signOut({ callbackUrl: '/' }),
+      label: isLoggingOut ? 'Đang đăng xuất...' : 'Đăng xuất',
+      onClick: () => logout(APP_CONFIG.homeUrl),
     },
   ];
 

@@ -27,8 +27,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   const router = useRouter();
   const { message } = App.useApp();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    fullName: '',
     email: '',
     phone: '',
     password: '',
@@ -56,24 +55,21 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     setErrorMessage(null); // Clear previous errors
     
         // Validation
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.password || !formData.confirmPassword) {
+    if (!formData.fullName || !formData.email || !formData.phone || !formData.password || !formData.confirmPassword) {
       const error = 'Vui lòng điền đầy đủ thông tin để đăng ký';
       setErrorMessage(error);
-      message.error(error);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
       const error = 'Mật khẩu xác nhận không khớp';
       setErrorMessage(error);
-      message.error(error);
       return;
     }
 
     if (formData.password.length < 6) {
       const error = 'Mật khẩu phải có ít nhất 6 ký tự';
       setErrorMessage(error);
-      message.error(error);
       return;
     }
 
@@ -82,7 +78,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     if (!emailRegex.test(formData.email)) {
       const error = 'Vui lòng nhập email hợp lệ';
       setErrorMessage(error);
-      message.error(error);
       return;
     }
 
@@ -90,26 +85,22 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     const phoneRegex = /^[0-9]{10,11}$/;
     if (!phoneRegex.test(formData.phone)) {
       const error = 'Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số)';
-      setErrorMessage(error);
-      message.error(error);
+      setErrorMessage(error); 
       return;
     }
 
     setIsLoading(true);
     try {
       const registerData = {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
+        full_name: formData.fullName,
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
-      };
+      } as const;
 
       const result = await authService.register(registerData);
       
-      if (result.success) {
-        message.success('Đăng ký thành công! Đang đăng nhập...');
-        
+      if (result && result.access_token && result.user) {        
         // Auto login after successful registration
         const loginResult = await signIn('credentials', {
           email: formData.email,
@@ -136,8 +127,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       }
     } catch (error: unknown) {
       const axiosError = error as { response?: { data?: { message?: string }; status?: number }; message?: string };
-      console.error('❌ Registration failed:', error);
-      
       let errorMessage = 'Đăng ký không thành công, vui lòng thử lại';
       
       if (axiosError.response?.data?.message) {
@@ -151,13 +140,10 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       }
       
       setErrorMessage(errorMessage);
-      message.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
-
-
 
   const handleSwitchToLogin = () => {
     if (onSwitchToLogin) {
@@ -210,25 +196,13 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
             )}
             
             <div className="space-y-4 mb-6">
-              {/* First Name */}
+              {/* Full Name */}
               <div>
                 <Input
-                  placeholder="Tên"
+                  placeholder="Họ và tên"
                   prefix={<Image src="/svgs/icon_user.svg" alt="user" width={20} height={20} className="w-5" />}
-                  value={formData.firstName}
-                  onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  size="large"
-                  className="h-12"
-                />
-              </div>
-
-              {/* Last Name */}
-              <div>
-                <Input
-                  placeholder="Họ và tên đệm"
-                  prefix={<Image src="/svgs/icon_user.svg" alt="user" width={20} height={20} className="w-5" />}
-                  value={formData.lastName}
-                  onChange={(e) => handleInputChange('lastName', e.target.value)}
+                  value={formData.fullName}
+                  onChange={(e) => handleInputChange('fullName', e.target.value)}
                   size="large"
                   className="h-12"
                 />
@@ -238,7 +212,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
               <div>
                 <Input
                   placeholder="Email"
-                  prefix={<Image src="/svgs/icon_email.svg" alt="email" width={20} height={20} className="w-5" />}
+                  prefix={<Image src="/svgs/icon_email.svg" alt="email" width={15} height={15} className="w-5" />}
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   size="large"
@@ -250,7 +224,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
               <div>
                 <Input
                   placeholder="Số điện thoại"
-                  prefix={<Image src="/svgs/phone.svg" alt="phone" width={20} height={20} className="w-5" />}
+                  prefix={<Image src="/svgs/phone-call.svg" alt="phone" width={15} height={15} className="w-5" style={{ width: '15px' }} />}
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   size="large"

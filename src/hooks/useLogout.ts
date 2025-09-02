@@ -1,5 +1,6 @@
-import { signOut } from 'next-auth/react';
+import { signOut, getSession } from 'next-auth/react';
 import { useState } from 'react';
+import { authService } from '@/services/auth';
 
 interface UseLogoutReturn {
   logout: (callbackUrl?: string) => Promise<void>;
@@ -16,17 +17,19 @@ export const useLogout = (): UseLogoutReturn => {
       setIsLoading(true);
       setError(null);
 
-      // Optionally call your backend logout API
-      // try {
-      //   await fetch('/api/auth/logout', {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //   });
-      // } catch (err) {
-      //   console.warn('Backend logout failed, continuing with client logout');
-      // }
+      // Get current session to access the access token
+      const session = await getSession();
+      
+      if (session?.accessToken) {
+        try {
+          // Call ProSai API to invalidate the token
+          await authService.logout();
+          console.log('ProSai API logout successful');
+        } catch (apiError) {
+          console.warn('ProSai API logout failed, continuing with client logout:', apiError);
+          // Continue with logout even if API call fails
+        }
+      }
 
       // Sign out from NextAuth
       await signOut({ 

@@ -40,8 +40,7 @@ export default function RegisterDemoPage() {
           
           <h4 className="font-semibold mt-4 mb-2">Required Fields:</h4>
           <ul className="text-sm space-y-1">
-            <li>• first_name: string</li>
-            <li>• last_name: string</li>
+            <li>• full_name: string</li>
             <li>• email: string</li>
             <li>• phone: string</li>
             <li>• password: string</li>

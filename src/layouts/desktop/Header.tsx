@@ -72,7 +72,7 @@ const Header: React.FC = () => {
       key: 'logout',
       label: <span className="text-red-600">{isLoggingOut ? 'Đang đăng xuất…' : 'Đăng xuất'}</span>,
       icon: <LogoutOutlined />,
-      onClick: () => logout('/'),
+      onClick: () => logout(APP_CONFIG.homeUrl),
     },
   ];
 
@@ -114,15 +114,15 @@ const Header: React.FC = () => {
             <nav className="hidden md:flex space-x-6">
               {[
                 { label: 'Trang chủ', href: APP_CONFIG.homeUrl },
-                { label: 'Rao bán', href: '/search' },
-                { label: 'Cho thuê', href: '/search' },
-                { label: 'Cần thuê', href: '#' },
-                { label: 'Cần mua', href: '#' },
-                { label: 'Chưa rõ', href: '#' },
-                { label: 'Xếp hạng', href: '#' },
+                { label: 'Rao bán', href: '/search?listing_type=1' },
+                { label: 'Cho thuê', href: '/search?listing_type=2' },
+                { label: 'Cần thuê', href: '/search?listing_type=5' },
+                { label: 'Cần mua', href: '/search?listing_type=4' },
+                { label: 'Chưa rõ', href: '/search?listing_type=3' },
+                { label: 'Xếp hạng', href: '/properties/ranking' },
                 { label: 'Tin tức', href: '/news' },
-                { label: 'Dự án', href: '#' },
-                { label: 'Chat AI', href: '#' }
+                { label: 'Dự án', href: '/projects' },
+                { label: 'Chat AI', href: '/chat-ai' }
               ].map((item) => (
                 <Link key={item.label} href={item.href} className="text-[#0C1B4D] hover:text-blue-600 font-medium">
                   {item.label}

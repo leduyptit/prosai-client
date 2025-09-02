@@ -1,10 +1,12 @@
 'use client';
 
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 import { User } from '@/types/auth';
+import { useLogout } from './useLogout';
 
 export function useAuth() {
   const { data: session, status } = useSession();
+  const { logout: logoutUser } = useLogout();
 
   const login = async (credentials: { email: string; password: string }) => {
     const result = await signIn('credentials', {
@@ -29,7 +31,7 @@ export function useAuth() {
   };
 
   const logout = async () => {
-    await signOut({ callbackUrl: '/' });
+    await logoutUser('/');
   };
 
   return {

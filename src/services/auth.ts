@@ -2,7 +2,6 @@ import { corsApi, apiClient } from './api';
 import { 
   LoginRequest, 
   RegisterRequest, 
-  AuthResponse, 
   SocialLoginRequest, 
   UserProfile,
   UpdateProfileRequest,
@@ -11,14 +10,15 @@ import {
   ResetPasswordRequest,
   ApiResponse
 } from '@/types/api';
+import { ProSaiAuthResponse } from '@/types/prosai-api';
 
 class AuthService {
   private baseUrl = '/auth';
 
   // Login
-  async login(credentials: LoginRequest): Promise<AuthResponse> {
+  async login(credentials: LoginRequest): Promise<ProSaiAuthResponse> {
     try {
-      const response = await corsApi.postUrlEncoded<AuthResponse>(`${this.baseUrl}/login`, credentials);
+      const response = await corsApi.postUrlEncoded<ProSaiAuthResponse>(`${this.baseUrl}/login`, credentials);
       return response;
     } catch (error) {
       console.error('Login failed:', error);
@@ -27,9 +27,9 @@ class AuthService {
   }
 
   // Register
-  async register(credentials: RegisterRequest): Promise<AuthResponse> {
+  async register(credentials: RegisterRequest): Promise<ProSaiAuthResponse> {
     try {
-      const response = await corsApi.postUrlEncoded<AuthResponse>(`${this.baseUrl}/register`, credentials);
+      const response = await corsApi.postUrlEncoded<ProSaiAuthResponse>(`${this.baseUrl}/register`, credentials);
       return response;
     } catch (error) {
       console.error('Registration failed:', error);
@@ -38,14 +38,14 @@ class AuthService {
   }
 
   // Social Login
-  async socialLogin(accessToken: string, provider: 'FACEBOOK' | 'GOOGLE'): Promise<AuthResponse> {
+  async socialLogin(accessToken: string, provider: 'FACEBOOK' | 'GOOGLE'): Promise<ProSaiAuthResponse> {
     try {
       const request: SocialLoginRequest = {
         access_token: accessToken,
         provider
       };
       
-      const response = await corsApi.get<AuthResponse>(`${this.baseUrl}/social-login?access_token=${encodeURIComponent(accessToken)}&provider=${provider}`);
+      const response = await corsApi.get<ProSaiAuthResponse>(`${this.baseUrl}/social-login?access_token=${encodeURIComponent(accessToken)}&provider=${provider}`);
       return response;
     } catch (error) {
       console.error(`${provider} social login failed:`, error);
@@ -120,9 +120,9 @@ class AuthService {
   }
 
   // Refresh Token
-  async refreshToken(refreshToken: string): Promise<AuthResponse> {
+  async refreshToken(refreshToken: string): Promise<ProSaiAuthResponse> {
     try {
-      const response = await apiClient.post<AuthResponse>(`${this.baseUrl}/refresh-token`, { refresh_token: refreshToken });
+      const response = await apiClient.post<ProSaiAuthResponse>(`${this.baseUrl}/refresh-token`, { refresh_token: refreshToken });
       return response.data;
     } catch (error) {
       console.error('Refresh token failed:', error);

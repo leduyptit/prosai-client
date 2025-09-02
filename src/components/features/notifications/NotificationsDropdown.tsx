@@ -5,6 +5,7 @@ import { Loading } from '@/components/ui/feedback';
 import { EmptyState } from '@/components/shared/empty-states';
 import { transactionsService } from '@/services';
 import { formatCurrency } from '@/utils/format';
+import Image from 'next/image';
 
 export interface NotificationsDropdownProps {
   visible: boolean;
@@ -99,7 +100,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
   // Helper function to get notification icon
   const getNotificationIcon = (type: string, customIcon?: string) => {
     if (customIcon) {
-      return <img src={customIcon} alt="notification" width={16} height={16} />;
+      return <Image src={customIcon} alt="notification" width={16} height={16} />;
     }
     
     switch (type) {
@@ -133,7 +134,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <p className="font-medium text-sm text-blue-600">
-          Thông báo ({notificationsCount})
+          Thông báo
         </p>
       </div>
 
@@ -141,7 +142,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
       <div className="max-h-96 overflow-y-auto">
         {loading ? (
           <div className="flex justify-center items-center py-12">
-            <Loading />
+            <Loading className="bg-white" />
           </div>
         ) : error ? (
           <div className="text-center py-8 text-gray-500">
