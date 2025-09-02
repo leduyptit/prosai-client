@@ -174,6 +174,10 @@ body {
   @apply max-w-[1200px] mx-auto;
 }
 
+.header-desktop .responsive-container {
+  max-width: 100%;
+}
+
 /* Lexend Font Utility Class */
 .font-lexend {
   font-family: var(--font-family-lexend);
@@ -295,6 +299,10 @@ footer.ant-layout-footer {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+.basic-hidden li:nth-child(n+2) span {
+  color: #C3C3C3!important;
 }
 
 /* Line Clamp Utility */

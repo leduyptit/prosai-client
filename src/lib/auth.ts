@@ -18,18 +18,15 @@ async function handleSocialLoginCallback(
     accessToken?: string; 
     refreshToken?: string; 
     provider?: 'google' | 'facebook' | 'zalo' | 'credentials';
+
   }, 
   accessToken: string, 
   provider: 'GOOGLE' | 'FACEBOOK' | 'ZALO'
 ): Promise<boolean> {
-  try {
-    console.log(`🔐 ${provider} sign in callback, calling ProSai social login API`);
-    
-    // Call ProSai backend API for social login
+  try {    
     const response = await corsApi.get<ProSaiAuthResponse>(`/auth/social-login?access_token=${encodeURIComponent(accessToken)}&provider=${provider}`);
     
-          if (response && response.access_token && response.user) {
-        // Update user object with ProSai data from backend
+    if (response && response.access_token && response.user) {
         user.id = response.user.id;
         user.email = response.user.email;
         user.name = response.user.full_name || response.user.first_name || response.user.email;
@@ -40,7 +37,6 @@ async function handleSocialLoginCallback(
         user.refreshToken = response.refresh_token;
         user.provider = provider.toLowerCase() as 'google' | 'facebook' | 'zalo';
       
-      // Return true to allow NextAuth to continue with the updated user data
       return true;
     } else {
       return false;

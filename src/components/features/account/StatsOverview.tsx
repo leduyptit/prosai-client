@@ -55,7 +55,7 @@ const StatsOverview: React.FC<StatsOverviewProps> = ({
       <div className="overflow-hidden">
         <h3 className="text-lg text-center font-font-medium bg-[#005EBC] py-4 text-white">Tổng quan tin đăng</h3>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-4 py-6">
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-4 py-12.5">
         <StatsCircle
           value={activeListings}
           label="Tin đang hiển thị"

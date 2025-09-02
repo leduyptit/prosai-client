@@ -6,10 +6,11 @@ import { Breadcrumb } from '@/components/ui/navigation';
 import { ProtectedRoute } from '@/components/shared';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/utils/env';
-import { usePropertyStats } from '@/hooks';
+import { usePropertyStats, useUserPackage } from '@/hooks';
 
 const AccountOverviewPage: React.FC = () => {
   const { data: propertyStats, loading, error } = usePropertyStats();
+  const { packageInfo, loading: packageLoading } = useUserPackage();
 
   return (
     <ProtectedRoute>
@@ -50,8 +51,19 @@ const AccountOverviewPage: React.FC = () => {
                         <div className="col-span-12 lg:col-span-6">
                             {/* Membership Card */}
                             <MembershipCard 
-                            membershipType="gold"
-                            expiryDate="31/12/2024"
+                              membershipType={(() => {
+                                if (!packageInfo) return 'basic';
+                                switch (packageInfo.slug) {
+                                  case 'gold':
+                                    return 'gold';
+                                  case 'sliver':
+                                    return 'silver';
+                                  default:
+                                    return 'basic';
+                                }
+                              })()}
+                              expiryDate={packageInfo?.premium_end_date ? new Date(packageInfo.premium_end_date).toLocaleDateString('vi-VN') : "Không có hạn sử dụng"}
+                              loading={packageLoading}
                             />
                         </div>
                         <div className="col-span-12 lg:col-span-6">

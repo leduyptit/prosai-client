@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Loading } from '@/components/ui/feedback';
 import { EmptyState } from '@/components/shared/empty-states';
+import { transactionsService } from '@/services';
+import { formatCurrency } from '@/utils/format';
 
 export interface NotificationsDropdownProps {
   visible: boolean;
@@ -31,42 +33,31 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
   const [error, setError] = useState<string | null>(null);
   const hasLoadedRef = useRef(false);
 
-  // Mock function to fetch notifications - replace with actual API call
   const fetchNotifications = async () => {
     setLoading(true);
     setError(null);
-    
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock data - replace with actual API response
-      const mockNotifications: NotificationItem[] = [
-        // Uncomment to test with data
-        // {
-        //   id: '1',
-        //   title: 'Tin đăng mới được duyệt',
-        //   message: 'Tin đăng "Bán đất 62m2 mặt tiền 5,4m" đã được duyệt và hiển thị công khai.',
-        //   type: 'success',
-        //   isRead: false,
-        //   createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        //   icon: '/svgs/icon_post.svg'
-        // },
-        // {
-        //   id: '2',
-        //   title: 'Cập nhật thông tin tài khoản',
-        //   message: 'Thông tin tài khoản của bạn đã được cập nhật thành công.',
-        //   type: 'info',
-        //   isRead: true,
-        //   createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-        //   icon: '/svgs/icon_user.svg'
-        // }
-      ];
-      
-      setNotifications(mockNotifications);
+      const res = await transactionsService.getUserTransactions();
+      if (!res.success) {
+        setError(res.message || 'Không thể tải thông báo');
+        setNotifications([]);
+        return;
+      }
+
+      const items: NotificationItem[] = (res.data || []).map((tx) => ({
+        id: tx.id,
+        title: 'Giao dịch tài khoản',
+        message: `Giao dịch nâng cấp gói: ${formatCurrency(parseFloat(tx.amount?.toString() ?? '0'))}`,
+        type: tx.status === 'success' ? 'success' : tx.status === 'failed' ? 'error' : 'info',
+        isRead: false,
+        createdAt: String(tx.created_at),
+        icon: '/svgs/icon_naptien.svg'
+      }));
+
+      setNotifications(items);
     } catch (err) {
-      console.error('Failed to fetch notifications:', err);
       setError('Không thể tải thông báo');
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -90,8 +81,12 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
   if (!visible) return null;
 
   // Helper function to format time
-  const formatTime = (timestamp: string) => {
-    const date = new Date(timestamp);
+  const formatTime = (timestamp: string | number) => {
+    // API gives unix seconds as int. Normalize to ms.
+    const ts = typeof timestamp === 'number' || /^(\d+)$/.test(String(timestamp))
+      ? Number(timestamp) * 1000
+      : Date.parse(String(timestamp));
+    const date = new Date(ts);
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
     

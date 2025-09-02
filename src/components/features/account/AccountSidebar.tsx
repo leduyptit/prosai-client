@@ -60,7 +60,7 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({
       </div>
 
       {/* Navigation Menu */}
-      <div className="p-4">
+      <div className="p-4 min-h-[265px]">
         <Menu
           mode="vertical"
           selectedKeys={[activeKey]}

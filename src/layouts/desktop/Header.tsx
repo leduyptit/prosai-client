@@ -13,6 +13,8 @@ import Link from 'next/link';
 import { APP_CONFIG } from '@/utils/env';
 import { useProfileStats } from '@/hooks';
 import { FavoritesDropdown, NotificationsDropdown } from '@/components/features';
+import { useLogout } from '@/hooks/useLogout';
+import { useUserBalance } from '@/hooks';
 
 const Header: React.FC = () => {
   const { data: session, status } = useSession();
@@ -22,6 +24,8 @@ const Header: React.FC = () => {
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
   const [isFavoritesDropdownOpen, setIsFavoritesDropdownOpen] = useState(false);
   const [isNotificationsDropdownOpen, setIsNotificationsDropdownOpen] = useState(false);
+  const { logout, isLoading: isLoggingOut } = useLogout();
+  const { balance } = useUserBalance();
 
   const handleOpenLoginModal = () => setIsLoginModalOpen(true);
   const handleCloseLoginModal = () => setIsLoginModalOpen(false);
@@ -66,12 +70,9 @@ const Header: React.FC = () => {
     },
     {
       key: 'logout',
-      label: 'Đăng xuất',
+      label: <span className="text-red-600">{isLoggingOut ? 'Đang đăng xuất…' : 'Đăng xuất'}</span>,
       icon: <LogoutOutlined />,
-      onClick: () => {
-        // Handle logout logic here
-        console.log('Logout clicked');
-      },
+      onClick: () => logout('/'),
     },
   ];
 
@@ -97,7 +98,7 @@ const Header: React.FC = () => {
   }, [isFavoritesDropdownOpen, isNotificationsDropdownOpen]);
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40 header-desktop">
       <div className="responsive-container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Left Section */}
@@ -111,21 +112,22 @@ const Header: React.FC = () => {
 
             {/* Navigation */}
             <nav className="hidden md:flex space-x-6">
-              <Link href={APP_CONFIG.homeUrl} className="text-gray-700 hover:text-blue-600 font-medium">
-                Trang chủ
-              </Link>
-              <Link href="/search" className="text-gray-700 hover:text-blue-600 font-medium">
-                Tìm kiếm
-              </Link>
-              <Link href="/post-property" className="text-gray-700 hover:text-blue-600 font-medium">
-                Đăng tin
-              </Link>
-              <a href="/news" className="text-gray-700 hover:text-blue-600 font-medium">
-                Tin tức
-              </a>
-              <a href="/about" className="text-gray-700 hover:text-blue-600 font-medium">
-                Giới thiệu
-              </a>
+              {[
+                { label: 'Trang chủ', href: APP_CONFIG.homeUrl },
+                { label: 'Rao bán', href: '/search' },
+                { label: 'Cho thuê', href: '/search' },
+                { label: 'Cần thuê', href: '#' },
+                { label: 'Cần mua', href: '#' },
+                { label: 'Chưa rõ', href: '#' },
+                { label: 'Xếp hạng', href: '#' },
+                { label: 'Tin tức', href: '/news' },
+                { label: 'Dự án', href: '#' },
+                { label: 'Chat AI', href: '#' }
+              ].map((item) => (
+                <Link key={item.label} href={item.href} className="text-[#0C1B4D] hover:text-blue-600 font-medium">
+                  {item.label}
+                </Link>
+              ))}
             </nav>
           </div>
 
@@ -168,11 +170,6 @@ const Header: React.FC = () => {
                       icon={
                         <div className="relative inline-flex items-center">
                           <img src="/svgs/icon_thongbao_tbmoi.svg" alt="notification" width={25} height={25} className="mt-2"/>
-                          {/* <Badge 
-                            count={4} 
-                            size="small" 
-                            className="absolute -top-1 right-1" 
-                          /> */}
                         </div>
                       }
                       style={{ margin: '0' }}
@@ -183,12 +180,12 @@ const Header: React.FC = () => {
                     <NotificationsDropdown
                       visible={isNotificationsDropdownOpen}
                       onClose={() => setIsNotificationsDropdownOpen(false)}
-                      notificationsCount={4}
+                      notificationsCount={0}
                     />
                   </div>
                   
                   <span className="font-medium text-sm">
-                    Số dư: {formatCurrency(parseFloat(session?.user?.balance || '0 ₫'))}
+                    Số dư: {formatCurrency(parseFloat(balance || '0'))}
                   </span>
                 </div>
 

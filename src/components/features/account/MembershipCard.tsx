@@ -4,15 +4,17 @@ import React from 'react';
 import { CrownOutlined } from '@ant-design/icons';
 
 interface MembershipCardProps {
-  membershipType?: 'basic' | 'gold' | 'premium';
+  membershipType?: 'basic' | 'silver' | 'gold';
   expiryDate?: string;
   className?: string;
+  loading?: boolean;
 }
 
 const MembershipCard: React.FC<MembershipCardProps> = ({ 
-  membershipType = 'gold',
-  expiryDate = '31/12/2024',
-  className = '' 
+  membershipType = 'basic',
+  expiryDate,
+  className = '',
+  loading = false
 }) => {
   const getMembershipInfo = () => {
     switch (membershipType) {
@@ -23,11 +25,11 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
           badge: 'gold',
           icon: <CrownOutlined className="text-white text-lg" />
         };
-      case 'premium':
+      case 'silver':
         return {
-          title: 'PROSAI PREMIUM',
-          color: 'bg-gradient-to-r from-purple-500 to-purple-600',
-          badge: 'premium',
+          title: 'PROSAI SILVER',
+          color: 'bg-gradient-to-r from-blue-500 to-blue-600',
+          badge: 'silver',
           icon: <CrownOutlined className="text-white text-lg" />
         };
       default:
@@ -49,6 +51,23 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
     'Hỗ trợ ưu đãi khi chuyên gia'
   ];
 
+  if (loading) {
+    return (
+      <div className={`${className} bg-[#F7F7F7] rounded-lg border border-gray-200 overflow-hidden`}>
+        <div className="overflow-hidden">
+          <h3 className="text-lg text-center font-font-medium bg-[#8D8DA1] py-4 text-white">Gói hội viên hiện tại</h3>
+        </div>
+        <div className="p-4">
+          <div className="animate-pulse">
+            <div className="h-32 bg-gray-300 rounded mb-4"></div>
+            <div className="h-4 bg-gray-300 rounded mb-2"></div>
+            <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`${className} bg-[#F7F7F7] rounded-lg border border-gray-200 overflow-hidden`}>
       <div className="overflow-hidden">
@@ -56,15 +75,25 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
       </div>
       <div className="space-y-4">
         {/* Membership Badge */}
-        <div className="flex justify-center">
-          <img src="/images/img_prosai_gold@2x.png" alt="Membership Badge" className="w-full h-auto" />
+        <div className={'max-h-[130px] flex justify-center'}>
+          <img 
+            src={`/images/img_${membershipInfo.badge}@2x.png`} 
+            alt={`${membershipInfo.title}`} 
+            className="" 
+            onError={(e) => {
+              // Fallback to basic image if specific image not found
+              e.currentTarget.src = "/images/img_basic@2x.png";
+            }}
+          />
         </div>
 
         {/* Expiry Date */}
-        <div className="px-4">
-          <span className="text-sm font-font-medium">Hạn sử dụng</span>
-          <div className="font-font-medium text-gray-900 pl-4">{expiryDate}</div>
-        </div>
+        {expiryDate && (
+          <div className="px-4">
+            <span className="text-sm font-font-medium">Hạn sử dụng</span>
+            <div className="font-font-medium text-gray-900 pl-4">{expiryDate}</div>
+          </div>
+        )}
 
         {/* Benefits */}
         <div className="border-t-1 border-dashed border-gray-300 pt-4 m-4">

@@ -1,79 +1,73 @@
 'use client';
 
 import React, { useState } from 'react';
-import Modal from '@/components/ui/overlay/Modal';
-import Button from '@/components/ui/buttons/Button';
+import { Modal, Button, App } from 'antd';
 
 interface UpgradeMembershipModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirmUpgrade?: () => void;
+  onConfirmUpgrade?: (packageId: string, duration: string) => void;
   packageType?: 'silver' | 'gold';
+  selectedPlan?: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    price: string;
+    duration: number;
+    features: string[];
+    image: string;
+  } | null;
 }
 
 const UpgradeMembershipModal: React.FC<UpgradeMembershipModalProps> = ({
   isOpen,
   onClose,
   onConfirmUpgrade,
-  packageType = 'silver'
+  packageType = 'silver',
+  selectedPlan
 }) => {
   const [selectedDuration, setSelectedDuration] = useState<'1' | '3' | '6'>('1');
+  const { message } = App.useApp();
 
   const handleConfirmUpgrade = () => {
-    onConfirmUpgrade?.();
+    if (!selectedPlan?.id) {
+      message.error('Không có thông tin gói hội viên');
+      return;
+    }
+    onConfirmUpgrade?.(selectedPlan.id, selectedDuration);
     onClose();
   };
 
   const getPackageInfo = (duration: string) => {
-    const isGold = packageType === 'gold';
-    
-    switch (duration) {
-      case '1':
-        return {
-          name: isGold ? 'Gold' : 'Silver',
-          price: isGold ? '199.000₫' : '99.000₫',
-          image: isGold ? '/images/img_gold@2x.png' : '/images/img_nangcap_silver@2x.png'
-        };
-      case '3':
-        return {
-          name: isGold ? 'Gold' : 'Silver',
-          price: isGold ? '559.000₫' : '279.000₫',
-          image: isGold ? '/images/img_gold@2x.png' : '/images/img_nangcap_silver@2x.png'
-        };
-      case '6':
-        return {
-          name: isGold ? 'Gold' : 'Silver',
-          price: isGold ? '1.079.000₫' : '539.000₫',
-          image: isGold ? '/images/img_gold@2x.png' : '/images/img_nangcap_silver@2x.png'
-        };
-      default:
-        return {
-          name: isGold ? 'Gold' : 'Silver',
-          price: isGold ? '199.000₫' : '99.000₫',
-          image: isGold ? '/images/img_gold@2x.png' : '/images/img_nangcap_silver@2x.png'
-        };
+    if (!selectedPlan) {
+      return {
+        name: packageType === 'gold' ? 'Gold' : 'Silver',
+        price: '0₫',
+        image: packageType === 'gold' ? '/images/img_gold@2x.png' : '/images/img_nangcap_silver@2x.png'
+      };
     }
+
+    // Tính giá theo thời hạn (giá gốc * số tháng)
+    const basePrice = parseFloat(selectedPlan.price);
+    const months = parseInt(duration);
+    const totalPrice = basePrice * months;
+    
+    return {
+      name: selectedPlan.name,
+      price: `${totalPrice.toLocaleString()}₫`,
+      image: selectedPlan.image
+    };
   };
 
   const getBenefits = () => {
-    const isGold = packageType === 'gold';
-    
-    if (isGold) {
+    if (!selectedPlan) {
       return [
-        'Đăng 50 tin/tháng',
-        'Hỗ trợ AI gợi ý nội dung',
-        'Ưu tiên SEO hiển thị',
-        'Hỗ trợ tư vấn 24/7',
-        'Tính năng đánh giá sao',
-        'Thống kê chi tiết'
-      ];
-    } else {
-      return [
-        'Đăng 30 tin/tháng',
-        'Hỗ trợ AI gợi ý nội dung',
-        'Ưu tiên SEO hiển thị'
+        'Không có thông tin quyền lợi'
       ];
     }
+    
+    return selectedPlan.features;
   };
 
   return (
