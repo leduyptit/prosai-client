@@ -8,3 +8,4 @@ export { usePropertyStats } from './usePropertyStats';
 export { useProfileStats } from './useProfileStats';
 export { useFavoritesList } from './useFavoritesList';
 export { useBookmarksList } from './useBookmarksList';
+export { useMyProperties } from './useMyProperties';

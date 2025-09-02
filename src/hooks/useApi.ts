@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { message } from 'antd';
+import { App } from 'antd';
 
 interface ApiState<T> {
   data: T | null;
@@ -15,6 +15,7 @@ export function useApi<T = unknown>() {
     loading: false,
     error: null,
   });
+  const { message } = App.useApp();
 
   const execute = useCallback(async <R = T>(
     apiCall: () => Promise<R>,

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useFavoritesList, useBookmarksList } from '@/hooks';
 import { Loading } from '@/components/ui/feedback';
+import { EmptyState } from '@/components/shared/empty-states';
 
 export interface FavoritesDropdownProps {
   visible: boolean;
@@ -49,16 +50,6 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
 
   if (!visible) return null;
 
-  // Helper function to format price
-  const formatPrice = (price: string) => {
-    const numPrice = parseFloat(price);
-    if (numPrice === 0) return 'Thỏa thuận';
-    if (numPrice >= 1000000000) {
-      return `${(numPrice / 1000000000).toFixed(1)} tỷ`;
-    }
-    return `${(numPrice / 1000000).toFixed(0)} triệu`;
-  };
-
   // Helper function to format area
   const formatArea = (area: string) => {
     const numArea = parseFloat(area);
@@ -76,26 +67,6 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
     if (diffInHours < 24) return `Lưu ${diffInHours} giờ trước`;
     if (diffInHours < 48) return 'Lưu 1 ngày trước';
     return `Lưu ${Math.floor(diffInHours / 24)} ngày trước`;
-  };
-
-  // Helper function to format property type
-  const formatPropertyType = (type: number) => {
-    switch (type) {
-      case 1: return 'Căn hộ';
-      case 2: return 'Nhà riêng';
-      case 3: return 'Đất nền';
-      case 4: return 'Văn phòng';
-      default: return 'Khác';
-    }
-  };
-
-  // Helper function to format listing type
-  const formatListingType = (type: number) => {
-    switch (type) {
-      case 1: return 'Bán';
-      case 2: return 'Cho thuê';
-      default: return 'Khác';
-    }
   };
 
   return (
@@ -160,19 +131,6 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                       <h4 className="text-sm font-medium text-gray-900 truncate">
                         {item.title}
                       </h4>
-                      <div className="flex items-center gap-2 mt-1 text-xs text-gray-600">
-                        {item.price !== '0.00' && (
-                          <span className="font-medium text-green-600">
-                            {formatPrice(item.price)}
-                          </span>
-                        )}
-                        {item.area !== '0.00' && (
-                          <span>{formatArea(item.area)}</span>
-                        )}
-                      </div>
-                      <p className="text-xs text-gray-500 mt-1 truncate">
-                        {item.address}
-                      </p>
                       <p className="text-xs text-gray-400 mt-1">
                         {formatTime(item.created_at)}
                       </p>
@@ -181,16 +139,19 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                 ))}
                 
                 {/* View All Link */}
-                <div className="mt-4 pt-3 border-t border-gray-200">
+                <div className="mt-4">
                   <button className="flex items-center justify-center w-full text-sm text-red-500 hover:text-red-600 font-medium">
                     Xem tất cả
                   </button>
                 </div>
               </>
             ) : (
-              <div className="text-center py-8 text-gray-500">
-                <p className="text-sm">Chưa có tin yêu thích nào</p>
-              </div>
+              <EmptyState 
+                type="favorite"
+                title="Chưa có tin yêu thích nào"
+                description="Lưu các tin đăng bạn quan tâm để xem sau"
+                className="py-8"
+              />
             )}
           </div>
         ) : (
@@ -215,7 +176,7 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                 {bookmarksData.map((bookmark) => (
                   <div key={bookmark.id} className="flex items-start space-x-3 py-3 border-b border-gray-100 last:border-b-0">
                     <div className="flex-shrink-0">
-                      <div className="w-20 h-20 bg-blue-100 rounded flex items-center justify-center">
+                      <div className="w-15 h-15 bg-blue-100 rounded flex items-center justify-center">
                         <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
                         </svg>
@@ -225,38 +186,6 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                       <h4 className="text-sm font-medium text-gray-900">
                         {bookmark.name}
                       </h4>
-                      <p className="text-xs text-gray-600 mt-1">
-                        {bookmark.description}
-                      </p>
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {bookmark.city && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {bookmark.city}
-                          </span>
-                        )}
-                        {bookmark.district && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            {bookmark.district}
-                          </span>
-                        )}
-                        {bookmark.num_bedrooms > 0 && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                            {bookmark.num_bedrooms} PN
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-                        {bookmark.from_price !== '0.00' && bookmark.to_price !== '0.00' && (
-                          <span className="font-medium text-green-600">
-                            {formatPrice(bookmark.from_price)} - {formatPrice(bookmark.to_price)}
-                          </span>
-                        )}
-                        {bookmark.from_area !== '0.00' && bookmark.to_area !== '0.00' && (
-                          <span>
-                            {formatArea(bookmark.from_area)} - {formatArea(bookmark.to_area)}
-                          </span>
-                        )}
-                      </div>
                       <p className="text-xs text-gray-400 mt-1">
                         {formatTime(bookmark.created_at)}
                       </p>
@@ -265,16 +194,19 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                 ))}
                 
                 {/* View All Link */}
-                <div className="mt-4 pt-3 border-t border-gray-200">
+                <div className="mt-4">
                   <button className="flex items-center justify-center w-full text-sm text-red-500 hover:text-red-600 font-medium">
                     Xem tất cả
                   </button>
                 </div>
               </>
             ) : (
-              <div className="text-center py-8 text-gray-500">
-                <p className="text-sm">Chưa có bộ lọc tìm kiếm nào được lưu</p>
-              </div>
+              <EmptyState 
+                type="default"
+                title="Chưa có bộ lọc tìm kiếm nào được lưu"
+                description="Lưu các bộ lọc tìm kiếm bạn thường xuyên sử dụng"
+                className="py-8"
+              />
             )}
           </div>
         )}

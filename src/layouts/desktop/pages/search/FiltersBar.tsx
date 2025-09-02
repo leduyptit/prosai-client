@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Input, Button, message } from 'antd';
+import { App, Input, Button } from 'antd';
 import Select from '@/components/ui/forms/Select';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { LocationSearchInput } from '@/components/features/search';
@@ -50,6 +50,7 @@ const MapIcon = () => (
 
 const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => {
   const { data: session } = useSession();
+  const { message } = App.useApp();
   
   const [filters, setFilters] = useState({
     city: initialFilters?.city || '',
@@ -546,8 +547,9 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
 
         {/* Save filter */}
         <Button 
-          className={`h-10 px-4 flex items-center gap-2 w-full md:w-auto transition-all duration-200`}
-          size="middle"
+          className={`md:w-auto transition-all duration-200`}
+          style={{ padding: '0 15px'}}
+          size="large"
           onClick={handleBookmarkClick}
           loading={isBookmarking}
           icon={isBookmarked ? <HeartFilled style={{ color: '#FF0000' }} /> : <HeartOutlined/>}
@@ -561,7 +563,11 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         </Button>
 
         {/* View map */}
-        <Button className="h-10 px-4 bg-orange-500 hover:bg-orange-600 text-white border-none flex items-center gap-2 map-button w-full md:w-auto md:py-2 my-3 md:my-0" size="middle">
+        <Button 
+          className="px-4 bg-orange-500 text-white border-none flex items-center gap-2 map-button w-full md:w-auto md:py-2 my-3 md:my-0" 
+          size="large"
+          style={{ padding: '0 15px'}}
+        >
           <img src="/svgs/icon_map.svg" alt="map" className="h-4 w-4" />
           <span className="font-medium" >Xem bản đồ</span>
         </Button>

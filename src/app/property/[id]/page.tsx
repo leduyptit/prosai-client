@@ -200,12 +200,20 @@ const PropertyDetailPage: React.FC = () => {
 
              {/* Property Details */}
              <PropertyDetails
-               price={property.price ? formatPrice(property.price[0]) : 'Liên hệ'}
-               area={property.area ? formatArea(property.area[0]) : 'Liên hệ'}
+               propertyId={propertyId}
+               title={property.title || ''}
+               description={property.description || ''}
+               images={property.images?.length > 0 ? property.images : mockImages}
+               price={property.price ? parseFloat(property.price[0]) : 0}
+               area={property.area ? parseFloat(property.area[0]) : 0}
+               address={property.address || ''}
+               city={property.city || ''}
+               district={property.district || ''}
+               ward={property.ward || ''}
                bedrooms={property.bedrooms || 0}
                bathrooms={property.bathrooms || 0}
                rating={property.ranking_score || 0}
-               className="mb-"
+               className="mb-4"
              />
 
              {/* Property Info */}

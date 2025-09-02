@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Button, message } from 'antd';
+import { App, Button } from 'antd';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { useSession } from 'next-auth/react';
 import { favoriteService, FavoriteRequest } from '@/services/favorites';
@@ -40,6 +40,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   onFavoriteChange
 }) => {
   const { data: session } = useSession();
+  const { message } = App.useApp();
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -139,7 +140,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
       return (
         <>
           <HeartFilled className="text-red-500" />
-          {showText && <span className="ml-2">Đã yêu thích</span>}
+          {showText && <span className="ml-2">Đã lưu</span>}
         </>
       );
     }
@@ -147,7 +148,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     return (
       <>
         <HeartOutlined />
-        {showText && <span className="ml-2">Yêu thích</span>}
+        {showText && <span className="ml-2">Lưu tin</span>}
       </>
     );
   };

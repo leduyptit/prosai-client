@@ -233,9 +233,19 @@ footer.ant-layout-footer {
   background: #0F75DB;
 }
 
+.custom-modal-delete .ant-modal-confirm-body-wrapper {
+  padding: 20px;
+}
+
 .map-button {
   background: transparent linear-gradient(90deg, #FC7400 0%, #FFAA22 100%) 0% 0% no-repeat padding-box;
   color: #fff;
+}
+
+.map-button:hover {
+  background: transparent linear-gradient(90deg, #FC7400 0%, #FFAA22 100%) 0% 0% no-repeat padding-box !important;
+  color: #fff !important;
+  border-color: #dddddd !important;
 }
 
 .rating-star {

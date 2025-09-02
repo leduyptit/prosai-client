@@ -2,12 +2,19 @@
 
 import React from 'react';
 import { Rating } from '@/components/ui/data-display';
-import { HeartOutlined } from '@ant-design/icons';
-import { Button } from '@/components/ui/buttons';
+import { FavoriteButton } from '@/components/features';
 
 interface PropertyDetailsProps {
-  price?: string;
-  area?: string;
+  propertyId: string;
+  title: string;
+  description: string;
+  images: string[];
+  price: number;
+  area: number;
+  address: string;
+  city: string;
+  district: string;
+  ward: string;
   bedrooms?: number;
   bathrooms?: number;
   rating?: number;
@@ -16,8 +23,16 @@ interface PropertyDetailsProps {
 }
 
 const PropertyDetails: React.FC<PropertyDetailsProps> = ({
-  price = '12 triệu/tháng',
-  area = '45 m²',
+  propertyId,
+  title,
+  description,
+  images,
+  price,
+  area,
+  address,
+  city,
+  district,
+  ward,
   bedrooms = 2,
   bathrooms = 1,
   rating = 4,
@@ -31,13 +46,19 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
         {/* Price */}
         <div className="text-left md:border-r border-gray-200">
           <div className="text-sm text-gray-500 mb-1">Mức giá</div>
-          <div className="font-font-medium text-gray-900">{price}</div>
+          <div className="font-font-medium text-gray-900">
+            {price === 0 ? 'Thỏa thuận' : 
+              price >= 1000000000 ? 
+                `${(price / 1000000000).toFixed(1)} tỷ` : 
+                `${(price / 1000000).toFixed(0)} triệu`
+            }
+          </div>
         </div>
 
         {/* Area */}
         <div className="text-left md:border-r border-gray-200 md:px-2">
           <div className="text-sm text-gray-500 mb-1">Diện tích</div>
-          <div className="font-font-medium text-gray-900">{area}</div>
+          <div className="font-font-medium text-gray-900">{area}m²</div>
         </div>
 
         {/* Bedrooms */}
@@ -68,9 +89,21 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
         </div>
         {/* Favorite */}
         <div className="text-left md:px-2">
-          <Button icon={<HeartOutlined />} size="small">
-            Lưu tin
-          </Button>
+          <FavoriteButton
+            propertyId={propertyId}
+            title={title}
+            description={description}
+            images={images}
+            price={price}
+            area={area}
+            address={address}
+            city={city}
+            district={district}
+            ward={ward}
+            size="small"
+            showText={true}
+            onFavoriteChange={onSave}
+          />
         </div>
       </div>
     </div>

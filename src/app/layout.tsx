@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ConfigProvider } from 'antd';
+import { App as AntdApp, ConfigProvider } from 'antd';
 import { antdConfig } from '@/lib/antd-config';
 import { SessionProvider } from '@/providers/SessionProvider';
 import "./globals.css";
@@ -38,9 +38,11 @@ export default function RootLayout({
             locale={antdConfig.locale}
             theme={antdConfig.theme}
           >
-            <MainLayout>
-              {children}
-            </MainLayout>
+            <AntdApp>
+              <MainLayout>
+                {children}
+              </MainLayout>
+            </AntdApp>
           </ConfigProvider>
         </SessionProvider>
       </body>

@@ -9,7 +9,7 @@ import Modal from '@/components/ui/overlay/Modal';
 import Input from '@/components/ui/forms/Input';
 import Button from '@/components/ui/buttons/Button';
 import { SocialLoginButton } from '../shared';
-import { Divider, message } from 'antd';
+import { App, Divider } from 'antd';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -26,6 +26,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
 }) => {
   const { update } = useSession();
   const router = useRouter();
+  const { message } = App.useApp();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
