@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { apiClient } from '@/services/api';
 
 interface UseUserBalanceResult {
@@ -15,6 +16,7 @@ export const requestBalanceRefresh = () => {
 };
 
 const useUserBalance = (): UseUserBalanceResult => {
+  const { data: session, status } = useSession();
   const [balance, setBalance] = useState<string>('0.00');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,8 +38,15 @@ const useUserBalance = (): UseUserBalanceResult => {
   }, []);
 
   useEffect(() => {
-    fetchBalance();
-  }, [fetchBalance]);
+    // Only fetch balance when user is authenticated
+    if (status === 'authenticated' && session?.accessToken) {
+      fetchBalance();
+    } else if (status === 'unauthenticated') {
+      // Reset balance when user logs out
+      setBalance('0.00');
+      setError(null);
+    }
+  }, [status, session?.accessToken, fetchBalance]);
 
   useEffect(() => {
     const handler = () => {

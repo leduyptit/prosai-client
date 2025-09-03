@@ -86,10 +86,42 @@ class BookmarkService {
   async deleteBookmark(id: string): Promise<BookmarkResponse> {
     try {
       const response = await apiClient.delete<BookmarkResponse>(`${this.baseUrl}/${id}`);
-      return response.data;
-    } catch (error) {
+      
+      // Handle successful deletion
+      if (response.status === 200 || response.status === 204) {
+        return {
+          success: true,
+          message: 'Đã xóa bộ lọc tìm kiếm'
+        };
+      }
+      
+      // Handle other success responses
+      return {
+        success: true,
+        message: response.data?.message || 'Đã xóa bộ lọc tìm kiếm'
+      };
+    } catch (error: any) {
       console.error('Delete bookmark failed:', error);
-      throw error;
+      
+      // Handle specific error cases
+      if (error.response?.status === 404) {
+        return {
+          success: false,
+          message: 'Không tìm thấy bộ lọc này'
+        };
+      }
+      
+      if (error.response?.status === 401) {
+        return {
+          success: false,
+          message: 'Vui lòng đăng nhập để thực hiện thao tác này'
+        };
+      }
+      
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Có lỗi xảy ra khi xóa bộ lọc tìm kiếm'
+      };
     }
   }
 }

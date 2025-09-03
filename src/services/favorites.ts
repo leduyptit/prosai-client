@@ -2,16 +2,10 @@ import { apiClient } from './api';
 
 export interface FavoriteRequest {
   property_id: string;
-  id_social: string;
   title: string;
   description: string;
   images: string[];
-  price: number;
-  area: number;
   address: string;
-  city: string;
-  district: string;
-  ward: string;
 }
 
 export interface FavoriteResponse {
@@ -19,16 +13,10 @@ export interface FavoriteResponse {
   data?: {
     id: string;
     property_id: string;
-    id_social: string;
     title: string;
     description: string;
     images: string[];
-    price: number;
-    area: number;
     address: string;
-    city: string;
-    district: string;
-    ward: string;
     created_at: string;
   };
   message?: string;

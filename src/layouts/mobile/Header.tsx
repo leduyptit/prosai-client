@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { APP_CONFIG } from '@/utils/env';
 import { useLogout } from '@/hooks/useLogout';
 import { LoginModal } from '@/components/features/auth';
+import { requestBalanceRefresh } from '@/hooks/useUserBalance';
 
 const { Header: AntHeader } = Layout;
 
@@ -39,6 +40,18 @@ const MobileHeader: React.FC = () => {
     setIsLoginModalOpen(false);
     // You can add register modal logic here if needed
   };
+
+  // Auto-refresh balance when session changes
+  React.useEffect(() => {
+    if (status === 'authenticated' && session?.accessToken) {
+      // Small delay to ensure session is fully established
+      const timer = setTimeout(() => {
+        requestBalanceRefresh();
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [status, session?.accessToken]);
 
   const userMenuItems = [
     {

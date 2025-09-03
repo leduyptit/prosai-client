@@ -110,12 +110,7 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
                   title={item.title}
                   description={item.description || item.title}
                   images={item.images || [item.imageUrl]}
-                  price={item.price || 0}
-                  area={item.area || 0}
                   address={item.address}
-                  city={item.city || ''}
-                  district={item.district || ''}
-                  ward={item.ward || ''}
                   className="rounded-full"
                   size="middle"
                 />

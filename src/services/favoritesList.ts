@@ -20,9 +20,10 @@ export interface FavoriteItem {
 
 export type FavoritesListResponse = FavoriteItem[];
 
-export const fetchFavoritesList = async (): Promise<FavoritesListResponse> => {
+export const fetchFavoritesList = async (limit?: number): Promise<FavoritesListResponse> => {
   try {
-    const response = await apiClient.get<FavoritesListResponse>('/favorites');
+    const params = limit ? { limit } : {};
+    const response = await apiClient.get<FavoritesListResponse>('/favorites', { params });
     return response.data;
   } catch (error) {
     console.error('Error fetching favorites list:', error);

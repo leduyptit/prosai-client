@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/shared/empty-states';
 import { transactionsService } from '@/services';
 import { formatCurrency } from '@/utils/format';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export interface NotificationsDropdownProps {
   visible: boolean;
@@ -170,7 +171,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className={`text-sm font-medium ${!notification.isRead ? 'text-gray-900' : 'text-gray-700'}`}>
-                        {notification.title}
+                        <Link href={`/notifications/${notification.id}`} className="text-blue-600 hover:text-blue-700">{notification.title}</Link>
                       </h4>
                       {!notification.isRead && (
                         <div className="w-2 h-2 bg-blue-500 rounded-full" />
@@ -186,13 +187,6 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                 </div>
               </div>
             ))}
-            
-            {/* View All Link */}
-            <div className="p-4 border-t border-gray-200">
-              <button className="flex items-center justify-center w-full text-sm text-blue-600 hover:text-blue-700 font-medium">
-                Xem tất cả thông báo
-              </button>
-            </div>
           </>
         ) : (
           <EmptyState 

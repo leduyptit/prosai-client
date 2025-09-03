@@ -11,6 +11,7 @@ import Button from '@/components/ui/buttons/Button';
 import { SocialLoginButton } from '../shared';
 import { App, Divider } from 'antd';
 import { authService } from '@/services/auth';
+import { requestBalanceRefresh } from '@/hooks/useUserBalance';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -116,6 +117,9 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
           setTimeout(async () => {
             await update();
             router.refresh(); // Refresh the current route to update server components
+            
+            // Trigger balance refresh after successful registration and auto-login
+            requestBalanceRefresh();
           }, 100);
         } else {
           message.info('Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.');

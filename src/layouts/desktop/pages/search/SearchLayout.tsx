@@ -63,16 +63,24 @@ const SearchLayout: React.FC = () => {
     
     // Price range - convert from_price and to_price to priceRange format, only if values exist
     if (searchParams.from_price || searchParams.to_price) {
-      const from = searchParams.from_price || '';
-      const to = searchParams.to_price || '+';
-      filters.priceRange = `${from}-${to}`;
+      if (searchParams.from_price && searchParams.to_price) {
+        filters.priceRange = `${searchParams.from_price}-${searchParams.to_price}`;
+      } else if (searchParams.from_price && !searchParams.to_price) {
+        filters.priceRange = `${searchParams.from_price}+`;
+      } else if (!searchParams.from_price && searchParams.to_price) {
+        filters.priceRange = `0-${searchParams.to_price}`;
+      }
     }
     
     // Area range - convert from_area and to_area to areaRange format, only if values exist
     if (searchParams.from_area || searchParams.to_area) {
-      const from = searchParams.from_area || '';
-      const to = searchParams.to_area || '+';
-      filters.areaRange = `${from}-${to}`;
+      if (searchParams.from_area && searchParams.to_area) {
+        filters.areaRange = `${searchParams.from_area}-${searchParams.to_area}`;
+      } else if (searchParams.from_area && !searchParams.to_area) {
+        filters.areaRange = `${searchParams.from_area}+`;
+      } else if (!searchParams.from_area && searchParams.to_area) {
+        filters.areaRange = `0-${searchParams.to_area}`;
+      }
     }
     
     // Bedrooms - only if not 'all'

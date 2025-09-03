@@ -11,12 +11,7 @@ export interface FavoriteButtonProps {
   title: string;
   description: string;
   images: string[];
-  price: number;
-  area: number;
   address: string;
-  city: string;
-  district: string;
-  ward: string;
   className?: string;
   size?: 'small' | 'middle' | 'large';
   showText?: boolean;
@@ -28,12 +23,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   title,
   description,
   images,
-  price,
-  area,
   address,
-  city,
-  district,
-  ward,
   className = '',
   size = 'middle',
   showText = false,
@@ -87,16 +77,10 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
         // Add to favorites
         const favoriteData: FavoriteRequest = {
           property_id: propertyId,
-          id_social: session.user.id,
           title,
           description,
           images,
-          price,
-          area,
-          address,
-          city,
-          district,
-          ward
+          address
         };
 
         const response = await favoriteService.createFavorite(favoriteData);

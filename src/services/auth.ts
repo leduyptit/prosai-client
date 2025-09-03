@@ -87,10 +87,13 @@ class AuthService {
   }
 
   // Forgot Password
-  async forgotPassword(data: ForgotPasswordRequest): Promise<ApiResponse<{ message: string }>> {
+  async forgotPassword(data: ForgotPasswordRequest): Promise<ApiResponse<{ message: string }> & { statusCode?: number }> {
     try {
       const response = await apiClient.post<ApiResponse<{ message: string }>>(`${this.baseUrl}/forgot-password`, data);
-      return response.data;
+      return {
+        ...response.data,
+        statusCode: response.status
+      };
     } catch (error) {
       console.error('Forgot password failed:', error);
       throw error;

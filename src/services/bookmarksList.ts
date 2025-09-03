@@ -22,9 +22,10 @@ export interface BookmarkItem {
 
 export type BookmarksListResponse = BookmarkItem[];
 
-export const fetchBookmarksList = async (): Promise<BookmarksListResponse> => {
+export const fetchBookmarksList = async (limit?: number): Promise<BookmarksListResponse> => {
   try {
-    const response = await apiClient.get<BookmarksListResponse>('/bookmarks');
+    const params = limit ? { limit } : {};
+    const response = await apiClient.get<BookmarksListResponse>('/bookmarks', { params });
     return response.data;
   } catch (error) {
     console.error('Error fetching bookmarks list:', error);

@@ -4,6 +4,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useFavoritesList, useBookmarksList } from '@/hooks';
 import { Loading } from '@/components/ui/feedback';
 import { EmptyState } from '@/components/shared/empty-states';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { createSearchUrlFromBookmark } from '@/utils/searchUrl';
 
 export interface FavoritesDropdownProps {
   visible: boolean;
@@ -18,6 +21,7 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
   favoritesCount = 0, 
   bookmarkCount = 0 
 }) => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
   const { data: favoritesData, loading: favoritesLoading, error: favoritesError, refetch: refetchFavorites } = useFavoritesList();
   const { data: bookmarksData, loading: bookmarksLoading, error: bookmarksError, refetch: refetchBookmarks } = useBookmarksList();
@@ -67,6 +71,20 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
     if (diffInHours < 24) return `Lưu ${diffInHours} giờ trước`;
     if (diffInHours < 48) return 'Lưu 1 ngày trước';
     return `Lưu ${Math.floor(diffInHours / 24)} ngày trước`;
+  };
+
+  // Handle view all favorites
+  const handleViewAllFavorites = () => {
+    onClose();
+    // Navigate to favorites page with limit=50
+    router.push('/account-overview/favorites?limit=50');
+  };
+
+  // Handle view all bookmarks
+  const handleViewAllBookmarks = () => {
+    onClose();
+    // Navigate to bookmarks page with limit=50
+    router.push('/account-overview/bookmarks?limit=50');
   };
 
   return (
@@ -129,8 +147,8 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="text-sm font-medium text-gray-900 truncate">
-                        {item.title}
-                      </h4>
+                        <Link href={`/property/${item.property_id}`} className="text-blue-600 hover:text-blue-700">{item.title}</Link>
+                        </h4>
                       <p className="text-xs text-gray-400 mt-1">
                         {formatTime(item.created_at)}
                       </p>
@@ -140,7 +158,10 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                 
                 {/* View All Link */}
                 <div className="mt-4">
-                  <button className="flex items-center justify-center w-full text-sm text-red-500 hover:text-red-600 font-medium">
+                  <button 
+                    onClick={handleViewAllFavorites}
+                    className="flex items-center justify-center w-full text-sm text-red-500 hover:text-red-600 font-medium"
+                  >
                     Xem tất cả
                   </button>
                 </div>
@@ -150,7 +171,7 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                 type="favorite"
                 title="Chưa có tin yêu thích nào"
                 description="Lưu các tin đăng bạn quan tâm để xem sau"
-                className="py-8"
+                className="py-8 bg-white"
               />
             )}
           </div>
@@ -184,7 +205,13 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="text-sm font-medium text-gray-900">
-                        {bookmark.name}
+                        <Link 
+                          href={createSearchUrlFromBookmark(bookmark)} 
+                          className="text-blue-600 hover:text-blue-700"
+                          onClick={onClose}
+                        >
+                          {bookmark.name}
+                        </Link>
                       </h4>
                       <p className="text-xs text-gray-400 mt-1">
                         {formatTime(bookmark.created_at)}
@@ -195,7 +222,10 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                 
                 {/* View All Link */}
                 <div className="mt-4">
-                  <button className="flex items-center justify-center w-full text-sm text-red-500 hover:text-red-600 font-medium">
+                  <button 
+                    onClick={handleViewAllBookmarks}
+                    className="flex items-center justify-center w-full text-sm text-red-500 hover:text-red-600 font-medium"
+                  >
                     Xem tất cả
                   </button>
                 </div>
@@ -205,7 +235,7 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
                 type="default"
                 title="Chưa có bộ lọc tìm kiếm nào được lưu"
                 description="Lưu các bộ lọc tìm kiếm bạn thường xuyên sử dụng"
-                className="py-8"
+                className="py-8 bg-white"
               />
             )}
           </div>

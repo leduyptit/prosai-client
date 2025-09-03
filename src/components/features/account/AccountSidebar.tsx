@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Menu } from 'antd';
-import { UserOutlined, CrownOutlined, FileTextOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, CrownOutlined, FileTextOutlined, SettingOutlined, LogoutOutlined, HeartOutlined, FilterOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useLogout } from '@/hooks/useLogout';
 import { useSession } from 'next-auth/react';
@@ -20,6 +20,16 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({
   const { data: session } = useSession();
   
   const menuItems = [
+    {
+      key: 'favorites',
+      icon: <HeartOutlined />,
+      label: <Link href="/account-overview/favorites">Tin yêu thích</Link>,
+    },
+    {
+      key: 'bookmarks',
+      icon: <FilterOutlined />,
+      label: <Link href="/account-overview/bookmarks">Bộ lọc đã lưu</Link>,
+    },
     {
       key: 'membership',
       icon: <CrownOutlined />,

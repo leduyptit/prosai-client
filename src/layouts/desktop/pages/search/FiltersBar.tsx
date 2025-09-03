@@ -12,7 +12,8 @@ import {
   AREA_RANGES, 
   BEDROOM_OPTIONS,
   BATHROOM_OPTIONS,
-  LISTING_TYPES
+  LISTING_TYPES,
+  LEGAL_STATUS
 } from '@/constants';
 import { bookmarkService, BookmarkRequest } from '@/services/bookmarks';
 
@@ -111,11 +112,41 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
       const cityFromUrl = urlParams.get('city');
       const districtFromUrl = urlParams.get('district');
       const propertyTypeFromUrl = urlParams.get('property_type');
-      const priceRangeFromUrl = urlParams.get('price_range');
-      const areaRangeFromUrl = urlParams.get('area_range');
       const bedroomsFromUrl = urlParams.get('bedrooms');
       const bathroomsFromUrl = urlParams.get('bathrooms');
       const legalStatusFromUrl = urlParams.get('legal_status');
+      
+      // Handle price range - convert from_price/to_price back to priceRange
+      let priceRangeFromUrl = urlParams.get('price_range');
+      if (!priceRangeFromUrl) {
+        const fromPrice = urlParams.get('from_price');
+        const toPrice = urlParams.get('to_price');
+        if (fromPrice || toPrice) {
+          if (fromPrice && toPrice) {
+            priceRangeFromUrl = `${fromPrice}-${toPrice}`;
+          } else if (fromPrice && !toPrice) {
+            priceRangeFromUrl = `${fromPrice}+`;
+          } else if (!fromPrice && toPrice) {
+            priceRangeFromUrl = `0-${toPrice}`;
+          }
+        }
+      }
+      
+      // Handle area range - convert from_area/to_area back to areaRange
+      let areaRangeFromUrl = urlParams.get('area_range');
+      if (!areaRangeFromUrl) {
+        const fromArea = urlParams.get('from_area');
+        const toArea = urlParams.get('to_area');
+        if (fromArea || toArea) {
+          if (fromArea && toArea) {
+            areaRangeFromUrl = `${fromArea}-${toArea}`;
+          } else if (fromArea && !toArea) {
+            areaRangeFromUrl = `${fromArea}+`;
+          } else if (!fromArea && toArea) {
+            areaRangeFromUrl = `0-${toArea}`;
+          }
+        }
+      }
       
       setFilters(prev => ({
         ...prev,
@@ -201,18 +232,34 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         }
       } else if (key === 'priceRange') {
         if (value !== 'all') {
-          const [min, max] = value.split('-');
-          if (min) urlParams.set('from_price', min);
-          if (max && max !== '+') urlParams.set('to_price', max);
+          if (value.includes('+')) {
+            // Handle cases like "1000+"
+            const min = value.replace('+', '');
+            urlParams.set('from_price', min);
+            urlParams.delete('to_price');
+          } else {
+            // Handle cases like "1000-2000"
+            const [min, max] = value.split('-');
+            if (min) urlParams.set('from_price', min);
+            if (max) urlParams.set('to_price', max);
+          }
         } else {
           urlParams.delete('from_price');
           urlParams.delete('to_price');
         }
       } else if (key === 'areaRange') {
         if (value !== 'all') {
-          const [min, max] = value.split('-');
-          if (min) urlParams.set('from_area', min);
-          if (max && max !== '+') urlParams.set('to_area', max);
+          if (value.includes('+')) {
+            // Handle cases like "100+"
+            const min = value.replace('+', '');
+            urlParams.set('from_area', min);
+            urlParams.delete('to_area');
+          } else {
+            // Handle cases like "100-200"
+            const [min, max] = value.split('-');
+            if (min) urlParams.set('from_area', min);
+            if (max) urlParams.set('to_area', max);
+          }
         } else {
           urlParams.delete('from_area');
           urlParams.delete('to_area');
@@ -263,16 +310,30 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
       
       // Price range - only include if not 'all'
       if (newFilters.priceRange !== 'all') {
-        const [min, max] = newFilters.priceRange.split('-');
-        if (min) apiParams.from_price = parseInt(min);
-        if (max && max !== '+') apiParams.to_price = parseInt(max);
+        if (newFilters.priceRange.includes('+')) {
+          // Handle cases like "1000+"
+          const min = newFilters.priceRange.replace('+', '');
+          apiParams.from_price = parseInt(min);
+        } else {
+          // Handle cases like "1000-2000"
+          const [min, max] = newFilters.priceRange.split('-');
+          if (min) apiParams.from_price = parseInt(min);
+          if (max) apiParams.to_price = parseInt(max);
+        }
       }
       
       // Area range - only include if not 'all'
       if (newFilters.areaRange !== 'all') {
-        const [min, max] = newFilters.areaRange.split('-');
-        if (min) apiParams.from_area = parseInt(min);
-        if (max && max !== '+') apiParams.to_area = parseInt(max);
+        if (newFilters.areaRange.includes('+')) {
+          // Handle cases like "100+"
+          const min = newFilters.areaRange.replace('+', '');
+          apiParams.from_area = parseInt(min);
+        } else {
+          // Handle cases like "100-200"
+          const [min, max] = newFilters.areaRange.split('-');
+          if (min) apiParams.from_area = parseInt(min);
+          if (max) apiParams.to_area = parseInt(max);
+        }
       }
       
       // Bedrooms - only include if not 'all'
@@ -324,14 +385,28 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
       apiParams.property_type = filters.propertyType;
     }
     if (filters.priceRange && filters.priceRange !== 'all') {
-      const [min, max] = filters.priceRange.split('-');
-      if (min) apiParams.from_price = parseInt(min);
-      if (max && max !== '+') apiParams.to_price = parseInt(max);
+      if (filters.priceRange.includes('+')) {
+        // Handle cases like "1000+"
+        const min = filters.priceRange.replace('+', '');
+        apiParams.from_price = parseInt(min);
+      } else {
+        // Handle cases like "1000-2000"
+        const [min, max] = filters.priceRange.split('-');
+        if (min) apiParams.from_price = parseInt(min);
+        if (max) apiParams.to_price = parseInt(max);
+      }
     }
     if (filters.areaRange && filters.areaRange !== 'all') {
-      const [min, max] = filters.areaRange.split('-');
-      if (min) apiParams.from_area = parseInt(min);
-      if (max && max !== '+') apiParams.to_area = parseInt(max);
+      if (filters.areaRange.includes('+')) {
+        // Handle cases like "100+"
+        const min = filters.areaRange.replace('+', '');
+        apiParams.from_area = parseInt(min);
+      } else {
+        // Handle cases like "100-200"
+        const [min, max] = filters.areaRange.split('-');
+        if (min) apiParams.from_area = parseInt(min);
+        if (max) apiParams.to_area = parseInt(max);
+      }
     }
     if (filters.bedrooms && filters.bedrooms !== 'all') {
       apiParams.bedrooms = parseInt(filters.bedrooms);
@@ -402,17 +477,13 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
     
     try {
       setIsBookmarking(true);
-      const user_id = session.user.id;
       
       // Generate name and description based on current filters
       const filterNames = [];
       if (filters.listingType) filterNames.push(LISTING_TYPES.find(type => type.value === filters.listingType)?.label || '');
       if (filters.city) filterNames.push(filters.city);
       if (filters.district) filterNames.push(filters.district);
-      if (keyword) filterNames.push(keyword);
-      if (filters.propertyType !== 'all') filterNames.push(filters.propertyType);
       if (filters.bedrooms !== 'all') filterNames.push(`${filters.bedrooms} phòng ngủ`);
-      if (user_id) filterNames.push(user_id);
       
       const name = filterNames.length > 0 ? filterNames.join(' - ') : 'Bộ lọc tìm kiếm';
       const description = `Lưu bộ lọc: ${name}`;
@@ -432,16 +503,30 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
       
       // Add price range if specified
       if (filters.priceRange !== 'all') {
-        const [min, max] = filters.priceRange.split('-');
-        if (min) request.from_price = parseInt(min) * 1000000; // Convert to VND
-        if (max && max !== '+') request.to_price = parseInt(max) * 1000000; // Convert to VND
+        if (filters.priceRange.includes('+')) {
+          // Handle cases like "1000+"
+          const min = filters.priceRange.replace('+', '');
+          request.from_price = parseInt(min) * 1000000; // Convert to VND
+        } else {
+          // Handle cases like "1000-2000"
+          const [min, max] = filters.priceRange.split('-');
+          if (min) request.from_price = parseInt(min) * 1000000; // Convert to VND
+          if (max) request.to_price = parseInt(max) * 1000000; // Convert to VND
+        }
       }
       
       // Add area range if specified
       if (filters.areaRange !== 'all') {
-        const [min, max] = filters.areaRange.split('-');
-        if (min) request.from_area = parseInt(min);
-        if (max && max !== '+') request.to_area = parseInt(max);
+        if (filters.areaRange.includes('+')) {
+          // Handle cases like "100+"
+          const min = filters.areaRange.replace('+', '');
+          request.from_area = parseInt(min);
+        } else {
+          // Handle cases like "100-200"
+          const [min, max] = filters.areaRange.split('-');
+          if (min) request.from_area = parseInt(min);
+          if (max) request.to_area = parseInt(max);
+        }
       }
 
       const response = await bookmarkService.createBookmark(request);
@@ -650,9 +735,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
            onChange={(value) => handleFilterChange('legalStatus', value)}
            options={[
              { value: 'all', label: 'Tất cả pháp lý' },
-             { value: 'sổ đỏ', label: 'Sổ đỏ' },
-             { value: 'hđmb', label: 'HĐMB' },
-             { value: 'khác', label: 'Khác' },
+             ...LEGAL_STATUS as any
            ]} 
          />
       </div>

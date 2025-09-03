@@ -15,6 +15,7 @@ import { useProfileStats } from '@/hooks';
 import { FavoritesDropdown, NotificationsDropdown } from '@/components/features';
 import { useLogout } from '@/hooks/useLogout';
 import { useUserBalance } from '@/hooks';
+import { requestBalanceRefresh } from '@/hooks/useUserBalance';
 
 const Header: React.FC = () => {
   const { data: session, status } = useSession();
@@ -48,6 +49,18 @@ const Header: React.FC = () => {
     handleCloseForgotPasswordModal();
     handleOpenLoginModal();
   };
+
+  // Auto-refresh balance when session changes
+  useEffect(() => {
+    if (status === 'authenticated' && session?.accessToken) {
+      // Small delay to ensure session is fully established
+      const timer = setTimeout(() => {
+        requestBalanceRefresh();
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [status, session?.accessToken]);
 
   const userMenuItems = [
     {
@@ -143,7 +156,7 @@ const Header: React.FC = () => {
                       <div className="relative inline-flex items-center">
                         <img src="/svgs/akar-heart.svg" alt="favorite" width={20} height={20} className="mt-2"/>
                         <Badge 
-                          count={profileStats?.favorite_count || 0} 
+                          count={(profileStats?.favorite_count || 0) + (profileStats?.bookmark_count || 0)} 
                           size="small" 
                           className="absolute -top-1 right-1" 
                         />

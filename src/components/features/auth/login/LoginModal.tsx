@@ -10,6 +10,7 @@ import Input from '@/components/ui/forms/Input';
 import Button from '@/components/ui/buttons/Button';
 import { SocialLoginButton } from '../shared';
 import { App, Divider } from 'antd';
+import { requestBalanceRefresh } from '@/hooks/useUserBalance';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -98,6 +99,9 @@ const LoginModal: React.FC<LoginModalProps> = ({
         setTimeout(async () => {
           await update();
           router.refresh(); // Refresh the current route to update server components
+          
+          // Trigger balance refresh after successful login
+          requestBalanceRefresh();
         }, 100);
       } else {
         console.log('❓ Unexpected login result:', result);

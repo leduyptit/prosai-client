@@ -134,12 +134,7 @@ const PropertyRanking: React.FC<PropertyRankingProps> = ({
                         title={property.title}
                         description={property.title}
                         images={property.images || []}
-                        price={property.price_all?.[0] || property.price?.[0] || 0}
-                        area={property.area?.[0] || 0}
                         address={property.address || ''}
-                        city=""
-                        district=""
-                        ward=""
                         className="w-8 h-8 rounded"
                         size="small"
                       />

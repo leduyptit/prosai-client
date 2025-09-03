@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetchFavoritesList, FavoritesListResponse } from '@/services';
 
-export const useFavoritesList = () => {
+export const useFavoritesList = (limit?: number) => {
   const [data, setData] = useState<FavoritesListResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const refetch = async () => {
+  const refetch = useCallback(async (customLimit?: number) => {
     try {
       setLoading(true);
       setError(null);
-      const favorites = await fetchFavoritesList();
+      const favorites = await fetchFavoritesList(customLimit || limit);
       setData(favorites);
     } catch (err) {
       console.error('Failed to load favorites list:', err);
@@ -18,7 +18,12 @@ export const useFavoritesList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [limit]);
+
+  // Auto-fetch data when component mounts
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   return {
     data,
