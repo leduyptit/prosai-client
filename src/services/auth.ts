@@ -11,14 +11,13 @@ import {
   ApiResponse
 } from '@/types/api';
 import { ProSaiAuthResponse } from '@/types/prosai-api';
+import { API_ENDPOINTS } from '@/constants';
 
 class AuthService {
-  private baseUrl = '/auth';
-
   // Login
   async login(credentials: LoginRequest): Promise<ProSaiAuthResponse> {
     try {
-      const response = await corsApi.postUrlEncoded<ProSaiAuthResponse>(`${this.baseUrl}/login`, credentials);
+      const response = await corsApi.postUrlEncoded<ProSaiAuthResponse>(API_ENDPOINTS.AUTH.LOGIN, credentials);
       return response;
     } catch (error) {
       console.error('Login failed:', error);
@@ -29,7 +28,7 @@ class AuthService {
   // Register
   async register(credentials: RegisterRequest): Promise<ProSaiAuthResponse> {
     try {
-      const response = await corsApi.postUrlEncoded<ProSaiAuthResponse>(`${this.baseUrl}/register`, credentials);
+      const response = await corsApi.postUrlEncoded<ProSaiAuthResponse>(API_ENDPOINTS.AUTH.REGISTER, credentials);
       return response;
     } catch (error) {
       console.error('Registration failed:', error);
@@ -45,7 +44,7 @@ class AuthService {
         provider
       };
       
-      const response = await corsApi.get<ProSaiAuthResponse>(`${this.baseUrl}/social-login?access_token=${encodeURIComponent(accessToken)}&provider=${provider}`);
+      const response = await corsApi.get<ProSaiAuthResponse>(`${API_ENDPOINTS.AUTH.BASE}/social-login?access_token=${encodeURIComponent(accessToken)}&provider=${provider}`);
       return response;
     } catch (error) {
       console.error(`${provider} social login failed:`, error);
@@ -56,7 +55,7 @@ class AuthService {
   // Get User Profile
   async getProfile(): Promise<UserProfile> {
     try {
-      const response = await apiClient.get<UserProfile>(`${this.baseUrl}/profile`);
+      const response = await apiClient.get<UserProfile>(API_ENDPOINTS.AUTH.PROFILE);
       return response.data;
     } catch (error) {
       console.error('Get profile failed:', error);
@@ -67,7 +66,7 @@ class AuthService {
   // Update Profile
   async updateProfile(data: UpdateProfileRequest): Promise<ApiResponse<UserProfile>> {
     try {
-      const response = await apiClient.put<ApiResponse<UserProfile>>(`${this.baseUrl}/profile`, data);
+      const response = await apiClient.put<ApiResponse<UserProfile>>(API_ENDPOINTS.AUTH.PROFILE, data);
       return response.data;
     } catch (error) {
       console.error('Update profile failed:', error);
@@ -78,7 +77,7 @@ class AuthService {
   // Change Password
   async changePassword(data: ChangePasswordRequest): Promise<ApiResponse<{ message: string }>> {
     try {
-      const response = await apiClient.post(`${this.baseUrl}/change-password`, data);
+      const response = await apiClient.post(`${API_ENDPOINTS.AUTH.BASE}/change-password`, data);
       return response.data;
     } catch (error) {
       console.error('Change password failed:', error);
@@ -89,7 +88,7 @@ class AuthService {
   // Forgot Password
   async forgotPassword(data: ForgotPasswordRequest): Promise<ApiResponse<{ message: string }> & { statusCode?: number }> {
     try {
-      const response = await apiClient.post<ApiResponse<{ message: string }>>(`${this.baseUrl}/forgot-password`, data);
+      const response = await apiClient.post<ApiResponse<{ message: string }>>(`${API_ENDPOINTS.AUTH.BASE}/forgot-password`, data);
       return {
         ...response.data,
         statusCode: response.status
@@ -103,7 +102,7 @@ class AuthService {
   // Reset Password
   async resetPassword(data: ResetPasswordRequest): Promise<ApiResponse<{ message: string }>> {
     try {
-      const response = await apiClient.post<ApiResponse<{ message: string }>>(`${this.baseUrl}/reset-password`, data);
+      const response = await apiClient.post<ApiResponse<{ message: string }>>(`${API_ENDPOINTS.AUTH.BASE}/reset-password`, data);
       return response.data;
     } catch (error) {
       console.error('Reset password failed:', error);
@@ -114,7 +113,7 @@ class AuthService {
   // Logout
   async logout(): Promise<ApiResponse<{ message: string }>> {
     try {
-      const response = await apiClient.post<ApiResponse<{ message: string }>>(`${this.baseUrl}/logout`);
+      const response = await apiClient.post<ApiResponse<{ message: string }>>(API_ENDPOINTS.AUTH.LOGOUT);
       return response.data;
     } catch (error) {
       console.error('Logout failed:', error);
@@ -125,7 +124,7 @@ class AuthService {
   // Refresh Token
   async refreshToken(refreshToken: string): Promise<ProSaiAuthResponse> {
     try {
-      const response = await apiClient.post<ProSaiAuthResponse>(`${this.baseUrl}/refresh-token`, { refresh_token: refreshToken });
+      const response = await apiClient.post<ProSaiAuthResponse>(`${API_ENDPOINTS.AUTH.BASE}/refresh-token`, { refresh_token: refreshToken });
       return response.data;
     } catch (error) {
       console.error('Refresh token failed:', error);
@@ -136,7 +135,7 @@ class AuthService {
   // Verify Token
   async verifyToken(token: string): Promise<ApiResponse<{ user: UserProfile }>> {
     try {
-      const response = await apiClient.get<ApiResponse<{ user: UserProfile }>>(`${this.baseUrl}/verify-token?token=${encodeURIComponent(token)}`);
+      const response = await apiClient.get<ApiResponse<{ user: UserProfile }>>(`${API_ENDPOINTS.AUTH.BASE}/verify-token?token=${encodeURIComponent(token)}`);
       return response.data;
     } catch (error) {
       console.error('Verify token failed:', error);

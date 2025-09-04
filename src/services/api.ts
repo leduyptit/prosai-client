@@ -30,22 +30,12 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Debug: Log all errors
-    console.error('API Error:', {
-      url: error.config?.url,
-      method: error.config?.method,
-      status: error.response?.status,
-      data: error.response?.data,
-      message: error.message
-    });
-
     // Handle 401 errors (unauthorized)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       
       // Try to refresh token or redirect to login
       const session = await getSession();
-      console.log('Session on 401 error:', session);
       
       if (session?.user && 'refreshToken' in session && session.refreshToken) {
         try {
@@ -61,14 +51,10 @@ apiClient.interceptors.response.use(
         } catch (refreshError: unknown) {
           // Refresh failed, redirect to login
           console.error('Token refresh failed:', refreshError);
-          // Temporarily disable redirect for debugging
-          // window.location.href = '/auth/signin';
         }
       } else {
         // No refresh token, redirect to login
         console.log('No refresh token found, would redirect to signin');
-        // Temporarily disable redirect for debugging
-        // window.location.href = '/auth/signin';
       }
     }
 

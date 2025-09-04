@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from 'antd';
+import { DISTRICTS } from '@/constants';
 
 interface DistrictSelectorProps {
   visible: boolean;
@@ -29,45 +30,10 @@ const DistrictSelector: React.FC<DistrictSelectorProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredDistricts, setFilteredDistricts] = useState<any[]>([]);
 
-  // Mock district data for selected city
+  // Get district data for selected city from constants
   const getDistrictsForCity = (city: string) => {
-    const mockDistricts: { [key: string]: any[] } = {
-      'Hà Nội': [
-        { value: 'Cầu Giấy', label: 'Cầu Giấy', searchCount: 33987 },
-        { value: 'Long Biên', label: 'Long Biên', searchCount: 28945 },
-        { value: 'Ba Đình', label: 'Ba Đình', searchCount: 25678 },
-        { value: 'Hà Đông', label: 'Hà Đông', searchCount: 23456 },
-        { value: 'Thanh Xuân', label: 'Thanh Xuân', searchCount: 21234 },
-        { value: 'Đống Đa', label: 'Đống Đa', searchCount: 19876 },
-        { value: 'Bắc Từ Liêm', label: 'Bắc Từ Liêm', searchCount: 18765 },
-        { value: 'Nam Từ Liêm', label: 'Nam Từ Liêm', searchCount: 17654 },
-        { value: 'Hai Bà Trưng', label: 'Hai Bà Trưng', searchCount: 16543 },
-        { value: 'Hoàn Kiếm', label: 'Hoàn Kiếm', searchCount: 15432 },
-        { value: 'Tây Hồ', label: 'Tây Hồ', searchCount: 14321 },
-        { value: 'Hoàng Mai', label: 'Hoàng Mai', searchCount: 13210 }
-      ],
-      'TP. Hồ Chí Minh': [
-        { value: 'Quận 1', label: 'Quận 1', searchCount: 45678 },
-        { value: 'Quận 2', label: 'Quận 2', searchCount: 42345 },
-        { value: 'Quận 3', label: 'Quận 3', searchCount: 39876 },
-        { value: 'Quận 4', label: 'Quận 4', searchCount: 37654 },
-        { value: 'Quận 5', label: 'Quận 5', searchCount: 35432 },
-        { value: 'Quận 6', label: 'Quận 6', searchCount: 33210 },
-        { value: 'Quận 7', label: 'Quận 7', searchCount: 31987 },
-        { value: 'Quận 8', label: 'Quận 8', searchCount: 30765 },
-        { value: 'Quận 9', label: 'Quận 9', searchCount: 29543 },
-        { value: 'Quận 10', label: 'Quận 10', searchCount: 28321 }
-      ],
-      'Đà Nẵng': [
-        { value: 'Quận Hải Châu', label: 'Quận Hải Châu', searchCount: 12345 },
-        { value: 'Quận Thanh Khê', label: 'Quận Thanh Khê', searchCount: 11234 },
-        { value: 'Quận Sơn Trà', label: 'Quận Sơn Trà', searchCount: 10123 },
-        { value: 'Quận Ngũ Hành Sơn', label: 'Quận Ngũ Hành Sơn', searchCount: 9012 },
-        { value: 'Quận Liên Chiểu', label: 'Quận Liên Chiểu', searchCount: 8901 },
-        { value: 'Quận Cẩm Lệ', label: 'Quận Cẩm Lệ', searchCount: 8790 }
-      ]
-    };
-    return mockDistricts[city] || [];
+    const districts = DISTRICTS[city as keyof typeof DISTRICTS];
+    return districts ? [...districts] : [];
   };
 
   // Filter districts based on search term

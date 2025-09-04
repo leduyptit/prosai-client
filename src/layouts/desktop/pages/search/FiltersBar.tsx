@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { App, Input, Button } from 'antd';
 import Select from '@/components/ui/forms/Select';
+import PriceRangeSelect from '@/components/ui/forms/PriceRangeSelect';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { LocationSearchInput } from '@/components/features/search';
 import { useSession } from 'next-auth/react';
@@ -672,19 +673,12 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
              ...PROPERTY_TYPES as any
            ]} 
          />
-                 <Select 
+                 <PriceRangeSelect
            size="small" 
-           placeholder="Giá" 
+           placeholder="Mức giá" 
            className="w-full" 
-           variant="outlined" 
            value={filters.priceRange}
            onChange={(value) => handleFilterChange('priceRange', value)}
-           options={
-            [
-              { value: 'all', label: 'Tất cả giá' },
-              ...PRICE_RANGES as any
-            ]
-          } 
          />
                  <Select 
            size="small" 

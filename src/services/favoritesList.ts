@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface FavoriteItem {
   id: string;
@@ -23,7 +24,7 @@ export type FavoritesListResponse = FavoriteItem[];
 export const fetchFavoritesList = async (limit?: number): Promise<FavoritesListResponse> => {
   try {
     const params = limit ? { limit } : {};
-    const response = await apiClient.get<FavoritesListResponse>('/favorites', { params });
+    const response = await apiClient.get<FavoritesListResponse>(API_ENDPOINTS.FAVORITES.BASE, { params });
     return response.data;
   } catch (error) {
     console.error('Error fetching favorites list:', error);

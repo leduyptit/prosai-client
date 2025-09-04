@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface NewsCategory {
   id: string;
@@ -49,7 +50,7 @@ export interface NewsResponse {
 // Fetch active news categories
 export const fetchNewsCategories = async (): Promise<NewsCategory[]> => {
   try {
-    const response = await apiClient.get<NewsCategory[]>('/news-categories/active/all');
+    const response = await apiClient.get<NewsCategory[]>(API_ENDPOINTS.NEWS.CATEGORIES);
     return response.data;
   } catch (error) {
     console.error('Failed to fetch news categories:', error);
@@ -60,7 +61,7 @@ export const fetchNewsCategories = async (): Promise<NewsCategory[]> => {
 // Fetch news by category
 export const fetchNewsByCategory = async (categoryId: string, page: number = 1, limit: number = 3, sortType: string = 'latest'): Promise<NewsResponse> => {
   try {
-    const response = await apiClient.get<NewsResponse>(`/news/category/${categoryId}`, {
+    const response = await apiClient.get<NewsResponse>(`${API_ENDPOINTS.NEWS.BY_CATEGORY}/${categoryId}`, {
       params: { page, limit, sort_type: sortType }
     });
     return response.data;
@@ -79,7 +80,7 @@ export const fetchAllNews = async (
   isPublished: boolean = true
 ): Promise<NewsResponse> => {
   try {
-    const response = await apiClient.get<NewsResponse>('/news', {
+    const response = await apiClient.get<NewsResponse>(API_ENDPOINTS.NEWS.BASE, {
       params: { 
         page, 
         limit, 
@@ -98,7 +99,7 @@ export const fetchAllNews = async (
 // Fetch most viewed news
 export const fetchMostViewedNews = async (limit: number = 10): Promise<NewsArticle[]> => {
   try {
-    const response = await apiClient.get<NewsArticle[]>('/news/most-viewed', {
+    const response = await apiClient.get<NewsArticle[]>(API_ENDPOINTS.NEWS.MOST_VIEWED, {
       params: { limit }
     });
     return response.data || [];
@@ -111,7 +112,7 @@ export const fetchMostViewedNews = async (limit: number = 10): Promise<NewsArtic
 // Fetch news detail by ID
 export const fetchNewsDetail = async (articleId: string): Promise<NewsArticle> => {
   try {
-    const response = await apiClient.get<NewsArticle>(`/news/${articleId}`);
+    const response = await apiClient.get<NewsArticle>(`${API_ENDPOINTS.NEWS.BASE}/${articleId}`);
     return response.data;
   } catch (error) {
     console.error('Failed to fetch news detail:', error);

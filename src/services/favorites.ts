@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface FavoriteRequest {
   property_id: string;
@@ -33,11 +34,9 @@ export interface FavoriteCheckResponse {
 }
 
 class FavoriteService {
-  private baseUrl = '/favorites';
-
   async createFavorite(favoriteData: FavoriteRequest): Promise<FavoriteResponse> {
     try {
-      const response = await apiClient.post<FavoriteResponse>(this.baseUrl, favoriteData);
+      const response = await apiClient.post<FavoriteResponse>(API_ENDPOINTS.FAVORITES.BASE, favoriteData);
       
       // Handle successful creation (201 Created)
       if (response.status === 201) {
@@ -78,7 +77,7 @@ class FavoriteService {
 
   async deleteFavorite(propertyId: string): Promise<FavoriteDeleteResponse> {
     try {
-      const response = await apiClient.delete<FavoriteDeleteResponse>(`${this.baseUrl}/${propertyId}`);
+      const response = await apiClient.delete<FavoriteDeleteResponse>(`${API_ENDPOINTS.FAVORITES.BASE}/${propertyId}`);
       
       // Handle successful deletion
       if (response.status === 200 || response.status === 204) {
@@ -120,7 +119,7 @@ class FavoriteService {
 
   async getFavorites(): Promise<FavoriteResponse> {
     try {
-      const response = await apiClient.get<FavoriteResponse>(this.baseUrl);
+      const response = await apiClient.get<FavoriteResponse>(API_ENDPOINTS.FAVORITES.BASE);
       return response.data;
     } catch (error) {
       console.error('Get favorites failed:', error);
@@ -130,7 +129,7 @@ class FavoriteService {
 
   async checkFavorite(propertyId: string): Promise<boolean> {
     try {
-      const response = await apiClient.get<FavoriteCheckResponse>(`${this.baseUrl}/check/${propertyId}`);
+      const response = await apiClient.get<FavoriteCheckResponse>(`${API_ENDPOINTS.FAVORITES.CHECK}/${propertyId}`);
       return response.data.isFavorite;
     } catch (error) {
       console.error('Check favorite failed:', error);

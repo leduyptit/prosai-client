@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface MembershipPlan {
   id: string;
@@ -112,7 +113,7 @@ class MembershipService {
   // Get user profile with package info
   async getUserProfile(): Promise<{ success: boolean; data?: any; message?: string }> {
     try {
-      const response = await apiClient.get('/auth/profile');
+      const response = await apiClient.get(API_ENDPOINTS.AUTH.PROFILE);
       return {
         success: true,
         data: response.data.data,

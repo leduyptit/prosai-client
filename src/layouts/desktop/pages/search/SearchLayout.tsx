@@ -180,16 +180,16 @@ const SearchLayout: React.FC = () => {
     // Start with current search params but reset page to 1
     const updatedParams: any = { ...searchParams, page: 1 };
     
-    // Update with new params, but also remove any params that are not in newParams
-    // This ensures that when a filter is set to "all", it gets removed
-    Object.keys(updatedParams).forEach(key => {
-      if (key !== 'page' && key !== 'limit' && !(key in newParams)) {
+    // Apply new params - only update the specific params provided
+    Object.keys(newParams).forEach(key => {
+      if (newParams[key] === undefined || newParams[key] === null || newParams[key] === '') {
+        // Remove the param if it's explicitly set to undefined/null/empty
         delete updatedParams[key];
+      } else {
+        // Update the param with new value
+        updatedParams[key] = newParams[key];
       }
     });
-    
-    // Apply new params
-    Object.assign(updatedParams, newParams);
     
     setSearchParams(updatedParams);
     updateUrlParams(updatedParams);
@@ -281,7 +281,42 @@ const SearchLayout: React.FC = () => {
             )}
           </div>
           <div className="col-span-12 lg:col-span-3">
-            <Sidebar />
+            <Sidebar 
+              priceRange={searchParams.from_price && searchParams.to_price 
+                ? `${searchParams.from_price}-${searchParams.to_price}` 
+                : searchParams.from_price 
+                  ? `${searchParams.from_price}+` 
+                  : 'all'
+              }
+              areaRange={searchParams.from_area && searchParams.to_area 
+                ? `${searchParams.from_area}-${searchParams.to_area}` 
+                : searchParams.from_area 
+                  ? `${searchParams.from_area}+` 
+                  : 'all'
+              }
+              onPriceChange={(value) => {
+                if (value === 'all') {
+                  handleSearch({ from_price: undefined, to_price: undefined });
+                } else if (value.includes('+')) {
+                  const from = value.replace('+', '');
+                  handleSearch({ from_price: parseInt(from), to_price: undefined });
+                } else if (value.includes('-')) {
+                  const [from, to] = value.split('-');
+                  handleSearch({ from_price: parseInt(from), to_price: parseInt(to) });
+                }
+              }}
+              onAreaChange={(value) => {
+                if (value === 'all') {
+                  handleSearch({ from_area: undefined, to_area: undefined });
+                } else if (value.includes('+')) {
+                  const from = value.replace('+', '');
+                  handleSearch({ from_area: parseInt(from), to_area: undefined });
+                } else if (value.includes('-')) {
+                  const [from, to] = value.split('-');
+                  handleSearch({ from_area: parseInt(from), to_area: parseInt(to) });
+                }
+              }}
+            />
           </div>
         </div>
       </div>

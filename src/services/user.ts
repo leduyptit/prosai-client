@@ -1,11 +1,12 @@
 import { api, PaginatedResponse } from './api';
 import { User, MembershipPlanDetails, UserMembership } from '@/types/auth';
 import { Notification } from '@/types/api';
+import { API_ENDPOINTS } from '@/constants';
 
 class UserService {
   // Get user dashboard statistics
   async getDashboardStats(): Promise<any> {
-    const response = await api.get<any>('/user/dashboard');
+    const response = await api.get<any>(API_ENDPOINTS.USERS.DASHBOARD);
     return response.data;
   }
 
@@ -15,34 +16,34 @@ class UserService {
     limit?: number;
     unread?: boolean;
   } = {}): Promise<PaginatedResponse<Notification>> {
-    const response = await api.get<PaginatedResponse<Notification>>('/user/notifications', { params });
+    const response = await api.get<PaginatedResponse<Notification>>(API_ENDPOINTS.USERS.NOTIFICATIONS, { params });
     return response.data;
   }
 
   // Mark notification as read
   async markNotificationRead(id: string): Promise<void> {
-    await api.patch(`/user/notifications/${id}/read`);
+    await api.patch(`${API_ENDPOINTS.USERS.NOTIFICATIONS}/${id}/read`);
   }
 
   // Mark all notifications as read
   async markAllNotificationsRead(): Promise<void> {
-    await api.patch('/user/notifications/read-all');
+    await api.patch(`${API_ENDPOINTS.USERS.NOTIFICATIONS}/read-all`);
   }
 
   // Delete notification
   async deleteNotification(id: string): Promise<void> {
-    await api.delete(`/user/notifications/${id}`);
+    await api.delete(`${API_ENDPOINTS.USERS.NOTIFICATIONS}/${id}`);
   }
 
   // Get unread notifications count
   async getUnreadCount(): Promise<{ count: number }> {
-    const response = await api.get<{ count: number }>('/user/notifications/unread-count');
+    const response = await api.get<{ count: number }>(`${API_ENDPOINTS.USERS.NOTIFICATIONS}/unread-count`);
     return response.data;
   }
 
   // Get membership plans
   async getMembershipPlans(): Promise<MembershipPlanDetails[]> {
-    const response = await api.get<MembershipPlanDetails[]>('/membership/plans');
+    const response = await api.get<MembershipPlanDetails[]>(API_ENDPOINTS.MEMBERSHIP.PLANS);
     return response.data;
   }
 
@@ -85,7 +86,7 @@ class UserService {
     planType: string;
     createdAt: string;
   }>> {
-    const response = await api.get('/user/payments', { params });
+    const response = await api.get(API_ENDPOINTS.USERS.PAYMENTS, { params });
     return response.data as PaginatedResponse<{
       id: string;
       amount: number;
@@ -134,7 +135,7 @@ class UserService {
       timezone: string;
     };
   }> {
-    const response = await api.get('/user/settings');
+    const response = await api.get(API_ENDPOINTS.USERS.SETTINGS);
     return response.data as {
       notifications: {
         email: boolean;

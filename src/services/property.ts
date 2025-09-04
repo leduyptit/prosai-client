@@ -1,5 +1,6 @@
 import { api, apiClient, PaginatedResponse } from './api';
 import { Property, PropertySearchParams, PropertyRankingItem } from '@/types/api';
+import { API_ENDPOINTS } from '@/constants';
 
 class PropertyService {
   // Get properties with filters and pagination
@@ -148,7 +149,7 @@ class PropertyService {
   // Get property ranking data from ProSai API
   async getPropertyRanking(type: 'latest_sale' | 'latest_rent', limit: number = 8): Promise<PropertyRankingItem[]> {
     try {
-      const response = await apiClient.get(`/property-ranking/realestate-for-you`, {
+      const response = await apiClient.get(API_ENDPOINTS.PROPERTIES.RANKING_FOR_YOU, {
         params: { type, limit }
       });
       return response.data.data || [];
@@ -161,7 +162,7 @@ class PropertyService {
   // Get top properties ranking with pagination
   async getTopProperties(page: number = 1, limit: number = 8): Promise<{ data: PropertyRankingItem[]; total: number; page: number; pageCount: number }> {
     try {
-      const response = await apiClient.get(`/property-ranking/realestate-top`, {
+      const response = await apiClient.get(API_ENDPOINTS.PROPERTIES.RANKING_TOP, {
         params: { page, limit }
       });
       return {
@@ -179,7 +180,7 @@ class PropertyService {
   // Get high-rated properties ranking with pagination
   async getHighRatedProperties(page: number = 1, limit: number = 8): Promise<{ data: PropertyRankingItem[]; total: number; page: number; pageCount: number }> {
     try {
-      const response = await apiClient.get(`/property-ranking/realestate-highrated`, {
+      const response = await apiClient.get(API_ENDPOINTS.PROPERTIES.RANKING_HIGH_RATED, {
         params: { page, limit }
       });
       return {
@@ -197,7 +198,7 @@ class PropertyService {
   // Get AI suggested properties ranking with pagination
   async getAISuggestedProperties(page: number = 1, limit: number = 8): Promise<{ data: PropertyRankingItem[]; total: number; page: number; pageCount: number }> {
     try {
-      const response = await apiClient.get(`/property-ranking/realestate-ai-suggest`, {
+      const response = await apiClient.get(API_ENDPOINTS.PROPERTIES.RANKING_AI_SUGGEST, {
         params: { page, limit }
       });
       return {
@@ -225,7 +226,7 @@ class PropertyService {
         params.user_id_social = userIdSocial;
       }
 
-      const response = await apiClient.get(`/property-related/realestate-by-owner`, {
+      const response = await apiClient.get(API_ENDPOINTS.PROPERTIES.RELATED_BY_OWNER, {
         params
       });
       
@@ -246,7 +247,7 @@ class PropertyService {
     limit?: number;
   } = {}): Promise<PropertyRankingItem[]> {
     try {
-      const response = await apiClient.get(`/property-related/realestate-recommend`, {
+      const response = await apiClient.get(API_ENDPOINTS.PROPERTIES.RELATED_RECOMMEND, {
         params
       });
       

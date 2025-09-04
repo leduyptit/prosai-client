@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface BookmarkRequest {
   name: string;
@@ -30,11 +31,9 @@ export interface BookmarkResponse {
 }
 
 class BookmarkService {
-  private baseUrl = '/bookmarks';
-
   async createBookmark(bookmarkData: BookmarkRequest): Promise<BookmarkResponse> {
     try {
-      const response = await apiClient.post<BookmarkResponse>(this.baseUrl, bookmarkData);
+      const response = await apiClient.post<BookmarkResponse>(API_ENDPOINTS.BOOKMARKS.BASE, bookmarkData);
       
       // Handle successful creation (201 Created)
       if (response.status === 201) {
@@ -75,7 +74,7 @@ class BookmarkService {
 
   async getBookmarks(): Promise<BookmarkResponse> {
     try {
-      const response = await apiClient.get<BookmarkResponse>(this.baseUrl);
+      const response = await apiClient.get<BookmarkResponse>(API_ENDPOINTS.BOOKMARKS.BASE);
       return response.data;
     } catch (error) {
       console.error('Get bookmarks failed:', error);
@@ -85,7 +84,7 @@ class BookmarkService {
 
   async deleteBookmark(id: string): Promise<BookmarkResponse> {
     try {
-      const response = await apiClient.delete<BookmarkResponse>(`${this.baseUrl}/${id}`);
+      const response = await apiClient.delete<BookmarkResponse>(`${API_ENDPOINTS.BOOKMARKS.BASE}/${id}`);
       
       // Handle successful deletion
       if (response.status === 200 || response.status === 204) {

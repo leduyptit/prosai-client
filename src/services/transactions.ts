@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface TransactionItem {
   id: string;
@@ -16,11 +17,9 @@ export interface TransactionsResponse {
 }
 
 class TransactionsService {
-  private baseUrl = '/transactions/user';
-
   async getUserTransactions(): Promise<TransactionsResponse> {
     try {
-      const response = await apiClient.get(this.baseUrl);
+      const response = await apiClient.get(API_ENDPOINTS.TRANSACTIONS.USER);
       // API may return array directly
       const list: TransactionItem[] = Array.isArray(response.data)
         ? response.data

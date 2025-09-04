@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface BookmarkItem {
   id: string;
@@ -25,7 +26,7 @@ export type BookmarksListResponse = BookmarkItem[];
 export const fetchBookmarksList = async (limit?: number): Promise<BookmarksListResponse> => {
   try {
     const params = limit ? { limit } : {};
-    const response = await apiClient.get<BookmarksListResponse>('/bookmarks', { params });
+    const response = await apiClient.get<BookmarksListResponse>(API_ENDPOINTS.BOOKMARKS.BASE, { params });
     return response.data;
   } catch (error) {
     console.error('Error fetching bookmarks list:', error);

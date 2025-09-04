@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from 'antd';
 import Select from '@/components/ui/forms/Select';
+import PriceRangeSelect from '@/components/ui/forms/PriceRangeSelect';
 import { useRouter } from 'next/navigation';
 import { 
   PROPERTY_TYPES, 
@@ -261,7 +262,7 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
                     className="w-full placeholder:text-[#8D8DA1] bg-white border-[#C3C3C3] rounded-lg"
                     options={PROPERTY_TYPES as any}
                   />
-                  <Select
+                  <PriceRangeSelect
                     placeholder="Mức giá"
                     value={localSearchForm.priceRange}
                     size="small"
@@ -269,7 +270,6 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
                       handleLocalInputChange('priceRange', value);
                     }}
                     className="w-full placeholder:text-[#8D8DA1] bg-white border-[#C3C3C3] rounded-lg"
-                    options={PRICE_RANGES as any}
                   />
                   <Select
                     placeholder="Diện tích"

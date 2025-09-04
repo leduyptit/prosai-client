@@ -1,5 +1,6 @@
 import { apiClient } from './api';
 import type { MyPropertyItem } from './myProperties';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface PropertyPostRequest {
   title: string;
@@ -68,11 +69,9 @@ export interface PropertyUpdateRequest extends Partial<PropertyPostRequest> {
 }
 
 class PropertiesService {
-  private baseUrl = '/properties';
-
   async postProperty(propertyData: PropertyPostRequest): Promise<PropertyPostResponse> {
     try {
-      const response = await apiClient.post<PropertyPostResponse>(this.baseUrl, propertyData);
+      const response = await apiClient.post<PropertyPostResponse>(API_ENDPOINTS.PROPERTIES.BASE, propertyData);
       
       return {
         success: true,
@@ -112,7 +111,7 @@ class PropertiesService {
 
   async getPropertyById(id: string): Promise<{ success: boolean; data?: MyPropertyItem; message?: string }> {
     try {
-      const response = await apiClient.get<{ success: boolean; data: MyPropertyItem; message?: string }>(`${this.baseUrl}/${id}`);
+      const response = await apiClient.get<{ success: boolean; data: MyPropertyItem; message?: string }>(`${API_ENDPOINTS.PROPERTIES.BASE}/${id}`);
       return {
         success: true,
         data: (response.data as any).data || (response as any).data?.data || (response as any).data,
@@ -129,7 +128,7 @@ class PropertiesService {
 
   async updateProperty(id: string, updateData: PropertyUpdateRequest): Promise<{ success: boolean; data?: MyPropertyItem; message?: string }> {
     try {
-      const response = await apiClient.put<{ success: boolean; data: MyPropertyItem; message?: string }>(`${this.baseUrl}/${id}`, updateData);
+      const response = await apiClient.put<{ success: boolean; data: MyPropertyItem; message?: string }>(`${API_ENDPOINTS.PROPERTIES.BASE}/${id}`, updateData);
       return {
         success: true,
         data: (response.data as any).data || (response as any).data?.data || (response as any).data,
@@ -158,7 +157,7 @@ class PropertiesService {
 
   async deleteProperty(id: string): Promise<{ success: boolean; message?: string }> {
     try {
-      await apiClient.delete(`${this.baseUrl}/${id}`);
+      await apiClient.delete(`${API_ENDPOINTS.PROPERTIES.BASE}/${id}`);
       return {
         success: true,
         message: 'Xóa tin đăng thành công'
