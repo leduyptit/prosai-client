@@ -22,7 +22,7 @@ interface FiltersBarProps {
   onSearch?: (params: any) => void;
   initialFilters?: {
     city?: string;
-    district?: string;
+    ward?: string;
     propertyType?: string;
     priceRange?: string;
     areaRange?: string;
@@ -56,7 +56,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
   
   const [filters, setFilters] = useState({
     city: initialFilters?.city || '',
-    district: initialFilters?.district || '',
+    ward: initialFilters?.ward || '',
     propertyType: initialFilters?.propertyType || 'all',
     priceRange: initialFilters?.priceRange || 'all',
     areaRange: initialFilters?.areaRange || 'all',
@@ -79,7 +79,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
     if (initialFilters && !hasLoadedFromUrl) {
       setFilters({
         city: initialFilters.city || '',
-        district: initialFilters.district || '',
+        ward: initialFilters.ward || '',
         propertyType: initialFilters.propertyType || 'all',
         priceRange: initialFilters.priceRange || 'all',
         areaRange: initialFilters.areaRange || 'all',
@@ -111,7 +111,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
       // Load all filters from URL params - use snake_case consistently
       const listingTypeFromUrl = urlParams.get('listing_type');
       const cityFromUrl = urlParams.get('city');
-      const districtFromUrl = urlParams.get('district');
+      const wardFromUrl = urlParams.get('ward');
       const propertyTypeFromUrl = urlParams.get('property_type');
       const bedroomsFromUrl = urlParams.get('bedrooms');
       const bathroomsFromUrl = urlParams.get('bathrooms');
@@ -153,7 +153,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         ...prev,
         listingType: listingTypeFromUrl || '1', // Default to '1' if not in URL (like HeaderBanner)
         city: cityFromUrl || '',
-        district: districtFromUrl || '',
+        ward: wardFromUrl || '',
         propertyType: propertyTypeFromUrl || 'all',
         priceRange: priceRangeFromUrl || 'all',
         areaRange: areaRangeFromUrl || 'all',
@@ -219,11 +219,11 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         } else {
           urlParams.delete('city');
         }
-      } else if (key === 'district') {
+      } else if (key === 'ward') {
         if (value && value.trim() !== '') {
-          urlParams.set('district', value);
+          urlParams.set('ward', value);
         } else {
-          urlParams.delete('district');
+          urlParams.delete('ward');
         }
       } else if (key === 'propertyType') {
         if (value !== 'all') {
@@ -290,7 +290,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
     }
     
     // Only call onSearch for non-location filters to prevent reload
-    if (key !== 'city' && key !== 'district') {
+    if (key !== 'city' && key !== 'ward') {
       // Convert filters to API params
       const apiParams: any = {};
       
@@ -299,9 +299,9 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         apiParams.city = newFilters.city;
       }
       
-      // District - only include if not empty
-      if (newFilters.district && newFilters.district.trim() !== '') {
-        apiParams.district = newFilters.district;
+      // Ward - only include if not empty
+      if (newFilters.ward && newFilters.ward.trim() !== '') {
+        apiParams.ward = newFilters.ward;
       }
       
       // Property type - only include if not 'all'
@@ -373,8 +373,8 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
     if (filters.city && filters.city !== 'Chọn vị trí') {
       apiParams.city = filters.city;
     }
-    if (filters.district) {
-      apiParams.district = filters.district;
+    if (filters.ward) {
+      apiParams.ward = filters.ward;
     }
     if (keyword) {
       apiParams.keyword = keyword;
@@ -428,7 +428,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
       
       // Convert to snake_case for URL params
       if (apiParams.city) urlParams.set('city', apiParams.city);
-      if (apiParams.district) urlParams.set('district', apiParams.district);
+      if (apiParams.ward) urlParams.set('ward', apiParams.ward);
       if (apiParams.keyword) urlParams.set('keyword', apiParams.keyword);
       if (apiParams.listing_type) urlParams.set('listing_type', apiParams.listing_type);
       if (apiParams.property_type) urlParams.set('property_type', apiParams.property_type);
@@ -483,7 +483,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
       const filterNames = [];
       if (filters.listingType) filterNames.push(LISTING_TYPES.find(type => type.value === filters.listingType)?.label || '');
       if (filters.city) filterNames.push(filters.city);
-      if (filters.district) filterNames.push(filters.district);
+      if (filters.ward) filterNames.push(filters.ward);
       if (filters.bedrooms !== 'all') filterNames.push(`${filters.bedrooms} phòng ngủ`);
       
       const name = filterNames.length > 0 ? filterNames.join(' - ') : 'Bộ lọc tìm kiếm';
@@ -494,7 +494,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         name,
         description,
         city: filters.city || undefined,
-        district: filters.district || undefined,
+        ward: filters.ward || undefined,
         keyword: keyword || undefined,
         property_type: filters.propertyType !== 'all' ? parseInt(filters.propertyType) : undefined,
         listing_type: filters.listingType !== '1' ? parseInt(filters.listingType) : undefined,
@@ -595,9 +595,9 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         <div className="mb-3 md:mb-0 flex-1">
           <LocationSearchInput
             city={filters.city}
-            district={filters.district}
+            ward={filters.ward}
             onCityChange={(city) => handleFilterChange('city', city)}
-            onDistrictChange={(district) => handleFilterChange('district', district)}
+            onWardChange={(ward) => handleFilterChange('ward', ward)}
             onKeywordChange={(keyword) => {
               setKeyword(keyword);
               if (!keyword) {
@@ -625,7 +625,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
             showSearchButton={true}
             searchButtonText="Tìm kiếm"
             searchButtonClassName="bg-blue-600 hover:bg-blue-700"
-            placeholder="Nhập địa điểm, dự án, quận, huyện..."
+            placeholder="Nhập địa điểm, dự án, phường, xã..."
             showKeywordAsTag={showKeywordAsTag}
             keywordTagText={keywordTagText}
           />

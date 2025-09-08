@@ -52,7 +52,7 @@ const DesktopDashboard: React.FC = () => {
   
   const [searchForm, setSearchForm] = useState({
     city: 'Chọn vị trí',
-    district: '',
+    ward: '',
     propertyType: undefined as string | undefined,
     listingType: undefined as string | undefined,
     priceRange: undefined as string | undefined,
@@ -70,9 +70,9 @@ const DesktopDashboard: React.FC = () => {
       params.set('city', searchForm.city);
     }
     
-    // Add district parameter (only if not empty)
-    if (searchForm.district && searchForm.district.trim() !== '') {
-      params.set('district', searchForm.district.trim());
+    // Add ward parameter (only if not empty)
+    if (searchForm.ward && searchForm.ward.trim() !== '') {
+      params.set('ward', searchForm.ward.trim());
     }
     
     // Add property type parameter (only if selected)

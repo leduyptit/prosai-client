@@ -3,14 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'antd';
 import CitySelector from './CitySelector';
-import DistrictSelector from './DistrictSelector';
+import WardSelector from './WardSelector';
 import SearchSuggestions from './SearchSuggestions';
 
 interface LocationSearchInputProps {
   city: string;
-  district: string;
+  ward: string;
   onCityChange: (city: string) => void;
-  onDistrictChange: (district: string) => void;
+  onWardChange: (ward: string) => void;
   onKeywordChange?: (keyword: string) => void;
   onSearch?: () => void;
   showSearchButton?: boolean;
@@ -25,36 +25,36 @@ interface LocationSearchInputProps {
 
 const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
   city,
-  district,
+  ward,
   onCityChange,
-  onDistrictChange,
+  onWardChange,
   onKeywordChange,
   onSearch,
   showSearchButton = false,
   searchButtonText = 'Tìm kiếm',
   searchButtonClassName = '',
   className = '',
-  placeholder = 'Nhập địa điểm, dự án, quận, huyện...',
+  placeholder = 'Nhập địa điểm, dự án, phường, xã...',
   disabled = false,
   showKeywordAsTag = false,
   keywordTagText = ''
 }) => {
   const [locationPickerVisible, setLocationPickerVisible] = useState(false);
-  const [districtPickerVisible, setDistrictPickerVisible] = useState(false);
-  const [selectedDistricts, setSelectedDistricts] = useState<string[]>([]);
+  const [wardPickerVisible, setWardPickerVisible] = useState(false);
+  const [selectedWards, setSelectedWards] = useState<string[]>([]);
   const [keyword, setKeyword] = useState<string>('');
   const [suggestionsVisible, setSuggestionsVisible] = useState(false);
   const [internalKeywordTagText, setInternalKeywordTagText] = useState<string>('');
   const [internalShowKeywordAsTag, setInternalShowKeywordAsTag] = useState<boolean>(false);
 
-  // Initialize selectedDistricts from district prop
+  // Initialize selectedWards from ward prop
   useEffect(() => {
-    if (district) {
-      setSelectedDistricts(district.split(', ').filter(d => d.trim()));
+    if (ward) {
+      setSelectedWards(ward.split(', ').filter(d => d.trim()));
     } else {
-      setSelectedDistricts([]);
+      setSelectedWards([]);
     }
-  }, [district]);
+  }, [ward]);
 
   // Auto-show keyword tag when props change
   useEffect(() => {
@@ -74,32 +74,32 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
       if (!target.closest('.location-input-container')) {
         setLocationPickerVisible(false);
         setSuggestionsVisible(false);
-        // Only close district picker if user has selected some districts
-        if (selectedDistricts.length > 0) {
-          setDistrictPickerVisible(false);
+        // Only close ward picker if user has selected some wards
+        if (selectedWards.length > 0) {
+          setWardPickerVisible(false);
         }
       }
     };
 
-    if (locationPickerVisible || districtPickerVisible || suggestionsVisible) {
+    if (locationPickerVisible || wardPickerVisible || suggestionsVisible) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [locationPickerVisible, districtPickerVisible, suggestionsVisible, selectedDistricts]);
+  }, [locationPickerVisible, wardPickerVisible, suggestionsVisible, selectedWards]);
 
   const handleCitySelect = (selectedCity: string) => {
     onCityChange(selectedCity);
-    // Reset selected districts when changing city
-    setSelectedDistricts([]);
-    onDistrictChange('');
+    // Reset selected wards when changing city
+    setSelectedWards([]);
+    onWardChange('');
   };
 
-  const handleDistrictSelect = (districts: string[]) => {
-    setSelectedDistricts(districts);
-    onDistrictChange(districts.join(', '));
+  const handleWardSelect = (wards: string[]) => {
+    setSelectedWards(wards);
+    onWardChange(wards.join(', '));
   };
 
   const handleKeywordChange = (value: string) => {
@@ -108,10 +108,10 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
       onKeywordChange(value);
     }
     
-    // Show suggestions when typing, regardless of district selection
+    // Show suggestions when typing, regardless of ward selection
     if (value.length > 0) {
       setSuggestionsVisible(true);
-      setDistrictPickerVisible(false);
+      setWardPickerVisible(false);
       setLocationPickerVisible(false);
     } else {
       setSuggestionsVisible(false);
@@ -120,34 +120,34 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
 
   const handleInputFocus = () => {
     if (!city || city === 'Chọn vị trí') {
-      setDistrictPickerVisible(false);
+      setWardPickerVisible(false);
       setLocationPickerVisible(true);
       setSuggestionsVisible(false);
       return;
     }
-    // Allow focusing on keyword input even without districts
-    if (selectedDistricts.length === 0) {
+    // Allow focusing on keyword input even without wards
+    if (selectedWards.length === 0) {
       setLocationPickerVisible(false);
-      setDistrictPickerVisible(true);
+      setWardPickerVisible(true);
       setSuggestionsVisible(false);
       return;
     }
-    // If districts are selected and there's a keyword, show suggestions
+    // If wards are selected and there's a keyword, show suggestions
     if (keyword.length > 0) {
       setSuggestionsVisible(true);
-      setDistrictPickerVisible(false);
+      setWardPickerVisible(false);
       setLocationPickerVisible(false);
     }
   };
 
-  const handleDistrictClick = () => {
+  const handleWardClick = () => {
     if (!city || city === 'Chọn vị trí') {
       setLocationPickerVisible(true);
-      setDistrictPickerVisible(false);
+      setWardPickerVisible(false);
       setSuggestionsVisible(false);
     } else {
       setLocationPickerVisible(false);
-      setDistrictPickerVisible(true);
+      setWardPickerVisible(true);
       setSuggestionsVisible(false);
     }
   };
@@ -157,7 +157,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
       <div className="flex bg-white border border-[#C3C3C3] rounded-lg">
         {/* Left Section - City Selector */}
         <div className="flex items-center px-4 py-3 border-r border-[#C3C3C3] cursor-pointer" onClick={() => {
-          setDistrictPickerVisible(false);
+          setWardPickerVisible(false);
           setLocationPickerVisible(!locationPickerVisible);
         }}>
           <img src="/svgs/address.svg" alt="location" className="w-4 h-4 mr-2 text-gray-500" />
@@ -173,17 +173,17 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
          <div className="flex-1 flex items-center px-4 py-0">
            <img src="/svgs/icon_search.svg" className="w-5 h-5 mr-3 text-gray-400" alt="search" />
                                    <div className="flex-1">
-              {/* Always show selected districts and keyword tags when they exist */}
-              {(selectedDistricts.length > 0 || (showKeywordAsTag && keywordTagText) || (internalShowKeywordAsTag && internalKeywordTagText)) && !districtPickerVisible && !suggestionsVisible ? (
+              {/* Always show selected wards and keyword tags when they exist */}
+              {(selectedWards.length > 0 || (showKeywordAsTag && keywordTagText) || (internalShowKeywordAsTag && internalKeywordTagText)) && !wardPickerVisible && !suggestionsVisible ? (
                 <div className="flex items-center gap-2 flex-wrap">
-                  {/* Show selected districts */}
-                  {selectedDistricts.slice(0, 1).map((district, index) => (
+                  {/* Show selected wards */}
+                  {selectedWards.slice(0, 1).map((ward, index) => (
                     <span
-                      key={`${district}-${index}`}
+                      key={`${ward}-${index}`}
                       className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm cursor-pointer"
-                      onClick={handleDistrictClick}
+                      onClick={handleWardClick}
                     >
-                      {district}
+                      {ward}
                     </span>
                   ))}
                   
@@ -219,13 +219,13 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
                      </span>
                    )}
                   
-                  {/* Show remaining districts and keywords summary */}
-                   {(selectedDistricts.length > 1) && (
-                     <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer" onClick={handleDistrictClick}>
+                  {/* Show remaining wards and keywords summary */}
+                   {(selectedWards.length > 1) && (
+                     <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer" onClick={handleWardClick}>
                        {(() => {
-                         const remainingDistricts = Math.max(0, selectedDistricts.length - 1);
-                         if (remainingDistricts > 0) {
-                           return `+${remainingDistricts} khu vực`;
+                         const remainingWards = Math.max(0, selectedWards.length - 1);
+                         if (remainingWards > 0) {
+                           return `+${remainingWards} khu vực`;
                          }
                          return '';
                        })()}
@@ -332,13 +332,13 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
         selectedCity={city}
       />
 
-             {/* District Selector Dropdown */}
-       <DistrictSelector
-         visible={districtPickerVisible}
-         onClose={() => setDistrictPickerVisible(false)}
-         onSelect={handleDistrictSelect}
+             {/* Ward Selector Dropdown */}
+       <WardSelector
+         visible={wardPickerVisible}
+         onClose={() => setWardPickerVisible(false)}
+         onSelect={handleWardSelect}
          selectedCity={city}
-         selectedDistricts={selectedDistricts}
+         selectedWards={selectedWards}
          showKeywordAsTag={Boolean((showKeywordAsTag && keywordTagText) || (internalShowKeywordAsTag && internalKeywordTagText))}
          keywordTagText={keywordTagText || internalKeywordTagText}
          onRemoveKeyword={() => {
@@ -360,15 +360,15 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
              visible={suggestionsVisible}
              keyword={keyword}
              onClose={() => setSuggestionsVisible(false)}
-             selectedDistricts={selectedDistricts}
-             onClearAllDistricts={() => {
-               setSelectedDistricts([]);
-               onDistrictChange('');
+             selectedWards={selectedWards}
+             onClearAllWards={() => {
+               setSelectedWards([]);
+               onWardChange('');
              }}
-             onRemoveDistrict={(district) => {
-               const newDistricts = selectedDistricts.filter(d => d !== district);
-               setSelectedDistricts(newDistricts);
-               onDistrictChange(newDistricts.join(', '));
+             onRemoveWard={(ward) => {
+               const newWards = selectedWards.filter(d => d !== ward);
+               setSelectedWards(newWards);
+               onWardChange(newWards.join(', '));
              }}
               onSelectSuggestion={(title) => {
                  // Don't fill the input, just add to keyword tag

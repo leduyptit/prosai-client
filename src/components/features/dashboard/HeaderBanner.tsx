@@ -20,7 +20,7 @@ interface HeaderBannerProps {
   activeTab: number;
   searchForm: {
     city: string;
-    district: string;
+    ward: string;
     propertyType?: string;
     listingType?: string;
     priceRange?: string;
@@ -106,8 +106,8 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
     if (formDataToUse.city && formDataToUse.city !== 'Chọn vị trí') {
       searchParams.set('city', formDataToUse.city);
     }
-    if (formDataToUse.district) {
-      searchParams.set('district', formDataToUse.district);
+    if (formDataToUse.ward) {
+      searchParams.set('ward', formDataToUse.ward);
     }
     if (formDataToUse.propertyType) {
       searchParams.set('property_type', formDataToUse.propertyType);
@@ -215,9 +215,9 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
                 <div className="mb-4">
                   <LocationSearchInput
                     city={searchForm.city}
-                    district={searchForm.district}
+                    ward={searchForm.ward}
                     onCityChange={(city) => onInputChange('city', city)}
-                    onDistrictChange={(district) => onInputChange('district', district)}
+                    onWardChange={(ward) => onInputChange('ward', ward)}
                     onKeywordChange={(keyword) => {
                       setKeyword(keyword);
                       if (!keyword) {

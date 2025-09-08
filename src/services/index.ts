@@ -17,3 +17,4 @@ export * from './myProperties';
 export * from './membership';
 export * from './transactions';
 export * from './districts';
+export * from './wards';

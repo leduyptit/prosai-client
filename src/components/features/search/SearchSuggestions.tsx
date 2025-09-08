@@ -7,9 +7,9 @@ interface SearchSuggestionsProps {
   visible: boolean;
   keyword: string;
   onClose: () => void;
-  selectedDistricts: string[];
-  onClearAllDistricts: () => void;
-  onRemoveDistrict: (district: string) => void;
+  selectedWards: string[];
+  onClearAllWards: () => void;
+  onRemoveWard: (ward: string) => void;
   onSelectSuggestion: (title: string) => void;
   onSelectSuggestionAsTag?: (title: string) => void;
   className?: string;
@@ -22,9 +22,9 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
   visible,
   keyword,
   onClose,
-  selectedDistricts,
-  onClearAllDistricts,
-  onRemoveDistrict,
+  selectedWards,
+  onClearAllWards,
+  onRemoveWard,
   onSelectSuggestion,
   onSelectSuggestionAsTag,
   className = '',
@@ -72,14 +72,14 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
   return (
     <div className={`bg-white border border-gray-200 rounded-lg shadow-lg mt-1 ${className}`}>
       {/* Selected Items Section */}
-      {(selectedDistricts.length > 0 || (showKeywordAsTag && keywordTagText)) && (
+      {(selectedWards.length > 0 || (showKeywordAsTag && keywordTagText)) && (
         <div className="p-3 border-b border-gray-200">
           <div className="flex justify-between items-start mb-2">
             <span className="text-sm font-medium text-gray-700">Đã chọn</span>
             <button
               type="button"
               onClick={() => {
-                onClearAllDistricts();
+                onClearAllWards();
                 if (onRemoveKeyword) {
                   onRemoveKeyword();
                 }
@@ -90,16 +90,16 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
             </button>
           </div>
           <div className="flex flex-wrap gap-2">
-            {/* Show selected districts */}
-            {selectedDistricts.map((district, index) => (
+            {/* Show selected wards */}
+            {selectedWards.map((ward, index) => (
               <div
                 key={index}
                 className="flex items-center gap-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
               >
-                <span>{district}</span>
+                <span>{ward}</span>
                 <button
                   type="button"
-                  onClick={() => onRemoveDistrict(district)}
+                  onClick={() => onRemoveWard(ward)}
                   className="text-blue-600 hover:text-blue-800 ml-1 text-lg leading-none"
                 >
                   ×

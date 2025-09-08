@@ -33,7 +33,7 @@ const SearchLayout: React.FC = () => {
     property_type: searchParamsFromUrl.get('property_type') && searchParamsFromUrl.get('property_type') !== 'all' ? parseInt(searchParamsFromUrl.get('property_type')!) : undefined,
     listing_type: searchParamsFromUrl.get('listing_type') && searchParamsFromUrl.get('listing_type') !== 'all' ? parseInt(searchParamsFromUrl.get('listing_type')!) : undefined,
     legal_status: searchParamsFromUrl.get('legal_status') && searchParamsFromUrl.get('legal_status') !== 'all' ? parseInt(searchParamsFromUrl.get('legal_status')!) : undefined,
-    district: searchParamsFromUrl.get('district') && searchParamsFromUrl.get('district')!.trim() !== '' ? searchParamsFromUrl.get('district')! : undefined,
+    ward: (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district')) && (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district'))!.trim() !== '' ? (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district'))! : undefined,
     from_price: searchParamsFromUrl.get('from_price') ? parseInt(searchParamsFromUrl.get('from_price')!) : undefined,
     to_price: searchParamsFromUrl.get('to_price') ? parseInt(searchParamsFromUrl.get('to_price')!) : undefined,
     from_area: searchParamsFromUrl.get('from_area') ? parseInt(searchParamsFromUrl.get('from_area')!) : undefined,
@@ -51,9 +51,9 @@ const SearchLayout: React.FC = () => {
       filters.city = searchParams.city;
     }
     
-    // District - only include if not undefined (which means it's not empty)
-    if (searchParams.district) {
-      filters.district = searchParams.district;
+    // Ward - only include if not undefined (which means it's not empty)
+    if ((searchParams as any).ward) {
+      filters.ward = (searchParams as any).ward;
     }
     
     // Property type - only if not 'all'
@@ -216,7 +216,7 @@ const SearchLayout: React.FC = () => {
       property_type: searchParamsFromUrl.get('property_type') && searchParamsFromUrl.get('property_type') !== 'all' ? parseInt(searchParamsFromUrl.get('property_type')!) : undefined,
       listing_type: searchParamsFromUrl.get('listing_type') && searchParamsFromUrl.get('listing_type') !== 'all' ? parseInt(searchParamsFromUrl.get('listing_type')!) : undefined,
       legal_status: searchParamsFromUrl.get('legal_status') && searchParamsFromUrl.get('legal_status') !== 'all' ? parseInt(searchParamsFromUrl.get('legal_status')!) : undefined,
-      district: searchParamsFromUrl.get('district') && searchParamsFromUrl.get('district')!.trim() !== '' ? searchParamsFromUrl.get('district')! : undefined,
+      ward: (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district')) && (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district'))!.trim() !== '' ? (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district'))! : undefined,
       from_price: searchParamsFromUrl.get('from_price') ? parseInt(searchParamsFromUrl.get('from_price')!) : undefined,
       to_price: searchParamsFromUrl.get('to_price') ? parseInt(searchParamsFromUrl.get('to_price')!) : undefined,
       from_area: searchParamsFromUrl.get('from_area') ? parseInt(searchParamsFromUrl.get('from_area')!) : undefined,

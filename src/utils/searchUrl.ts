@@ -36,10 +36,10 @@ export const createSearchUrlFromBookmark = (bookmark: BookmarkItem): string => {
 
   // Add price range parameters
   if (bookmark.from_price) {
-    params.append('from_price', bookmark.from_price);
+    params.append('from_price', parseInt(bookmark.from_price).toFixed(0));
   }
   if (bookmark.to_price) {
-    params.append('to_price', bookmark.to_price);
+    params.append('to_price', parseInt(bookmark.to_price).toFixed(0));
   }
 
   // Add area range parameters
