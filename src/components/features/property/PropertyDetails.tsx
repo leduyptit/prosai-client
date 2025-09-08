@@ -91,10 +91,6 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
         <div className="text-left md:px-2">
           <FavoriteButton
             propertyId={propertyId}
-            title={title}
-            description={description}
-            images={images}
-            address={address}
             size="small"
             showText={true}
             onFavoriteChange={onSave}

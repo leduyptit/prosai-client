@@ -107,10 +107,6 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
                 />
                 <FavoriteButton
                   propertyId={item.id}
-                  title={item.title}
-                  description={item.description || item.title}
-                  images={item.images || [item.imageUrl]}
-                  address={item.address}
                   className="rounded-full"
                   size="middle"
                 />

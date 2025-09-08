@@ -3,10 +3,6 @@ import { API_ENDPOINTS } from '@/constants';
 
 export interface FavoriteRequest {
   property_id: string;
-  title: string;
-  description: string;
-  images: string[];
-  address: string;
 }
 
 export interface FavoriteResponse {
@@ -18,6 +14,11 @@ export interface FavoriteResponse {
     description: string;
     images: string[];
     address: string;
+    price_all: number[];
+    area: number[];
+    bedrooms: number;
+    bathrooms: number;
+    ranking_score: number;
     created_at: string;
   };
   message?: string;

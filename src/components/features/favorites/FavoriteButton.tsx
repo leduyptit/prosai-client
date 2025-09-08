@@ -8,10 +8,6 @@ import { favoriteService, FavoriteRequest } from '@/services/favorites';
 
 export interface FavoriteButtonProps {
   propertyId: string;
-  title: string;
-  description: string;
-  images: string[];
-  address: string;
   className?: string;
   size?: 'small' | 'middle' | 'large';
   showText?: boolean;
@@ -20,10 +16,6 @@ export interface FavoriteButtonProps {
 
 const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   propertyId,
-  title,
-  description,
-  images,
-  address,
   className = '',
   size = 'middle',
   showText = false,
@@ -76,11 +68,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({
       } else {
         // Add to favorites
         const favoriteData: FavoriteRequest = {
-          property_id: propertyId,
-          title,
-          description,
-          images,
-          address
+          property_id: propertyId
         };
 
         const response = await favoriteService.createFavorite(favoriteData);
