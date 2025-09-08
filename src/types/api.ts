@@ -346,3 +346,14 @@ export interface PropertyRankingItem {
   address: string | null;
   images: string[];
 }
+
+export interface District {
+  id: string;
+  name: string;
+  code: string;
+  city_name: string;
+  city_code: string;
+  search_count: number;
+}
+
+export interface DistrictResponse extends ApiResponse<District[]> {}

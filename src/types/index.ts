@@ -29,5 +29,7 @@ export type {
   DeleteNotificationResponse,
   ApiConfig,
   RequestConfig,
-  ResponseConfig
+  ResponseConfig,
+  District,
+  DistrictResponse
 } from './api';

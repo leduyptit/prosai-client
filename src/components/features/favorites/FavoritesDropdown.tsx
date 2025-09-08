@@ -54,13 +54,6 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
 
   if (!visible) return null;
 
-  // Helper function to format area
-  const formatArea = (area: string) => {
-    const numArea = parseFloat(area);
-    if (numArea === 0) return '';
-    return `${numArea}m²`;
-  };
-
   // Helper function to format time
   const formatTime = (timestamp: string) => {
     const date = new Date(parseInt(timestamp) * 1000);

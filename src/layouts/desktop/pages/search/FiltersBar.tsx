@@ -507,12 +507,12 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         if (filters.priceRange.includes('+')) {
           // Handle cases like "1000+"
           const min = filters.priceRange.replace('+', '');
-          request.from_price = parseInt(min) * 1000000; // Convert to VND
+          request.from_price = parseInt(min); // Convert to VND
         } else {
           // Handle cases like "1000-2000"
           const [min, max] = filters.priceRange.split('-');
-          if (min) request.from_price = parseInt(min) * 1000000; // Convert to VND
-          if (max) request.to_price = parseInt(max) * 1000000; // Convert to VND
+          if (min) request.from_price = parseInt(min); // Convert to VND
+          if (max) request.to_price = parseInt(max); // Convert to VND
         }
       }
       
