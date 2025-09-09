@@ -21,6 +21,7 @@ export interface SearchItem {
   postedAt?: string; // e.g., "Đăng 2 ngày trước"
   rating?: number; // 0-5
   phone?: string; // e.g., "0982560123"
+  is_favorite?: boolean; // Favorite status
   // Additional fields for favorite functionality
   description?: string;
   images?: string[];
@@ -107,6 +108,7 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
                 />
                 <FavoriteButton
                   propertyId={item.id}
+                  isFavorite={item.is_favorite || false}
                   className="rounded-full"
                   size="middle"
                 />

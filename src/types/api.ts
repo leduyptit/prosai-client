@@ -150,6 +150,7 @@ export interface Property {
   note_8?: number | null;
   note_9?: number | null;
   note_10?: number | null;
+  is_favorite?: boolean;
 }
 
 export interface PropertySummary {
@@ -345,15 +346,5 @@ export interface PropertyRankingItem {
   area: number[];
   address: string | null;
   images: string[];
+  is_favorite: boolean;
 }
-
-export interface District {
-  id: string;
-  name: string;
-  code: string;
-  city_name: string;
-  city_code: string;
-  search_count: number;
-}
-
-export interface DistrictResponse extends ApiResponse<District[]> {}

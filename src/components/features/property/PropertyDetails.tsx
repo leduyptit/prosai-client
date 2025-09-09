@@ -18,6 +18,7 @@ interface PropertyDetailsProps {
   bedrooms?: number;
   bathrooms?: number;
   rating?: number;
+  isFavorite?: boolean;
   onSave?: () => void;
   className?: string;
 }
@@ -36,6 +37,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   bedrooms = 2,
   bathrooms = 1,
   rating = 4,
+  isFavorite = false,
   onSave,
   className = ''
 }) => {
@@ -91,6 +93,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
         <div className="text-left md:px-2">
           <FavoriteButton
             propertyId={propertyId}
+            isFavorite={isFavorite}
             size="small"
             showText={true}
             onFavoriteChange={onSave}

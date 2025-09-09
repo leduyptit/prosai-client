@@ -131,6 +131,7 @@ const PropertyRanking: React.FC<PropertyRankingProps> = ({
                     <div className="flex items-center justify-between">
                       <FavoriteButton
                         propertyId={property.id}
+                        isFavorite={property.is_favorite || false}
                         className="w-8 h-8 rounded"
                         size="small"
                       />
