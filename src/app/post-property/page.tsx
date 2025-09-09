@@ -10,6 +10,8 @@ import { propertiesService, PropertyPostRequest } from '@/services';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
+import { CITIES, PROPERTY_TYPES, LISTING_TYPES, BEDROOM_OPTIONS, BATHROOM_OPTIONS, LEGAL_STATUS } from '@/constants';
+import { wardsService } from '@/services/wards';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -18,8 +20,9 @@ const PostPropertyPage: React.FC = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<any[]>([]);
   const [submitting, setSubmitting] = useState(false);
-  const [districts, setDistricts] = useState<string[]>([]);
-  const [wards, setWards] = useState<string[]>([]);
+  const [wards, setWards] = useState<any[]>([]);
+  const [loadingWards, setLoadingWards] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<string>('');
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -27,11 +30,12 @@ const PostPropertyPage: React.FC = () => {
   const editId = useMemo(() => searchParams.get('id') || undefined, [searchParams]);
   const isEditMode = Boolean(editId);
 
-  // Initialize districts when component mounts
+  // Initialize wards when component mounts
   React.useEffect(() => {
     const initialCity = form.getFieldValue('city');
     if (initialCity) {
-      setDistricts(getDistrictsByCity(initialCity));
+      setSelectedCity(initialCity);
+      loadWardsByCity(initialCity);
     }
   }, [form]);
 
@@ -47,11 +51,11 @@ const PostPropertyPage: React.FC = () => {
         }
 
         const p = res.data;
-        // Prefill select lists for district/ward
-        const districtsList = getDistrictsByCity(p.city || '');
-        setDistricts(districtsList);
-        const wardsList = getWardsByDistrict(p.district || '');
-        setWards(wardsList);
+        // Load wards for the city
+        if (p.city) {
+          setSelectedCity(p.city);
+          await loadWardsByCity(p.city);
+        }
 
         // Split address to detailed part if possible
         let detailedAddress = '';
@@ -67,12 +71,11 @@ const PostPropertyPage: React.FC = () => {
           title: p.title,
           postingDate: dayjs(p.created_at),
           expirationDate: p.expired_at ? dayjs(p.expired_at) : dayjs().add(7, 'day'),
-          propertyType: mapPropertyTypeToForm(p.property_type),
-          listingType: mapListingTypeToForm(p.listing_type),
+          propertyType: p.property_type ? String(p.property_type) : undefined,
+          listingType: p.listing_type ? String(p.listing_type) : undefined,
           price: String(p.price ?? ''),
           area: String(p.area ?? ''),
           city: p.city || undefined,
-          district: p.district || undefined,
           ward: p.ward || undefined,
           detailedAddress,
           bedrooms: String(p.num_bedrooms ?? '1'),
@@ -109,28 +112,6 @@ const PostPropertyPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditMode, editId]);
 
-  const mapPropertyTypeToForm = (value?: number) => {
-    const reverseMap: { [key: number]: string } = {
-      1: 'chung-cu',
-      2: 'nha-rieng',
-      3: 'biet-thu',
-      4: 'nha-pho',
-      5: 'dat-nen',
-      6: 'van-phong',
-      7: 'cua-hang',
-    };
-    return value ? reverseMap[value] : undefined;
-  };
-
-  const mapListingTypeToForm = (value?: number) => {
-    const reverseMap: { [key: number]: string } = {
-      1: 'mua',
-      2: 'ban',
-      3: 'thue',
-      4: 'cho-thue',
-    };
-    return value ? reverseMap[value] : undefined;
-  };
 
   const handleSubmit = async (values: any) => {
     if (!session?.user?.id) {
@@ -149,9 +130,9 @@ const PostPropertyPage: React.FC = () => {
         listing_type: getListingTypeNumber(values.listingType),
         price: parseFloat(values.price) || 0,
         area: parseFloat(values.area) || 0,
-        address: `${values.detailedAddress}, ${values.ward}, ${values.district}, ${values.city}`,
+        address: `${values.detailedAddress}, ${values.ward}, ${values.city}`,
         ward: values.ward,
-        district: values.district,
+        district: '', // Empty since we removed district selection
         city: values.city,
         num_bedrooms: parseInt(values.bedrooms) || 0,
         num_bathrooms: parseInt(values.bathrooms) || 0,
@@ -194,42 +175,42 @@ const PostPropertyPage: React.FC = () => {
 
   // Helper functions to convert form values to API numbers
   const getPropertyTypeNumber = (type: string): number => {
-    const typeMap: { [key: string]: number } = {
-      'chung-cu': 1,
-      'nha-rieng': 2,
-      'biet-thu': 3,
-      'nha-pho': 4,
-      'dat-nen': 5,
-      'van-phong': 6,
-      'cua-hang': 7
-    };
-    return typeMap[type] || 1;
+    return parseInt(type) || 1;
   };
 
   const getListingTypeNumber = (type: string): number => {
-    const typeMap: { [key: string]: number } = {
-      'mua': 1,
-      'ban': 2,
-      'thue': 3,
-      'cho-thue': 4
-    };
-    return typeMap[type] || 1;
+    return parseInt(type) || 1;
   };
 
-  // Handle city change to populate districts
+  // Load wards by city from API
+  const loadWardsByCity = async (city: string) => {
+    if (!city) {
+      setWards([]);
+      return;
+    }
+
+    try {
+      setLoadingWards(true);
+      const wardsData = await wardsService.getWardsByCity(city);
+      setWards(wardsData);
+    } catch (error) {
+      message.error('Không thể tải danh sách phường/xã');
+      setWards([]);
+    } finally {
+      setLoadingWards(false);
+    }
+  };
+
+  // Handle city change to populate wards
   const handleCityChange = (city: string) => {
-    form.setFieldsValue({ district: '', ward: '' });
-    setDistricts(getDistrictsByCity(city));
-    setWards([]);
+    setSelectedCity(city);
+    form.setFieldsValue({ ward: '' });
+    loadWardsByCity(city);
     handleFieldChange();
   };
 
-  // Handle district change to populate wards
-  const handleDistrictChange = (district: string) => {
-    form.setFieldsValue({ ward: '' });
-    setWards(getWardsByDistrict(district));
-    handleFieldChange();
-  };
+  // Debug selectedCity
+  console.log('Current selectedCity:', selectedCity);
 
   // Auto-generate description based on form values
   const generateDescription = () => {
@@ -238,16 +219,8 @@ const PostPropertyPage: React.FC = () => {
 
     // Property type
     if (values.propertyType) {
-      const propertyTypeMap: { [key: string]: string } = {
-        'chung-cu': 'Căn hộ',
-        'nha-rieng': 'Nhà riêng',
-        'biet-thu': 'Biệt thự',
-        'nha-pho': 'Nhà phố',
-        'dat-nen': 'Đất nền',
-        'van-phong': 'Văn phòng',
-        'cua-hang': 'Cửa hàng'
-      };
-      description += propertyTypeMap[values.propertyType] || '';
+      const propertyType = PROPERTY_TYPES.find(type => type.value === values.propertyType);
+      description += propertyType?.label || '';
     }
 
     // Bedrooms
@@ -295,8 +268,8 @@ const PostPropertyPage: React.FC = () => {
     }
 
     // Address
-    if (values.detailedAddress && values.ward && values.district && values.city) {
-      description += `, ${values.detailedAddress}, ${values.ward}, ${values.district}, ${values.city}`;
+    if (values.detailedAddress && values.ward && values.city) {
+      description += `, ${values.detailedAddress}, ${values.ward}, ${values.city}`;
     }
 
     // Add common details
@@ -318,60 +291,6 @@ const PostPropertyPage: React.FC = () => {
     }
   };
 
-  // Get districts based on selected city
-  const getDistrictsByCity = (city: string): string[] => {
-    const cityDistricts: { [key: string]: string[] } = {
-      'Hà Nội': [
-        'Ba Đình', 'Hoàn Kiếm', 'Tây Hồ', 'Long Biên', 'Cầu Giấy', 'Đống Đa', 
-        'Hai Bà Trưng', 'Hoàng Mai', 'Thanh Xuân', 'Sóc Sơn', 'Đông Anh', 
-        'Gia Lâm', 'Nam Từ Liêm', 'Thanh Trì', 'Bắc Từ Liêm', 'Mê Linh', 
-        'Phú Xuyên', 'Thường Tín', 'Phúc Thọ', 'Ba Vì', 'Thạch Thất', 'Chương Mỹ', 
-        'Thanh Oai', 'Thường Tín', 'Phú Xuyên', 'Ứng Hòa', 'Mỹ Đức'
-      ],
-      'TP. Hồ Chí Minh': [
-        'Quận 1', 'Quận 2', 'Quận 3', 'Quận 4', 'Quận 5', 'Quận 6', 'Quận 7', 
-        'Quận 8', 'Quận 9', 'Quận 10', 'Quận 11', 'Quận 12', 'Tân Bình', 
-        'Tân Phú', 'Phú Nhuận', 'Gò Vấp', 'Bình Thạnh', 'Thủ Đức', 'Bình Tân', 
-        'Củ Chi', 'Hóc Môn', 'Bình Chánh', 'Nhà Bè', 'Cần Giờ'
-      ],
-      'Đà Nẵng': [
-        'Hải Châu', 'Thanh Khê', 'Sơn Trà', 'Ngũ Hành Sơn', 'Liên Chiểu', 
-        'Cẩm Lệ', 'Hòa Vang', 'Hoàng Sa'
-      ],
-      'Hải Phòng': [
-        'Hồng Bàng', 'Ngô Quyền', 'Lê Chân', 'Hải An', 'Kiến An', 'Đồ Sơn', 
-        'Dương Kinh', 'Thủy Nguyên', 'An Dương', 'An Lão', 'Kiến Thụy', 
-        'Tiên Lãng', 'Vĩnh Bảo', 'Cát Hải', 'Bạch Long Vĩ'
-      ]
-    };
-    return cityDistricts[city] || [];
-  };
-
-  // Get wards based on selected district
-  const getWardsByDistrict = (district: string): string[] => {
-    const districtWards: { [key: string]: string[] } = {
-      'Ba Đình': [
-        'Phúc Xá', 'Trúc Bạch', 'Vĩnh Phúc', 'Cống Vị', 'Liễu Giai', 'Nguyễn Trung Trực',
-        'Quán Thánh', 'Ngọc Hà', 'Điện Biên', 'Đội Cấn', 'Ngọc Khánh', 'Kim Mã',
-        'Giảng Võ', 'Thành Công', 'Phúc Xá', 'Trúc Bạch', 'Vĩnh Phúc', 'Cống Vị'
-      ],
-      'Hoàn Kiếm': [
-        'Phúc Tân', 'Đồng Xuân', 'Hàng Mã', 'Hàng Buồm', 'Hàng Đào', 'Hàng Bồ',
-        'Cửa Đông', 'Lý Thái Tổ', 'Hàng Bạc', 'Hàng Gai', 'Hàng Trống', 'Chương Dương',
-        'Hàng Trống', 'Cửa Nam', 'Hàng Bông', 'Tràng Tiền', 'Tràng Thi', 'Hàng Bài'
-      ],
-      'Quận 1': [
-        'Bến Nghé', 'Bến Thành', 'Bình Thạnh', 'Cầu Kho', 'Cầu Ông Lãnh', 'Cô Giang',
-        'Đa Kao', 'Nguyễn Cư Trinh', 'Nguyễn Thái Bình', 'Phạm Ngũ Lão', 'Tân Định',
-        'Tân Sơn Nhì', 'Tân Thành', 'Tân Thới Hiệp', 'Thạnh Xuân', 'Thới An'
-      ],
-      'Quận 2': [
-        'An Khánh', 'An Lợi Đông', 'An Phú', 'Bình An', 'Bình Khánh', 'Bình Trưng Đông',
-        'Bình Trưng Tây', 'Cát Lái', 'Thạnh Mỹ Lợi', 'Thảo Điền', 'Thủ Thiêm'
-      ]
-    };
-    return districtWards[district] || [];
-  };
 
   const uploadProps = {
     fileList,
@@ -410,15 +329,14 @@ const PostPropertyPage: React.FC = () => {
             initialValues={{
               postingDate: dayjs(),
               expirationDate: dayjs().add(7, 'day'),
-              propertyType: 'chung-cu',
-              listingType: 'mua',
-              bedrooms: '1',
-              bathrooms: '1',
+              propertyType: PROPERTY_TYPES[0].value,
+              listingType: LISTING_TYPES[0].value,
+              bedrooms: BEDROOM_OPTIONS[0].value,
+              bathrooms: BATHROOM_OPTIONS[0].value,
               hasElevator: 'co',
               hasParking: 'co',
-              legalStatus: 1,
-              city: 'Hà Nội',
-              district: '',
+              legalStatus: LEGAL_STATUS[0].value,
+              city: undefined,
               ward: '',
               detailedAddress: ''
             }}
@@ -479,13 +397,11 @@ const PostPropertyPage: React.FC = () => {
                    placeholder="Chọn loại bất động sản"
                    onChange={handleFieldChange}
                  >
-                   <Option value="chung-cu">Chung cư</Option>
-                   <Option value="nha-rieng">Nhà riêng</Option>
-                   <Option value="biet-thu">Biệt thự</Option>
-                   <Option value="nha-pho">Nhà phố</Option>
-                   <Option value="dat-nen">Đất nền</Option>
-                   <Option value="van-phong">Văn phòng</Option>
-                   <Option value="cua-hang">Cửa hàng</Option>
+                   {PROPERTY_TYPES.map(type => (
+                     <Option key={type.value} value={type.value}>
+                       {type.label}
+                     </Option>
+                   ))}
                  </Select>
                </Form.Item>
 
@@ -496,16 +412,17 @@ const PostPropertyPage: React.FC = () => {
                 className="mb-0"
               >
                 <Select size="large" placeholder="Chọn hình thức">
-                  <Option value="mua">Mua</Option>
-                  <Option value="ban">Bán</Option>
-                  <Option value="thue">Thuê</Option>
-                  <Option value="cho-thue">Cho thuê</Option>
+                  {LISTING_TYPES.map(type => (
+                    <Option key={type.value} value={type.value}>
+                      {type.label}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </div>
 
-            {/* Location Selection - City, District, Ward */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Location Selection - City and Ward */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <Form.Item
                 label="Tỉnh/Thành phố"
                 name="city"
@@ -517,87 +434,11 @@ const PostPropertyPage: React.FC = () => {
                   placeholder="Chọn tỉnh/thành phố"
                   onChange={handleCityChange}
                 >
-                  <Option value="Hà Nội">Hà Nội</Option>
-                  <Option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</Option>
-                  <Option value="Đà Nẵng">Đà Nẵng</Option>
-                  <Option value="Hải Phòng">Hải Phòng</Option>
-                  <Option value="Cần Thơ">Cần Thơ</Option>
-                  <Option value="Bình Dương">Bình Dương</Option>
-                  <Option value="Đồng Nai">Đồng Nai</Option>
-                  <Option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</Option>
-                  <Option value="Khánh Hòa">Khánh Hòa</Option>
-                  <Option value="Lâm Đồng">Lâm Đồng</Option>
-                  <Option value="Thừa Thiên Huế">Thừa Thiên Huế</Option>
-                  <Option value="Quảng Nam">Quảng Nam</Option>
-                  <Option value="Quảng Ngãi">Quảng Ngãi</Option>
-                  <Option value="Bình Định">Bình Định</Option>
-                  <Option value="Phú Yên">Phú Yên</Option>
-                  <Option value="Ninh Thuận">Ninh Thuận</Option>
-                  <Option value="Bình Thuận">Bình Thuận</Option>
-                  <Option value="Kon Tum">Kon Tum</Option>
-                  <Option value="Gia Lai">Gia Lai</Option>
-                  <Option value="Đắk Lắk">Đắk Lắk</Option>
-                  <Option value="Đắk Nông">Đắk Nông</Option>
-                  <Option value="Bình Phước">Bình Phước</Option>
-                  <Option value="Tây Ninh">Tây Ninh</Option>
-                  <Option value="Long An">Long An</Option>
-                  <Option value="Tiền Giang">Tiền Giang</Option>
-                  <Option value="Bến Tre">Bến Tre</Option>
-                  <Option value="Trà Vinh">Trà Vinh</Option>
-                  <Option value="Vĩnh Long">Vĩnh Long</Option>
-                  <Option value="Đồng Tháp">Đồng Tháp</Option>
-                  <Option value="An Giang">An Giang</Option>
-                  <Option value="Kiên Giang">Kiên Giang</Option>
-                  <Option value="Cà Mau">Cà Mau</Option>
-                  <Option value="Bạc Liêu">Bạc Liêu</Option>
-                  <Option value="Sóc Trăng">Sóc Trăng</Option>
-                  <Option value="Hậu Giang">Hậu Giang</Option>
-                  <Option value="Vĩnh Phúc">Vĩnh Phúc</Option>
-                  <Option value="Phú Thọ">Phú Thọ</Option>
-                  <Option value="Thái Nguyên">Thái Nguyên</Option>
-                  <Option value="Lạng Sơn">Lạng Sơn</Option>
-                  <Option value="Quảng Ninh">Quảng Ninh</Option>
-                  <Option value="Bắc Giang">Bắc Giang</Option>
-                  <Option value="Bắc Ninh">Bắc Ninh</Option>
-                  <Option value="Hải Dương">Hải Dương</Option>
-                  <Option value="Hưng Yên">Hưng Yên</Option>
-                  <Option value="Hòa Bình">Hòa Bình</Option>
-                  <Option value="Sơn La">Sơn La</Option>
-                  <Option value="Lai Châu">Lai Châu</Option>
-                  <Option value="Điện Biên">Điện Biên</Option>
-                  <Option value="Yên Bái">Yên Bái</Option>
-                  <Option value="Tuyên Quang">Tuyên Quang</Option>
-                  <Option value="Cao Bằng">Cao Bằng</Option>
-                  <Option value="Bắc Kạn">Bắc Kạn</Option>
-                  <Option value="Thái Bình">Thái Bình</Option>
-                  <Option value="Nam Định">Nam Định</Option>
-                  <Option value="Ninh Bình">Ninh Bình</Option>
-                  <Option value="Thanh Hóa">Thanh Hóa</Option>
-                  <Option value="Nghệ An">Nghệ An</Option>
-                  <Option value="Hà Tĩnh">Hà Tĩnh</Option>
-                  <Option value="Quảng Bình">Quảng Bình</Option>
-                  <Option value="Quảng Trị">Quảng Trị</Option>
-                </Select>
-              </Form.Item>
-
-              <Form.Item
-                label="Quận/Huyện"
-                name="district"
-                rules={[{ required: true, message: 'Vui lòng chọn quận/huyện' }]}
-                className="mb-0"
-              >
-                <Select 
-                  size="large" 
-                  placeholder="Chọn quận/huyện" 
-                  disabled={!form.getFieldValue('city')}
-                  onChange={handleDistrictChange}
-                >
-                  {districts.map(district => (
-                    <Option key={district} value={district}>{district}</Option>
+                  {CITIES.map(city => (
+                    <Option key={city.value} value={city.value}>
+                      {city.label}
+                    </Option>
                   ))}
-                  {districts.length === 0 && (
-                    <Option value="" disabled>Vui lòng chọn tỉnh/thành phố trước</Option>
-                  )}
                 </Select>
               </Form.Item>
 
@@ -609,15 +450,35 @@ const PostPropertyPage: React.FC = () => {
               >
                 <Select 
                   size="large" 
-                  placeholder="Chọn phường/xã" 
-                  disabled={!form.getFieldValue('district')}
+                  placeholder="Chọn phường/xã"
+                  disabled={!selectedCity}
+                  loading={loadingWards}
+                  showSearch
+                  allowClear
+                  style={{
+                    color: !selectedCity ? '#999' : 'inherit'
+                  }}
+                  filterOption={(input, option) =>
+                    String(option?.children || '').toLowerCase().includes(input.toLowerCase())
+                  }
+                  notFoundContent={
+                    !selectedCity 
+                      ? "Vui lòng chọn tỉnh/thành phố trước" 
+                      : loadingWards 
+                        ? "Đang tải danh sách phường/xã..." 
+                        : "Không có dữ liệu phường/xã"
+                  }
                 >
-                  {wards.map(ward => (
-                    <Option key={ward} value={ward}>{ward}</Option>
-                  ))}
-                  {wards.length === 0 && (
-                    <Option value="" disabled>Vui lòng chọn quận/huyện trước</Option>
+                  {!selectedCity && (
+                    <Option value="" disabled>
+                      Vui lòng chọn tỉnh/thành phố trước
+                    </Option>
                   )}
+                  {wards.map(ward => (
+                    <Option key={ward.id} value={ward.name}>
+                      {ward.name}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </div>
@@ -741,12 +602,11 @@ const PostPropertyPage: React.FC = () => {
                    placeholder="Chọn số phòng ngủ"
                    onChange={handleFieldChange}
                  >
-                   <Option value="1">1</Option>
-                   <Option value="2">2</Option>
-                   <Option value="3">3</Option>
-                   <Option value="4">4</Option>
-                   <Option value="5">5</Option>
-                   <Option value="6+">6+</Option>
+                   {BEDROOM_OPTIONS.map(option => (
+                     <Option key={option.value} value={option.value}>
+                       {option.label}
+                     </Option>
+                   ))}
                  </Select>
                </Form.Item>
 
@@ -772,11 +632,11 @@ const PostPropertyPage: React.FC = () => {
                    placeholder="Chọn số phòng vệ sinh"
                    onChange={handleFieldChange}
                  >
-                   <Option value="1">1</Option>
-                   <Option value="2">2</Option>
-                   <Option value="3">3</Option>
-                   <Option value="4">4</Option>
-                   <Option value="5+">5+</Option>
+                   {BATHROOM_OPTIONS.map(option => (
+                     <Option key={option.value} value={option.value}>
+                       {option.label}
+                     </Option>
+                   ))}
                  </Select>
                </Form.Item>
 
@@ -804,11 +664,11 @@ const PostPropertyPage: React.FC = () => {
                 className="mb-0"
               >
                 <Select size="large" placeholder="Chọn tình trạng pháp lý">
-                  <Option value={1}>Sổ đỏ/Sổ hồng</Option>
-                  <Option value={2}>Sổ đỏ chung</Option>
-                  <Option value={3}>Giấy tờ hợp lệ</Option>
-                  <Option value={4}>Đang hoàn thiện</Option>
-                  <Option value={5}>Khác</Option>
+                  {LEGAL_STATUS.map(status => (
+                    <Option key={status.value} value={status.value}>
+                      {status.label}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
 
