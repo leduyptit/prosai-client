@@ -148,6 +148,11 @@ export const getConfigForEnvironment = () => {
   };
 };
 
+// Minio CDN
+export const MINIO_CDN_CONFIG = {
+  endpointUrl: process.env.MINIO_ENDPOINT_URL || 'https://cdn.prosai.vn/',
+} as const;
+
 export default {
   APP_CONFIG,
   API_CONFIG,
@@ -159,6 +164,7 @@ export default {
   FEATURE_FLAGS,
   PERFORMANCE_CONFIG,
   MONITORING_CONFIG,
+  MINIO_CDN_CONFIG,
   getEnvironment,
   validateRequiredEnvVars,
   getConfigForEnvironment,

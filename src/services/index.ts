@@ -18,3 +18,4 @@ export * from './membership';
 export * from './transactions';
 export * from './districts';
 export * from './wards';
+export * from './upload';

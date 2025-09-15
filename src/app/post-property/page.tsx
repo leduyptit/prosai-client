@@ -6,7 +6,7 @@ import { UploadOutlined, CalendarOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { APP_CONFIG } from '@/utils/env';
 import Link from 'next/link';
-import { propertiesService, PropertyPostRequest } from '@/services';
+import { propertiesService, PropertyPostRequest, uploadService } from '@/services';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
@@ -23,6 +23,7 @@ const PostPropertyPage: React.FC = () => {
   const [wards, setWards] = useState<any[]>([]);
   const [loadingWards, setLoadingWards] = useState(false);
   const [selectedCity, setSelectedCity] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -119,6 +120,19 @@ const PostPropertyPage: React.FC = () => {
       return;
     }
 
+    // Check if there are files still uploading
+    if (uploading) {
+      message.error('Vui lòng đợi upload ảnh hoàn tất');
+      return;
+    }
+
+    // Check if there are files with error status
+    const hasErrorFiles = fileList.some((file: any) => file.status === 'error');
+    if (hasErrorFiles) {
+      message.error('Vui lòng xóa các ảnh lỗi trước khi đăng tin');
+      return;
+    }
+
     try {
       setSubmitting(true);
       
@@ -139,7 +153,9 @@ const PostPropertyPage: React.FC = () => {
         legal_status: values.legalStatus || 1,
         direction: values.direction,
         balcony_direction: values.balconyDirection,
-        images: fileList.map((file: any) => file.url || file.thumbUrl || ''),
+        images: fileList
+          .filter((file: any) => file.status === 'done')
+          .map((file: any) => file.url || file.thumbUrl || ''),
         project_name: values.projectName || undefined,
         floor: values.currentFloor ? parseInt(values.currentFloor) : undefined,
         total_floors: values.totalFloors ? parseInt(values.totalFloors) : undefined,
@@ -291,14 +307,119 @@ const PostPropertyPage: React.FC = () => {
     }
   };
 
+  // Custom upload handler
+  const handleUpload = async (options: any) => {
+    const { file, onSuccess, onError, onProgress } = options;
+    
+    try {
+      setUploading(true);
+      
+      // Validate file
+      const validation = uploadService.validateFile(file);
+      if (!validation.isValid) {
+        onError(new Error(validation.error));
+        message.error(validation.error);
+        return;
+      }
+
+      // Show progress (simulate progress for better UX)
+      onProgress({ percent: 10 });
+      
+      // Upload file
+      const response = await uploadService.uploadFile({
+        file,
+        fileName: file.name.split('.')[0],
+        fileType: 'image',
+        folderPath: 'images'
+      });
+
+      onProgress({ percent: 100 });
+
+      // Update file list with uploaded file info
+      const newFile = {
+        uid: file.uid,
+        name: file.name,
+        status: 'done',
+        url: response.url, // Use the CDN URL from response
+        thumbUrl: response.url,
+        response: response
+      };
+
+      setFileList(prev => [...prev, newFile]);
+      onSuccess(response);
+      message.success('Upload thành công!');
+      
+    } catch (error) {
+      console.error('Upload error:', error);
+      onError(error);
+      message.error('Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Handle file list changes
+  const handleFileListChange = ({ fileList: newFileList }: any) => {
+    setFileList(newFileList);
+  };
+
+  // Resolve filePath from upload response or CDN URL
+  const resolveFilePath = (file: any): string | undefined => {
+    // Prefer server response
+    const resp = file?.response;
+    if (resp && typeof resp === 'object' && 'filePath' in resp && resp.filePath) {
+      return resp.filePath as string;
+    }
+
+    // Fallback: derive from URL like https://cdn.prosai.vn/uploads/images/abc.jpg
+    const fileUrl: string | undefined = file?.url || file?.thumbUrl;
+    if (fileUrl) {
+      const marker = '/uploads/';
+      const idx = fileUrl.indexOf(marker);
+      if (idx >= 0) {
+        return fileUrl.substring(idx + marker.length);
+      }
+    }
+    return undefined;
+  };
+
+  // Handle file removal (call delete API)
+  const handleRemove = async (file: any) => {
+    try {
+      setUploading(true);
+      const filePath = resolveFilePath(file);
+
+      if (filePath) {
+        await uploadService.deleteFile(filePath);
+      }
+
+      const newFileList = fileList.filter(item => item.uid !== file.uid);
+      setFileList(newFileList);
+      message.success('Đã xóa ảnh');
+      return true;
+    } catch (error) {
+      console.error('Delete file error:', error);
+      message.error('Xóa ảnh thất bại. Vui lòng thử lại.');
+      return false;
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const uploadProps = {
     fileList,
-    onChange: ({ fileList }: any) => setFileList(fileList),
-    beforeUpload: () => false, // Prevent auto upload
+    onChange: handleFileListChange,
+    customRequest: handleUpload,
+    onRemove: handleRemove,
     multiple: true, // Allow multiple file selection
     accept: 'image/*', // Accept only image files
     maxCount: 10, // Maximum 10 images
+    listType: 'picture-card' as const,
+    showUploadList: {
+      showPreviewIcon: true,
+      showRemoveIcon: true,
+      showDownloadIcon: false,
+    },
   };
 
   const breadcrumbItems = [
@@ -772,9 +893,9 @@ const PostPropertyPage: React.FC = () => {
                 className="mb-0"
                 extra="Có thể chọn nhiều ảnh (tối đa 10 ảnh). Hỗ trợ định dạng: JPG, PNG, GIF"
               >
-                <Upload {...uploadProps} listType="picture-card">
-                  <Button icon={<UploadOutlined />} size="large">
-                    Chọn ảnh
+                <Upload {...uploadProps}>
+                  <Button icon={<UploadOutlined />} size="large" loading={uploading}>
+                    {uploading ? 'Đang tải lên...' : 'Chọn ảnh'}
                   </Button>
                 </Upload>
               </Form.Item>
@@ -821,7 +942,7 @@ const PostPropertyPage: React.FC = () => {
                 size="large"
                 className="w-1/3 py-3 h-auto text-lg mb-4"
                 loading={submitting}
-                disabled={submitting}
+                disabled={submitting || uploading}
               >
                 {submitting ? (isEditMode ? 'ĐANG CẬP NHẬT...' : 'ĐANG ĐĂNG TIN...') : (isEditMode ? 'CẬP NHẬT' : 'ĐĂNG TIN')}
               </Button>
