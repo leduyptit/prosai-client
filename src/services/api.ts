@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getSession } from 'next-auth/react';
 import { API_CONFIG } from '@/utils/env';
+import { API_ENDPOINTS } from '@/constants';
 
 // Create axios instance with CORS-friendly configuration
 export const apiClient: AxiosInstance = axios.create({
@@ -39,7 +40,7 @@ apiClient.interceptors.response.use(
       
       if (session?.user && 'refreshToken' in session && session.refreshToken) {
         try {
-          const response = await axios.post(`${API_CONFIG.baseUrl}/auth/refresh`, {
+          const response = await axios.post(`${API_CONFIG.baseUrl}${API_ENDPOINTS.AUTH.REFRESH}`, {
             refreshToken: session.refreshToken,
           });
           

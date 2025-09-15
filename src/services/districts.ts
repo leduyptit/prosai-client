@@ -1,4 +1,5 @@
 import { api } from './api';
+import { API_ENDPOINTS } from '@/constants';
 import { District, DistrictResponse } from '@/types';
 
 export class DistrictsService {
@@ -11,7 +12,7 @@ export class DistrictsService {
     try {
       // URL encode the city name to handle special characters
       const encodedCityName = encodeURIComponent(cityName);
-      const response = await api.get<District[]>(`/districts/city/${encodedCityName}`);
+      const response = await api.get<District[]>(`${API_ENDPOINTS.DISTRICTS.BY_CITY}/${encodedCityName}`);
       
       // The API returns the data directly as an array, not wrapped in a response object
       return Array.isArray(response) ? response : response.data || [];

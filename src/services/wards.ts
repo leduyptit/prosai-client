@@ -1,4 +1,5 @@
 import { api } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface Ward {
   id: string;
@@ -20,7 +21,7 @@ export class WardsService {
   async getWardsByCity(cityName: string): Promise<Ward[]> {
     try {
       const encodedCityName = encodeURIComponent(cityName);
-      const response = await api.get<Ward[]>(`/wards/city/${encodedCityName}`);
+      const response = await api.get<Ward[]>(`${API_ENDPOINTS.WARDS.BY_CITY}/${encodedCityName}`);
       return Array.isArray(response) ? response : response.data || [];
     } catch (error) {
       console.error('Error fetching wards:', error);

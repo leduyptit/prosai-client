@@ -1,3 +1,6 @@
+import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
+
 export interface SuggestionItem {
   id: string;
   title: string;
@@ -7,24 +10,13 @@ export interface SuggestionItem {
 
 export const fetchSuggestions = async (keyword: string, limit: number = 10): Promise<SuggestionItem[]> => {
   try {
-    const response = await fetch(`https://api-v1.prosai.vn/suggestions/address?keyword=${encodeURIComponent(keyword)}&limit=${limit}`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data: SuggestionItem[] = await response.json();
-    
-    // API returns array directly, not wrapped in success/data structure
-    if (Array.isArray(data)) {
-      return data;
-    } else {
-      console.warn('Suggestions API returned unexpected format:', data);
-      return [];
-    }
+    const response = await apiClient.get<SuggestionItem[]>(API_ENDPOINTS.SUGGESTIONS.ADDRESS, {
+      params: { keyword, limit }
+    });
+    const data = response.data as unknown as SuggestionItem[];
+    return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error('Error fetching suggestions:', error);
-    // Return empty array if API fails
     return [];
   }
 };

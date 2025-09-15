@@ -153,9 +153,11 @@ const PostPropertyPage: React.FC = () => {
         legal_status: values.legalStatus || 1,
         direction: values.direction,
         balcony_direction: values.balconyDirection,
+        // Only send CDN URLs that came from upload response
         images: fileList
-          .filter((file: any) => file.status === 'done')
-          .map((file: any) => file.url || file.thumbUrl || ''),
+          .filter((file: any) => file.status === 'done' && (file.url || (file.response && file.response.url)))
+          .map((file: any) => file.url || file.response.url)
+          .filter((url: string) => /^https?:\/\//.test(url)),
         project_name: values.projectName || undefined,
         floor: values.currentFloor ? parseInt(values.currentFloor) : undefined,
         total_floors: values.totalFloors ? parseInt(values.totalFloors) : undefined,
@@ -335,17 +337,17 @@ const PostPropertyPage: React.FC = () => {
 
       onProgress({ percent: 100 });
 
-      // Update file list with uploaded file info
-      const newFile = {
-        uid: file.uid,
-        name: file.name,
-        status: 'done',
-        url: response.url, // Use the CDN URL from response
-        thumbUrl: response.url,
-        response: response
-      };
-
-      setFileList(prev => [...prev, newFile]);
+      // Update existing file entry with uploaded URL instead of appending new
+      setFileList(prev => prev.map(item => {
+        if (item.uid === file.uid) {
+          return { ...item, status: 'done', url: response.url, thumbUrl: response.url, response };
+        }
+        // Also handle antd replacing item references: match by name+size if uid differs
+        if (!item.url && item.name === file.name && (item.size === file.size || !item.size)) {
+          return { ...item, status: 'done', url: response.url, thumbUrl: response.url, response };
+        }
+        return item;
+      }));
       onSuccess(response);
       message.success('Upload thành công!');
       
@@ -359,8 +361,22 @@ const PostPropertyPage: React.FC = () => {
   };
 
   // Handle file list changes
-  const handleFileListChange = ({ fileList: newFileList }: any) => {
-    setFileList(newFileList);
+  const handleFileListChange = ({ file, fileList: newFileList }: any) => {
+    // Normalize items: if server responded, persist CDN URL into url/thumbUrl and mark done
+    const normalized = newFileList.map((item: any) => {
+      const resp = item?.response || file?.response;
+      if (resp && resp.url) {
+        return {
+          ...item,
+          status: 'done',
+          url: resp.url,
+          thumbUrl: resp.url,
+          response: resp,
+        };
+      }
+      return item;
+    });
+    setFileList(normalized);
   };
 
   // Resolve filePath from upload response or CDN URL

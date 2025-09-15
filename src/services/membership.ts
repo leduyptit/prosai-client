@@ -22,7 +22,7 @@ export interface MembershipResponse {
 }
 
 class MembershipService {
-  private baseUrl = '/packages';
+  private baseUrl = API_ENDPOINTS.PACKAGES.BASE;
 
   async getMembershipPlans(): Promise<MembershipResponse> {
     try {
@@ -52,7 +52,7 @@ class MembershipService {
 
   async purchasePackage(packageId: string, countMonth: string | number): Promise<{ success: boolean; message?: string }> {
     try {
-      const response = await apiClient.post('/packages/purchase', {
+      const response = await apiClient.post(API_ENDPOINTS.PACKAGES.PURCHASE, {
         package_id: packageId,
         count_month: typeof countMonth === 'string' ? parseInt(countMonth) : countMonth
       });
@@ -86,7 +86,7 @@ class MembershipService {
 
   async upgradeMembership(planId: string): Promise<{ success: boolean; message?: string }> {
     try {
-      const response = await apiClient.post<{ success: boolean; message?: string }>(`${this.baseUrl}/upgrade`, {
+      const response = await apiClient.post<{ success: boolean; message?: string }>(API_ENDPOINTS.PACKAGES.UPGRADE, {
         plan_id: planId
       });
       

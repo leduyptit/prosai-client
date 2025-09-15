@@ -49,7 +49,7 @@ class UserService {
 
   // Get user membership info
   async getUserMembership(): Promise<UserMembership> {
-    const response = await api.get<UserMembership>('/user/membership');
+    const response = await api.get<UserMembership>(API_ENDPOINTS.USERS.MEMBERSHIP);
     return response.data;
   }
 
@@ -61,7 +61,7 @@ class UserService {
     const response = await api.post<{
       paymentUrl?: string;
       message: string;
-    }>('/user/membership/upgrade', {
+    }>(API_ENDPOINTS.USERS.MEMBERSHIP_UPGRADE, {
       planType,
       paymentMethod,
     });
@@ -70,7 +70,7 @@ class UserService {
 
   // Cancel membership
   async cancelMembership(): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>('/user/membership/cancel');
+    const response = await api.post<{ message: string }>(API_ENDPOINTS.USERS.MEMBERSHIP_CANCEL);
     return response.data;
   }
 
@@ -114,7 +114,7 @@ class UserService {
       timezone: string;
     };
   }): Promise<{ message: string }> {
-    const response = await api.put<{ message: string }>('/user/settings', settings);
+    const response = await api.put<{ message: string }>(API_ENDPOINTS.USERS.SETTINGS, settings);
     return response.data;
   }
 
@@ -159,7 +159,7 @@ class UserService {
     const formData = new FormData();
     formData.append('avatar', file);
 
-    const response = await api.post<{ avatarUrl: string }>('/user/avatar', formData, {
+    const response = await api.post<{ avatarUrl: string }>(API_ENDPOINTS.USERS.AVATAR, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -169,7 +169,7 @@ class UserService {
 
   // Delete user account
   async deleteAccount(password: string): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>('/user/delete-account', { password });
+    const response = await api.post<{ message: string }>(API_ENDPOINTS.USERS.DELETE_ACCOUNT, { password });
     return response.data;
   }
 }

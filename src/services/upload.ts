@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 import { getSession } from 'next-auth/react';
 
 // Upload response type based on the API response
@@ -41,7 +42,7 @@ class UploadService {
     formData.append('contentType', uploadRequest.contentType || uploadRequest.file.type);
 
     try {
-      const response = await apiClient.post('/minio/upload', formData, {
+      const response = await apiClient.post(API_ENDPOINTS.MINIO.UPLOAD, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${session.accessToken}`,
@@ -82,7 +83,7 @@ class UploadService {
    */
   async deleteFile(filePath: string): Promise<void> {
     try {
-      await apiClient.delete('/minio/file', {
+      await apiClient.delete(API_ENDPOINTS.MINIO.FILE, {
         data: { filePath },
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface PropertyStatsResponse {
   success: boolean;
@@ -13,7 +14,7 @@ export interface PropertyStatsResponse {
 
 export const fetchPropertyStats = async (): Promise<PropertyStatsResponse> => {
   try {
-    const response = await apiClient.get<PropertyStatsResponse>('/profile/property-stats');
+    const response = await apiClient.get<PropertyStatsResponse>(API_ENDPOINTS.PROFILE.PROPERTY_STATS);
     return response.data;
   } catch (error) {
     console.error('Error fetching property stats:', error);

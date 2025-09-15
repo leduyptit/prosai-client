@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface MyPropertyItem {
   id: string;
@@ -76,7 +77,7 @@ export const fetchMyProperties = async (filters: MyPropertiesFilters = {}): Prom
       params.append('to_date', filters.to_date);
     }
     
-    const response = await apiClient.get<MyPropertiesResponse>(`/properties/my?${params.toString()}`);
+    const response = await apiClient.get<MyPropertiesResponse>(`${API_ENDPOINTS.PROPERTIES.MY}?${params.toString()}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching my properties:', error);

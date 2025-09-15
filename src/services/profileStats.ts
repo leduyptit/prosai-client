@@ -1,4 +1,5 @@
 import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface ProfileStatsResponse {
   favorite_count: number;
@@ -7,7 +8,7 @@ export interface ProfileStatsResponse {
 
 export const fetchProfileStats = async (): Promise<ProfileStatsResponse> => {
   try {
-    const response = await apiClient.get<ProfileStatsResponse>('/profile/stats');
+    const response = await apiClient.get<ProfileStatsResponse>(API_ENDPOINTS.PROFILE.STATS);
     return response.data;
   } catch (error) {
     console.error('Error fetching profile stats:', error);

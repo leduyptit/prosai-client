@@ -19,12 +19,22 @@ export const API_ENDPOINTS = {
     NOTIFICATIONS: '/user/notifications',
     PAYMENTS: '/user/payments',
     SETTINGS: '/user/settings',
+    MEMBERSHIP: '/user/membership',
+    MEMBERSHIP_UPGRADE: '/user/membership/upgrade',
+    MEMBERSHIP_CANCEL: '/user/membership/cancel',
+    DELETE_ACCOUNT: '/user/delete-account',
+    SAVED_PROPERTIES: '/user/saved-properties',
+    USER_PROPERTIES: '/user/properties',
+    USER_PROPERTIES_STATS: '/user/properties/stats',
   },
   PROPERTIES: {
     BASE: '/properties',
     SEARCH: '/properties/search',
     DETAIL: '/properties',
     STATS: '/properties/stats',
+    FEATURED: '/properties/featured',
+    SEARCH_PUBLIC: '/search-property',
+    MY: '/properties/my',
     RANKING: '/properties/ranking',
     SUGGESTIONS: '/properties/suggestions',
     RANKING_FOR_YOU: '/property-ranking/realestate-for-you',
@@ -58,6 +68,28 @@ export const API_ENDPOINTS = {
   },
   STATISTICS: {
     BASE: '/statistics',
+  },
+  PROFILE: {
+    STATS: '/profile/stats',
+    PROPERTY_STATS: '/profile/property-stats',
+  },
+  PACKAGES: {
+    BASE: '/packages',
+    PURCHASE: '/packages/purchase',
+    UPGRADE: '/packages/upgrade',
+  },
+  WARDS: {
+    BY_CITY: '/wards/city',
+  },
+  DISTRICTS: {
+    BY_CITY: '/districts/city',
+  },
+  SUGGESTIONS: {
+    ADDRESS: '/suggestions/address',
+  },
+  MINIO: {
+    UPLOAD: '/minio/upload',
+    FILE: '/minio/file',
   },
 } as const;
 

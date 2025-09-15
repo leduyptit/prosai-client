@@ -1,3 +1,6 @@
+import { apiClient } from './api';
+import { API_ENDPOINTS } from '@/constants';
+
 export interface StatisticsResponse {
   type: string;
   date: string;
@@ -19,14 +22,10 @@ export interface StatisticsResponse {
 
 export const fetchStatistics = async (date: string = new Date().toISOString().split('T')[0]): Promise<StatisticsResponse> => {
   try {
-    const response = await fetch(`https://api-v1.prosai.vn/statistics?type=header_statistic&date=${date}`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    return data;
+    const response = await apiClient.get<StatisticsResponse>(API_ENDPOINTS.STATISTICS.BASE, {
+      params: { type: 'header_statistic', date }
+    });
+    return response.data;
   } catch (error) {
     console.error('Error fetching statistics:', error);
     // Return fallback data if API fails

@@ -5,37 +5,37 @@ import { API_ENDPOINTS } from '@/constants';
 class PropertyService {
   // Get properties with filters and pagination
   async getProperties(params: PropertySearchParams = {}): Promise<PaginatedResponse<Property>> {
-    const response = await api.get<PaginatedResponse<Property>>('/properties', { params });
+    const response = await api.get<PaginatedResponse<Property>>(API_ENDPOINTS.PROPERTIES.BASE, { params });
     return response.data;
   }
 
   // Get single property by ID
   async getProperty(id: string): Promise<Property> {
-    const response = await api.get<Property>(`/properties/${id}`);
+    const response = await api.get<Property>(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${id}`);
     return response.data;
   }
 
   // Create new property listing
   async createProperty(data: Partial<Property>): Promise<Property> {
-    const response = await api.post<Property>('/properties', data);
+    const response = await api.post<Property>(API_ENDPOINTS.PROPERTIES.BASE, data);
     return response.data;
   }
 
   // Update property
   async updateProperty(id: string, data: Partial<Property>): Promise<Property> {
-    const response = await api.put<Property>(`/properties/${id}`, data);
+    const response = await api.put<Property>(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${id}`, data);
     return response.data;
   }
 
   // Delete property
   async deleteProperty(id: string): Promise<void> {
-    await api.delete(`/properties/${id}`);
+    await api.delete(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${id}`);
   }
 
   // Search properties
   async searchProperties(query: string, filters: PropertySearchParams = {}): Promise<PaginatedResponse<Property>> {
     const params = { query, ...filters };
-    const response = await api.get<PaginatedResponse<Property>>('/properties/search', { params });
+    const response = await api.get<PaginatedResponse<Property>>(API_ENDPOINTS.PROPERTIES.SEARCH, { params });
     return response.data;
   }
 
@@ -56,19 +56,19 @@ class PropertyService {
     bathrooms?: number;
   } = {}): Promise<PaginatedResponse<Property>> {
     // Use direct axios call to avoid API service wrapper issues
-    const response = await apiClient.get<PaginatedResponse<Property>>('/search-property', { params });
+    const response = await apiClient.get<PaginatedResponse<Property>>(API_ENDPOINTS.PROPERTIES.SEARCH_PUBLIC, { params });
     return response.data;
   }
 
   // Get featured properties
   async getFeaturedProperties(limit: number = 10): Promise<Property[]> {
-    const response = await api.get<Property[]>(`/properties/featured?limit=${limit}`);
+    const response = await api.get<Property[]>(`${API_ENDPOINTS.PROPERTIES.FEATURED}?limit=${limit}`);
     return response.data;
   }
 
   // Get related properties
   async getRelatedProperties(propertyId: string, limit: number = 6): Promise<Property[]> {
-    const response = await api.get<Property[]>(`/properties/${propertyId}/related?limit=${limit}`);
+    const response = await api.get<Property[]>(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${propertyId}/related?limit=${limit}`);
     return response.data;
   }
 
@@ -79,7 +79,7 @@ class PropertyService {
       formData.append(`images[${index}]`, file);
     });
 
-    const response = await api.post<{ images: string[] }>(`/properties/${propertyId}/images`, formData, {
+    const response = await api.post<{ images: string[] }>(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${propertyId}/images`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -89,36 +89,36 @@ class PropertyService {
 
   // Delete property image
   async deleteImage(propertyId: string, imageId: string): Promise<void> {
-    await api.delete(`/properties/${propertyId}/images/${imageId}`);
+    await api.delete(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${propertyId}/images/${imageId}`);
   }
 
   // Get user's properties
   async getUserProperties(params: { page?: number; limit?: number; status?: string } = {}): Promise<PaginatedResponse<Property>> {
-    const response = await api.get<PaginatedResponse<Property>>('/user/properties', { params });
+    const response = await api.get<PaginatedResponse<Property>>(API_ENDPOINTS.USERS.USER_PROPERTIES, { params });
     return response.data;
   }
 
   // Get user's property statistics
   async getUserStats(): Promise<any> {
-    const response = await api.get<any>('/user/properties/stats');
+    const response = await api.get<any>(API_ENDPOINTS.USERS.USER_PROPERTIES_STATS);
     return response.data;
   }
 
   // Toggle property status (activate/deactivate)
   async togglePropertyStatus(id: string): Promise<Property> {
-    const response = await api.patch<Property>(`/properties/${id}/toggle-status`);
+    const response = await api.patch<Property>(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${id}/toggle-status`);
     return response.data;
   }
 
   // Extend property listing
   async extendListing(id: string, days: number): Promise<Property> {
-    const response = await api.post<Property>(`/properties/${id}/extend`, { days });
+    const response = await api.post<Property>(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${id}/extend`, { days });
     return response.data;
   }
 
   // Report property
   async reportProperty(id: string, reason: string, description?: string): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(`/properties/${id}/report`, {
+    const response = await api.post<{ message: string }>(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${id}/report`, {
       reason,
       description,
     });
@@ -127,19 +127,19 @@ class PropertyService {
 
   // Save/unsave property (favorites)
   async toggleSaveProperty(id: string): Promise<{ saved: boolean }> {
-    const response = await api.post<{ saved: boolean }>(`/properties/${id}/save`);
+    const response = await api.post<{ saved: boolean }>(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${id}/save`);
     return response.data;
   }
 
   // Get saved properties
   async getSavedProperties(params: { page?: number; limit?: number } = {}): Promise<PaginatedResponse<Property>> {
-    const response = await api.get<PaginatedResponse<Property>>('/user/saved-properties', { params });
+    const response = await api.get<PaginatedResponse<Property>>(API_ENDPOINTS.USERS.SAVED_PROPERTIES, { params });
     return response.data;
   }
 
   // Contact property owner
   async contactOwner(propertyId: string, message: string, contactInfo: { name: string; phone: string; email?: string }): Promise<{ message: string }> {
-    const response = await api.post<{ message: string }>(`/properties/${propertyId}/contact`, {
+    const response = await api.post<{ message: string }>(`${API_ENDPOINTS.PROPERTIES.DETAIL}/${propertyId}/contact`, {
       message,
       contactInfo,
     });
@@ -264,14 +264,8 @@ export const propertyService = new PropertyService();
 // Fetch property details by ID
 export const getPropertyById = async (id: string): Promise<any> => {
   try {
-    const response = await fetch(`https://api-v1.prosai.vn/search-property/${id}`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    return data;
+    const response = await apiClient.get(`${API_ENDPOINTS.PROPERTIES.SEARCH_PUBLIC}/${id}`);
+    return response.data;
   } catch (error) {
     console.error('Error fetching property details:', error);
     throw error;
