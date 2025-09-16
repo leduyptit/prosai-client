@@ -9,7 +9,7 @@ interface PostData {
   title: string;
   postDate: string;
   expiredDate: string;
-  status: 'active' | 'expired' | 'pending';
+  status: 'active' | 'expired' | 'deleted';
   views: number;
   interactions: number;
 }
@@ -43,8 +43,8 @@ const PostsTable: React.FC<PostsTableProps> = ({
         return <Tag color="green">Đang hiển thị</Tag>;
       case 'expired':
         return <Tag color="red">Hết hạn</Tag>;
-      case 'pending':
-        return <Tag color="orange">Chờ duyệt</Tag>;
+      case 'deleted':
+        return <Tag color="default">Đã xóa</Tag>;
       default:
         return <Tag color="default">{status}</Tag>;
     }
@@ -126,7 +126,9 @@ const PostsTable: React.FC<PostsTableProps> = ({
           <Button
             type="link"
             size="small"
+            disabled={record.status === 'deleted'}
             onClick={() => {
+              if (record.status === 'deleted') return;
               window.open(`/property/${record.id}`, '_blank');
               onView?.(record.id);
             }}
@@ -139,7 +141,11 @@ const PostsTable: React.FC<PostsTableProps> = ({
           <Button
             type="link"
             size="small"
-            onClick={() => onEdit?.(record.id)}
+            disabled={record.status === 'deleted'}
+            onClick={() => {
+              if (record.status === 'deleted') return;
+              onEdit?.(record.id);
+            }}
             className="hover:text-green-700 p-0"
             style={{ padding: 0, color: '#005EBC' }}
           >
@@ -149,7 +155,11 @@ const PostsTable: React.FC<PostsTableProps> = ({
           <Button
             type="link"
             size="small"
-            onClick={() => onDelete?.(record.id)}
+            disabled={record.status === 'deleted'}
+            onClick={() => {
+              if (record.status === 'deleted') return;
+              onDelete?.(record.id);
+            }}
             className="hover:text-red-700 p-0"
             style={{ padding: 0, color: '#DC3545' }}
           >

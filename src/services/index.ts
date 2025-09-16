@@ -11,6 +11,7 @@ export * from './property';
 export * from './propertyStats';
 export * from './statistics';
 export * from './suggestions';
+export * from './search';
 export * from './user';
 export * from './profileStats';
 export * from './myProperties';

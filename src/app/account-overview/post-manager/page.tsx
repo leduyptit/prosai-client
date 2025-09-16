@@ -16,7 +16,7 @@ interface PostData {
   title: string;
   postDate: string;
   expiredDate: string;
-  status: 'active' | 'expired' | 'pending';
+  status: 'active' | 'expired' | 'deleted';
   views: number;
   interactions: number;
 }
@@ -32,12 +32,10 @@ const PostManagerPage: React.FC = () => {
     switch (apiStatus) {
       case 1:
         return 'active';
-      case 0:
-        return 'pending';
-      case -1:
+      case 2:
         return 'expired';
       default:
-        return 'pending';
+        return 'deleted';
     }
   };
 
@@ -46,10 +44,10 @@ const PostManagerPage: React.FC = () => {
     switch (uiStatus) {
       case 'active':
         return 1;
-      case 'pending':
-        return 0;
       case 'expired':
-        return -1;
+        return 2;
+      case 'deleted':
+        return 0;
       case 'all':
       default:
         return 'all';
@@ -95,8 +93,8 @@ const PostManagerPage: React.FC = () => {
       case 1:
         return 'active';
       case 0:
-        return 'pending';
-      case -1:
+        return 'deleted';
+      case 2:
         return 'expired';
       default:
         return 'all';
@@ -105,6 +103,8 @@ const PostManagerPage: React.FC = () => {
 
   // Helper function to get UI date filter from date range
   const getUIDateFilterFromRange = (fromDate?: string, toDate?: string): string => {
+    // When both are undefined, interpret as 'all'
+    if (!fromDate && !toDate) return 'all';
     if (!fromDate || !toDate) return '7days';
     
     const from = new Date(fromDate);
@@ -135,7 +135,7 @@ const PostManagerPage: React.FC = () => {
     title: item.title,
     postDate: new Date(item.created_at).toLocaleDateString('vi-VN'),
     expiredDate: new Date(item.expired_at).toLocaleDateString('vi-VN'),
-    status: getStatusFromAPI(item.status) as 'active' | 'expired' | 'pending',
+    status: getStatusFromAPI(item.status) as 'active' | 'expired' | 'deleted',
     views: item.views_count,
     interactions: item.favorite_count,
   }));
@@ -152,6 +152,11 @@ const PostManagerPage: React.FC = () => {
   };
 
   const handleDateFilterChange = (value: string) => {
+    if (value === 'all') {
+      // Clear time filter completely
+      updateDateFilter(undefined as any, undefined as any);
+      return;
+    }
     // Convert date filter to actual date range
     const { fromDate, toDate } = getDateRangeFromFilter(value);
     updateDateFilter(fromDate, toDate);

@@ -362,6 +362,38 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         apiParams.keyword = keyword.trim();
       }
       
+      // If priceRange is cleared, explicitly unset from_price/to_price so SearchLayout removes them
+      if (key === 'priceRange' && value === 'all') {
+        apiParams.from_price = undefined;
+        apiParams.to_price = undefined;
+      }
+
+      // If areaRange is cleared, explicitly unset from_area/to_area
+      if (key === 'areaRange' && value === 'all') {
+        apiParams.from_area = undefined;
+        apiParams.to_area = undefined;
+      }
+
+      // If bedrooms is cleared, explicitly unset bedrooms
+      if (key === 'bedrooms' && value === 'all') {
+        apiParams.bedrooms = undefined;
+      }
+
+      // If bathrooms is cleared, explicitly unset bathrooms
+      if (key === 'bathrooms' && value === 'all') {
+        apiParams.bathrooms = undefined;
+      }
+
+      // If legalStatus is cleared, explicitly unset legal_status
+      if (key === 'legalStatus' && value === 'all') {
+        apiParams.legal_status = undefined;
+      }
+
+      // If propertyType is cleared, explicitly unset property_type
+      if (key === 'propertyType' && value === 'all') {
+        apiParams.property_type = undefined;
+      }
+
       onSearch?.(apiParams);
     }
   };

@@ -44,6 +44,9 @@ export const API_ENDPOINTS = {
     RELATED_BY_OWNER: '/property-related/realestate-by-owner',
     RELATED_RECOMMEND: '/property-related/realestate-recommend',
   },
+  SEARCH: {
+    TOP_TOPICS: '/search-topic/top-topics',
+  },
   FAVORITES: {
     BASE: '/favorites',
     CHECK: '/favorites/check',

@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Slider, Space } from 'antd';
-import { PRICE_RANGES, PRICE_SLIDER_CONFIG, AREA_SLIDER_CONFIG } from '@/constants';
+import { PRICE_SLIDER_CONFIG, AREA_SLIDER_CONFIG } from '@/constants';
+import Link from 'next/link';
+import { searchService, type TopTopicItem } from '@/services';
 
 const pillClass = 'inline-block px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-700 border border-gray-200';
 
@@ -21,6 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [priceRange, setPriceRange] = useState<[number, number]>(PRICE_SLIDER_CONFIG.DEFAULT_RANGE);
   const [areaRange, setAreaRange] = useState<[number, number]>(AREA_SLIDER_CONFIG.DEFAULT_RANGE);
+  const [topTopics, setTopTopics] = useState<TopTopicItem[]>([]);
 
   // Parse price range from prop
   useEffect(() => {
@@ -51,6 +54,19 @@ const Sidebar: React.FC<SidebarProps> = ({
       setAreaRange(AREA_SLIDER_CONFIG.DEFAULT_RANGE);
     }
   }, [areaRangeProp]);
+
+  // Load top topics from API to keep the same request flow as elsewhere
+  useEffect(() => {
+    const loadTopTopics = async () => {
+      try {
+        const topics = await searchService.getTopTopics();
+        setTopTopics(topics);
+      } catch (e) {
+        setTopTopics([]);
+      }
+    };
+    loadTopTopics();
+  }, []);
 
   // Handle price range change
   const handlePriceChange = (values: [number, number]) => {
@@ -141,11 +157,11 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Featured topics */}
       <Card title="Chủ đề tìm kiếm nổi bật" variant="outlined" styles={{ body: { padding: 12 } }} className="shadow-sm border-gray-200">
         <div className="flex flex-wrap gap-2">
-          <span className={pillClass}>Bất động sản dưới 2 tỷ</span>
-          <span className={pillClass}>Gần trung tâm</span>
-          <span className={pillClass}>Chung cư tiện nghi</span>
-          <span className={pillClass}>Có chỗ để xe</span>
-          <span className={pillClass}>Tiện ích đi kèm</span>
+          {topTopics.map((topic) => (
+            <span key={topic.slug} className={pillClass}>
+              <Link href={topic.url}>{topic.topic}</Link>
+            </span>
+          ))}
         </div>
       </Card>
     </Space>

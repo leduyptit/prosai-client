@@ -25,7 +25,7 @@ const PostFilters: React.FC<PostFiltersProps> = ({
     { value: 'all', label: 'Tất cả' },
     { value: 'active', label: 'Đang hiển thị' },
     { value: 'expired', label: 'Hết hạn' },
-    { value: 'pending', label: 'Chờ duyệt' },
+    { value: 'deleted', label: 'Đã xóa' },
   ];
 
   const dateOptions = [

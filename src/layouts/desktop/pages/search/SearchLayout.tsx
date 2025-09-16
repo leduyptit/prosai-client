@@ -31,7 +31,7 @@ const SearchLayout: React.FC = () => {
     limit: parseInt(searchParamsFromUrl.get('limit') || '20'),
     city: searchParamsFromUrl.get('city') && searchParamsFromUrl.get('city') !== 'all' ? searchParamsFromUrl.get('city')! : undefined,
     property_type: searchParamsFromUrl.get('property_type') && searchParamsFromUrl.get('property_type') !== 'all' ? parseInt(searchParamsFromUrl.get('property_type')!) : undefined,
-    listing_type: searchParamsFromUrl.get('listing_type') && searchParamsFromUrl.get('listing_type') !== 'all' ? parseInt(searchParamsFromUrl.get('listing_type')!) : undefined,
+    listing_type: parseInt(searchParamsFromUrl.get('listing_type') || '1'),
     legal_status: searchParamsFromUrl.get('legal_status') && searchParamsFromUrl.get('legal_status') !== 'all' ? parseInt(searchParamsFromUrl.get('legal_status')!) : undefined,
     ward: (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district')) && (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district'))!.trim() !== '' ? (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district'))! : undefined,
     from_price: searchParamsFromUrl.get('from_price') ? parseInt(searchParamsFromUrl.get('from_price')!) : undefined,
@@ -135,10 +135,7 @@ const SearchLayout: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      console.log('Fetching properties with params:', params);
       const response = await propertyService.searchPropertyProSai(params);
-      console.log('API Response:', response);
-      console.log('Properties count:', response.data?.length);
       
       setProperties(response.data || []);
       setTotalCount(response.total || 0);
@@ -149,7 +146,6 @@ const SearchLayout: React.FC = () => {
         count: response.count || 0
       });
     } catch (err: any) {
-      console.error('Error fetching properties:', err);
       setError(err.response?.data?.message || 'Có lỗi xảy ra khi tải dữ liệu');
       setProperties([]);
       setTotalCount(0);
@@ -168,6 +164,10 @@ const SearchLayout: React.FC = () => {
     // Add new params - exclude 'all' values and empty values
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '' && value !== 'all') {
+        // Do not include listing_type when it's default (1)
+        if (key === 'listing_type' && Number(value) === 1) {
+          return;
+        }
         url.searchParams.set(key, String(value));
       }
     });
@@ -214,7 +214,7 @@ const SearchLayout: React.FC = () => {
       limit: parseInt(searchParamsFromUrl.get('limit') || '20'),
       city: searchParamsFromUrl.get('city') && searchParamsFromUrl.get('city') !== 'all' ? searchParamsFromUrl.get('city')! : undefined,
       property_type: searchParamsFromUrl.get('property_type') && searchParamsFromUrl.get('property_type') !== 'all' ? parseInt(searchParamsFromUrl.get('property_type')!) : undefined,
-      listing_type: searchParamsFromUrl.get('listing_type') && searchParamsFromUrl.get('listing_type') !== 'all' ? parseInt(searchParamsFromUrl.get('listing_type')!) : undefined,
+      listing_type: parseInt(searchParamsFromUrl.get('listing_type') || '1'),
       legal_status: searchParamsFromUrl.get('legal_status') && searchParamsFromUrl.get('legal_status') !== 'all' ? parseInt(searchParamsFromUrl.get('legal_status')!) : undefined,
       ward: (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district')) && (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district'))!.trim() !== '' ? (searchParamsFromUrl.get('ward') || searchParamsFromUrl.get('district'))! : undefined,
       from_price: searchParamsFromUrl.get('from_price') ? parseInt(searchParamsFromUrl.get('from_price')!) : undefined,
