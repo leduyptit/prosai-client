@@ -28,7 +28,7 @@ const DesktopFooter: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-start space-x-2">
                   <Text className="text-gray-600 text-sm">
-                    Địa chỉ: Số 369 phố Hàm Nghi, Quận Hai Bà Trưng, Hà Nội.
+                    Địa chỉ: Tòa nhà Việt Á, Số 9 Duy Tân, Cầu Giấy, Hà Nội.
                   </Text>
                 </div>
                 <div className="flex items-center space-x-2">
