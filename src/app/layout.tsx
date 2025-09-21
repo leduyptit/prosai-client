@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import { App as AntdApp, ConfigProvider } from 'antd';
 import { antdConfig } from '@/lib/antd-config';
 import { SessionProvider } from '@/providers/SessionProvider';
@@ -10,12 +10,15 @@ import MainLayout from "@/layouts/shared/MainLayout";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  fallback: ["ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
+// Fallback monospace font configuration
+const monospaceFont = {
   variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  className: "font-mono",
+};
 
 export const metadata: Metadata = {
   title: "ProSai Client",
@@ -30,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${monospaceFont.variable} antialiased`}
         suppressHydrationWarning={true}
       >
         <SessionProvider>

@@ -132,7 +132,7 @@ const Header: React.FC = () => {
                 { label: 'Cần thuê', href: '/search?listing_type=5' },
                 { label: 'Cần mua', href: '/search?listing_type=4' },
                 { label: 'Chưa rõ', href: '/search?listing_type=3' },
-                { label: 'Xếp hạng', href: '/properties/ranking' },
+                { label: 'Xếp hạng', href: '/property/ranking' },
                 { label: 'Tin tức', href: '/news' },
                 { label: 'Dự án', href: '/projects' },
                 { label: 'Chat AI', href: '/chat-ai' }

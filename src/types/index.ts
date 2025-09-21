@@ -30,6 +30,7 @@ export type {
   ApiConfig,
   RequestConfig,
   ResponseConfig,
-  District,
-  DistrictResponse
+  Project,
+  ProjectListResponse,
+  ProjectListParams
 } from './api';

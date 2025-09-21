@@ -210,43 +210,19 @@ export const PRICE_RANGES = [
   { value: '10000+', label: 'Trên 10 tỷ' },
 ] as const;
 
-// Price slider configuration
-export const PRICE_SLIDER_CONFIG = {
-  MIN: 0,
-  MAX: 3000, // 3 tỷ (3000 triệu)
-  STEP: 50,
-  MARKS: {
-    0: '0 triệu',
-    1000: '1 tỷ',
-    2000: '2 tỷ',
-    3000: '3 tỷ',
-  },
-  DEFAULT_RANGE: [0, 3000] as [number, number],
-} as const;
-
 // Area ranges
 export const AREA_RANGES = [
-  { value: '0-50', label: 'Dưới 50m²' },
-  { value: '50-100', label: '50m² - 100m²' },
-  { value: '100-200', label: '100m² - 200m²' },
-  { value: '200-500', label: '200m² - 500m²' },
-  { value: '500-1000', label: '500m² - 1000m²' },
-  { value: '1000+', label: 'Trên 1000m²' },
+  { value: '0-30', label: 'Dưới 30 m²' },
+  { value: '30-50', label: '30 - 50 m²' },
+  { value: '50-80', label: '50 - 80 m²' },
+  { value: '80-100', label: '80 - 100 m²' },
+  { value: '100-150', label: '100 - 150 m²' },
+  { value: '150-200', label: '150 - 200 m²' },
+  { value: '200-250', label: '200 - 250 m²' },
+  { value: '250-300', label: '250 - 300 m²' },
+  { value: '300-500', label: '300 - 500 m²' },
+  { value: '500+', label: 'Trên 500 m²' },
 ] as const;
-
-// Area slider configuration
-export const AREA_SLIDER_CONFIG = {
-  MIN: 0,
-  MAX: 150,
-  STEP: 50,
-  MARKS: {
-    0: '0m²',
-    50: '50m²',
-    100: '100m²',
-    150: '150m²',
-  },
-  DEFAULT_RANGE: [0, 150] as [number, number],
-} as const;
 
 // Bedroom options
 export const BEDROOM_OPTIONS = [
@@ -282,6 +258,49 @@ export const SORT_OPTIONS = [
   { value: 'area_asc', label: 'Diện tích tăng dần' },
   { value: 'area_desc', label: 'Diện tích giảm dần' },
   { value: 'views_desc', label: 'Lượt xem nhiều nhất' },
+] as const;
+
+// Project sort constants
+export const PROJECT_SORT = {
+  LATEST: 'LATEST',
+  OLDEST: 'OLDEST',
+  MOST_VIEWED: 'MOST_VIEWED',
+  MOST_LIKED: 'MOST_LIKED',
+  NAME_ASC: 'NAME_ASC',
+  NAME_DESC: 'NAME_DESC',
+  PRICE_ASC: 'PRICE_ASC',
+  PRICE_DESC: 'PRICE_DESC',
+  AREA_ASC: 'AREA_ASC',
+  AREA_DESC: 'AREA_DESC',
+  START_DATE_ASC: 'START_DATE_ASC',
+  START_DATE_DESC: 'START_DATE_DESC',
+} as const;
+
+// Project status constants
+export const PROJECT_STATUS = {
+  PLANNING: "Đang lên kế hoạch",
+  PRE_CONSTRUCTION: "Chuẩn bị thi công",
+  UNDER_CONSTRUCTION: "Đang thi công",
+  COMPLETED: "Hoàn thành",
+  HANDOVER: "Đã bàn giao",
+  SUSPENDED: "Tạm dừng",
+  CANCELLED: "Hủy bỏ",
+} as const;
+
+// Project sort options
+export const PROJECT_SORT_OPTIONS = [
+  { value: PROJECT_SORT.LATEST, label: 'Mới nhất' },
+  { value: PROJECT_SORT.OLDEST, label: 'Cũ nhất' },
+  { value: PROJECT_SORT.NAME_ASC, label: 'Tên A-Z' },
+  { value: PROJECT_SORT.NAME_DESC, label: 'Tên Z-A' },
+  { value: PROJECT_SORT.PRICE_ASC, label: 'Giá tăng dần' },
+  { value: PROJECT_SORT.PRICE_DESC, label: 'Giá giảm dần' },
+  { value: PROJECT_SORT.AREA_ASC, label: 'Diện tích tăng dần' },
+  { value: PROJECT_SORT.AREA_DESC, label: 'Diện tích giảm dần' },
+  { value: PROJECT_SORT.START_DATE_ASC, label: 'Ngày khởi công tăng dần' },
+  { value: PROJECT_SORT.START_DATE_DESC, label: 'Ngày khởi công giảm dần' },
+  { value: PROJECT_SORT.MOST_VIEWED, label: 'Lượt xem nhiều nhất' },
+  { value: PROJECT_SORT.MOST_LIKED, label: 'Yêu thích nhiều nhất' },
 ] as const;
 
 // Error messages

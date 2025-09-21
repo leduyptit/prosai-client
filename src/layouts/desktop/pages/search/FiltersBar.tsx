@@ -685,6 +685,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
           className="px-4 bg-orange-500 text-white border-none flex items-center gap-2 map-button w-full md:w-auto md:py-2 my-3 md:my-0" 
           size="large"
           style={{ padding: '0 15px'}}
+          onClick={() => window.open('https://www.google.com/maps', '_blank')}
         >
           <img src="/svgs/icon_map.svg" alt="map" className="h-4 w-4" />
           <span className="font-medium" >Xem bản đồ</span>

@@ -331,6 +331,65 @@ export interface ResponseConfig {
   config: RequestConfig;
 }
 
+export interface Project {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  content: string;
+  featured_image: string | null;
+  images: string[];
+  investor: string;
+  contractor: string | null;
+  architect: string | null;
+  address: string;
+  city: string;
+  ward: string;
+  area: string;
+  floors: number;
+  apartments: number;
+  total_investment: string;
+  price_from: string;
+  price_to: string;
+  start_date: string | null;
+  expected_completion_date: string | null;
+  handover_date: string | null;
+  status: string;
+  project_type: string;
+  view_count: number;
+  like_count: number;
+  is_featured: boolean;
+  is_published: boolean;
+  is_active: boolean;
+  meta_tags: {
+    title: string;
+    keywords: string;
+    description: string;
+  };
+  created_at: string;
+  updated_at: string | null;
+}
+
+export interface ProjectListResponse {
+  data: Project[];
+  total: number;
+  page: number;
+  pageCount: number;
+}
+
+export interface ProjectListParams {
+  page?: number;
+  limit?: number;
+  city?: string;
+  project_type?: string;
+  status?: string;
+  search?: string;
+  sort_type?: string;
+  is_featured?: boolean;
+  is_published?: boolean;
+  filter_type?: string;
+}
+
 export interface PropertyRankingItem {
   id: string;
   id_social: string;

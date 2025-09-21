@@ -20,3 +20,4 @@ export * from './transactions';
 export * from './districts';
 export * from './wards';
 export * from './upload';
+export * from './projectService';

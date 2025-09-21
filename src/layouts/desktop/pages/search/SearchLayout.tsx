@@ -225,10 +225,17 @@ const SearchLayout: React.FC = () => {
       bathrooms: searchParamsFromUrl.get('bathrooms') ? parseInt(searchParamsFromUrl.get('bathrooms')!) : undefined,
     };
     setSearchParams(newSearchParams);
+    
+    // Check if action=reload is present in URL to trigger automatic search
+    const action = searchParamsFromUrl.get('action');
+    if (action === 'reload') {
+      fetchProperties(newSearchParams);
+      // Remove action parameter from URL after triggering search
+      const url = new URL(window.location.href);
+      url.searchParams.delete('action');
+      window.history.replaceState({}, '', url.toString());
+    }
   }, [searchParamsFromUrl]);
-
-  // Debug logs for render
-  console.log('Render state - loading:', loading, 'properties length:', properties.length, 'totalCount:', totalCount);
 
   return (
     <div className="search-layout pb-10">

@@ -1,12 +1,26 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, Slider, Space } from 'antd';
-import { PRICE_SLIDER_CONFIG, AREA_SLIDER_CONFIG } from '@/constants';
+import { Card, Space } from 'antd';
 import Link from 'next/link';
 import { searchService, type TopTopicItem } from '@/services';
+import { AREA_RANGES } from '@/constants';
 
 const pillClass = 'inline-block px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-700 border border-gray-200';
+
+// Predefined price ranges
+const PRICE_RANGES = [
+  { label: 'Dưới 500 triệu', value: '0-500' },
+  { label: '500 - 800 triệu', value: '500-800' },
+  { label: '800 triệu - 1 tỷ', value: '800-1000' },
+  { label: '1 - 2 tỷ', value: '1000-2000' },
+  { label: '2 - 3 tỷ', value: '2000-3000' },
+  { label: '3 - 5 tỷ', value: '3000-5000' },
+  { label: '5 - 7 tỷ', value: '5000-7000' },
+  { label: '7 - 10 tỷ', value: '7000-10000' },
+  { label: 'Trên 10 tỷ', value: '10000' }
+];
+
 
 interface SidebarProps {
   priceRange?: string;
@@ -21,37 +35,32 @@ const Sidebar: React.FC<SidebarProps> = ({
   onPriceChange,
   onAreaChange 
 }) => {
-  const [priceRange, setPriceRange] = useState<[number, number]>(PRICE_SLIDER_CONFIG.DEFAULT_RANGE);
-  const [areaRange, setAreaRange] = useState<[number, number]>(AREA_SLIDER_CONFIG.DEFAULT_RANGE);
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string>('all');
+  const [selectedAreaRange, setSelectedAreaRange] = useState<string>('all');
   const [topTopics, setTopTopics] = useState<TopTopicItem[]>([]);
+
+  // Function to add action=reload to URL
+  const addReloadAction = (url: string) => {
+    const urlObj = new URL(url, window.location.origin);
+    urlObj.searchParams.set('action', 'reload');
+    return urlObj.toString();
+  };
 
   // Parse price range from prop
   useEffect(() => {
     if (priceRangeProp && priceRangeProp !== 'all') {
-      if (priceRangeProp.includes('-')) {
-        const [from, to] = priceRangeProp.split('-');
-        setPriceRange([parseInt(from) || 0, parseInt(to) || PRICE_SLIDER_CONFIG.MAX]);
-      } else if (priceRangeProp.includes('+')) {
-        const from = priceRangeProp.replace('+', '');
-        setPriceRange([parseInt(from) || 0, PRICE_SLIDER_CONFIG.MAX]);
-      }
+      setSelectedPriceRange(priceRangeProp);
     } else {
-      setPriceRange(PRICE_SLIDER_CONFIG.DEFAULT_RANGE);
+      setSelectedPriceRange('all');
     }
   }, [priceRangeProp]);
 
   // Parse area range from prop
   useEffect(() => {
     if (areaRangeProp && areaRangeProp !== 'all') {
-      if (areaRangeProp.includes('-')) {
-        const [from, to] = areaRangeProp.split('-');
-        setAreaRange([parseInt(from) || 0, parseInt(to) || AREA_SLIDER_CONFIG.MAX]);
-      } else if (areaRangeProp.includes('+')) {
-        const from = areaRangeProp.replace('+', '');
-        setAreaRange([parseInt(from) || 0, AREA_SLIDER_CONFIG.MAX]);
-      }
+      setSelectedAreaRange(areaRangeProp);
     } else {
-      setAreaRange(AREA_SLIDER_CONFIG.DEFAULT_RANGE);
+      setSelectedAreaRange('all');
     }
   }, [areaRangeProp]);
 
@@ -69,97 +78,87 @@ const Sidebar: React.FC<SidebarProps> = ({
   }, []);
 
   // Handle price range change
-  const handlePriceChange = (values: [number, number]) => {
-    setPriceRange(values);
-    let result = 'all';
-    
-    if (values[0] === PRICE_SLIDER_CONFIG.MIN && values[1] === PRICE_SLIDER_CONFIG.MAX) {
-      result = 'all';
-    } else if (values[1] === PRICE_SLIDER_CONFIG.MAX) {
-      result = `${values[0]}+`;
-    } else {
-      result = `${values[0]}-${values[1]}`;
-    }
-    
-    onPriceChange?.(result);
+  const handlePriceRangeSelect = (value: string) => {
+    setSelectedPriceRange(value);
+    onPriceChange?.(value);
   };
 
   // Handle area range change
-  const handleAreaChange = (values: [number, number]) => {
-    setAreaRange(values);
-    let result = 'all';
-    
-    if (values[0] === AREA_SLIDER_CONFIG.MIN && values[1] === AREA_SLIDER_CONFIG.MAX) {
-      result = 'all';
-    } else if (values[1] === AREA_SLIDER_CONFIG.MAX) {
-      result = `${values[0]}+`;
-    } else {
-      result = `${values[0]}-${values[1]}`;
-    }
-    
-    onAreaChange?.(result);
+  const handleAreaRangeSelect = (value: string) => {
+    setSelectedAreaRange(value);
+    onAreaChange?.(value);
   };
 
   return (
     <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
       {/* Price range */}
-      <Card title="Lọc theo khoảng giá" variant="outlined" styles={{ body: { padding: 12 } }} className="shadow-sm border-gray-200">
-        <div className="px-1">
-          <Slider
-            range
-            min={PRICE_SLIDER_CONFIG.MIN}
-            max={PRICE_SLIDER_CONFIG.MAX}
-            step={PRICE_SLIDER_CONFIG.STEP}
-            marks={PRICE_SLIDER_CONFIG.MARKS}
-            tooltip={{
-              formatter: (value) => `${value} triệu`
-            }}
-            value={priceRange}
-            onChange={(values) => handlePriceChange(values as [number, number])}
-          />
-          <div className="mt-2 text-sm text-gray-600">
-            Giá: <span className="font-medium text-gray-800">
-              {priceRange[0] === PRICE_SLIDER_CONFIG.MIN && priceRange[1] === PRICE_SLIDER_CONFIG.MAX 
-                ? 'Tất cả mức giá'
-                : `${priceRange[0]} - ${priceRange[1]} triệu`
-              }
-            </span>
+      <Card title="Lọc theo khoảng giá" variant="outlined" styles={{ body: { padding: 20 } }} className="shadow-sm border-gray-200">
+        <div className="space-y-1">
+          <div className="flex flex-col space-y-1">
+            <button
+              className={`text-left py-2 px-0 text-sm transition-colors ${
+                selectedPriceRange === 'all' 
+                  ? 'text-blue-600 font-medium' 
+                  : 'text-gray-700 hover:text-blue-600'
+              }`}
+              onClick={() => handlePriceRangeSelect('all')}
+            >
+              Tất cả mức giá
+            </button>
+            {PRICE_RANGES.map((range) => (
+              <button
+                key={range.value}
+                className={`text-left py-2 px-0 text-sm transition-colors ${
+                  selectedPriceRange === range.value 
+                    ? 'text-blue-600 font-medium' 
+                    : 'text-gray-700 hover:text-blue-600'
+                }`}
+                onClick={() => handlePriceRangeSelect(range.value)}
+              >
+                {range.label}
+              </button>
+            ))}
           </div>
         </div>
       </Card>
 
       {/* Area range */}
-      <Card title="Lọc theo diện tích" variant="outlined" styles={{ body: { padding: 12 } }} className="shadow-sm border-gray-200">
-        <div className="px-1">
-          <Slider
-            range
-            min={AREA_SLIDER_CONFIG.MIN}
-            max={AREA_SLIDER_CONFIG.MAX}
-            step={AREA_SLIDER_CONFIG.STEP}
-            marks={AREA_SLIDER_CONFIG.MARKS}
-            tooltip={{
-              formatter: (value) => `${value}m²`
-            }}
-            value={areaRange}
-            onChange={(values) => handleAreaChange(values as [number, number])}
-          />
-          <div className="mt-2 text-sm text-gray-600">
-            Diện tích: <span className="font-medium text-gray-800">
-              {areaRange[0] === AREA_SLIDER_CONFIG.MIN && areaRange[1] === AREA_SLIDER_CONFIG.MAX 
-                ? 'Tất cả diện tích'
-                : `${areaRange[0]} - ${areaRange[1]}m²`
-              }
-            </span>
+      <Card title="Lọc theo diện tích" variant="outlined" styles={{ body: { padding: 20 } }} className="shadow-sm border-gray-200">
+        <div className="space-y-1">
+          <div className="flex flex-col space-y-1">
+            <button
+              className={`text-left py-2 px-0 text-sm transition-colors ${
+                selectedAreaRange === 'all' 
+                  ? 'text-blue-600 font-medium' 
+                  : 'text-gray-700 hover:text-blue-600'
+              }`}
+              onClick={() => handleAreaRangeSelect('all')}
+            >
+              Tất cả diện tích
+            </button>
+            {AREA_RANGES.map((range) => (
+              <button
+                key={range.value}
+                className={`text-left py-2 px-0 text-sm transition-colors ${
+                  selectedAreaRange === range.value 
+                    ? 'text-blue-600 font-medium' 
+                    : 'text-gray-700 hover:text-blue-600'
+                }`}
+                onClick={() => handleAreaRangeSelect(range.value)}
+              >
+                {range.label}
+              </button>
+            ))}
           </div>
         </div>
       </Card>
 
       {/* Featured topics */}
-      <Card title="Chủ đề tìm kiếm nổi bật" variant="outlined" styles={{ body: { padding: 12 } }} className="shadow-sm border-gray-200">
+      <Card title="Chủ đề tìm kiếm nổi bật" variant="outlined" styles={{ body: { padding: 20 } }} className="shadow-sm border-gray-200">
         <div className="flex flex-wrap gap-2">
           {topTopics.map((topic) => (
             <span key={topic.slug} className={pillClass}>
-              <Link href={topic.url}>{topic.topic}</Link>
+              <Link href={addReloadAction(topic.url)}>{topic.topic}</Link>
             </span>
           ))}
         </div>

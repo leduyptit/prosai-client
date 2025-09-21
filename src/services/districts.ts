@@ -1,6 +1,16 @@
 import { api } from './api';
 import { API_ENDPOINTS } from '@/constants';
-import { District, DistrictResponse } from '@/types';
+
+export interface District {
+  id: string;
+  name: string;
+  code: string;
+  type: string;
+  slug: string;
+  city_name: string;
+  city_code: string;
+  search_count: string | number;
+}
 
 export class DistrictsService {
   /**

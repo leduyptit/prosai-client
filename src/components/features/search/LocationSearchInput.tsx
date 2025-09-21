@@ -74,10 +74,8 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
       if (!target.closest('.location-input-container')) {
         setLocationPickerVisible(false);
         setSuggestionsVisible(false);
-        // Only close ward picker if user has selected some wards
-        if (selectedWards.length > 0) {
-          setWardPickerVisible(false);
-        }
+        // Always close ward picker when clicking outside
+        setWardPickerVisible(false);
       }
     };
 
@@ -88,7 +86,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [locationPickerVisible, wardPickerVisible, suggestionsVisible, selectedWards]);
+  }, [locationPickerVisible, wardPickerVisible, suggestionsVisible]);
 
   const handleCitySelect = (selectedCity: string) => {
     onCityChange(selectedCity);
@@ -125,18 +123,19 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
       setSuggestionsVisible(false);
       return;
     }
-    // Allow focusing on keyword input even without wards
-    if (selectedWards.length === 0) {
-      setLocationPickerVisible(false);
-      setWardPickerVisible(true);
-      setSuggestionsVisible(false);
-      return;
-    }
-    // If wards are selected and there's a keyword, show suggestions
+    
+    // If there's a keyword, show suggestions
     if (keyword.length > 0) {
       setSuggestionsVisible(true);
       setWardPickerVisible(false);
       setLocationPickerVisible(false);
+    } else {
+      // If no keyword, show ward picker if no wards selected
+      if (selectedWards.length === 0) {
+        setLocationPickerVisible(false);
+        setWardPickerVisible(true);
+        setSuggestionsVisible(false);
+      }
     }
   };
 
@@ -149,6 +148,18 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
       setLocationPickerVisible(false);
       setWardPickerVisible(true);
       setSuggestionsVisible(false);
+    }
+  };
+
+  const handleSearchClick = () => {
+    // Close all dropdowns when search is clicked
+    setLocationPickerVisible(false);
+    setWardPickerVisible(false);
+    setSuggestionsVisible(false);
+    
+    // Call the original onSearch function
+    if (onSearch) {
+      onSearch();
     }
   };
 
@@ -169,127 +180,93 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
           </svg>
         </div>
          
-        {/* Middle Section - Search Input */}
+         {/* Middle Section - Search Input */}
          <div className="flex-1 flex items-center px-4 py-0">
            <img src="/svgs/icon_search.svg" className="w-5 h-5 mr-3 text-gray-400" alt="search" />
-                                   <div className="flex-1">
-              {/* Always show selected wards and keyword tags when they exist */}
-              {(selectedWards.length > 0 || (showKeywordAsTag && keywordTagText) || (internalShowKeywordAsTag && internalKeywordTagText)) && !wardPickerVisible && !suggestionsVisible ? (
-                <div className="flex items-center gap-2 flex-wrap">
-                  {/* Show selected wards */}
-                  {selectedWards.slice(0, 1).map((ward, index) => (
-                    <span
-                      key={`${ward}-${index}`}
-                      className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm cursor-pointer"
-                      onClick={handleWardClick}
-                    >
-                      {ward}
-                    </span>
-                  ))}
-                  
-                                     {/* Show keyword tag */}
-                   {((showKeywordAsTag && keywordTagText) || (internalShowKeywordAsTag && internalKeywordTagText)) && (
-                     <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm flex items-center gap-1">
-                       <span>🔍</span>
-                       <span className="max-w-[120px] truncate" title={keywordTagText || internalKeywordTagText}>
-                         {keywordTagText || internalKeywordTagText}
-                       </span>
-                       <button
-                         type="button"
-                         onClick={(e) => {
-                           e.stopPropagation();
-                           // Clear all keyword states
-                           setKeyword('');
-                           setInternalKeywordTagText('');
-                           setInternalShowKeywordAsTag(false);
-                           // Reset keyword in parent component to remove from URL params
-                           if (onKeywordChange) {
-                             onKeywordChange('');
-                           }
-                           // Focus on input for new keyword
-                           const inputElement = e.currentTarget.closest('.flex-1')?.querySelector('input');
-                           if (inputElement) {
-                             inputElement.focus();
-                           }
-                         }}
-                         className="text-green-600 hover:text-green-800 ml-1 flex-shrink-0"
-                       >
-                         ×
-                       </button>
-                     </span>
-                   )}
-                  
-                  {/* Show remaining wards and keywords summary */}
-                   {(selectedWards.length > 1) && (
-                     <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer" onClick={handleWardClick}>
-                       {(() => {
-                         const remainingWards = Math.max(0, selectedWards.length - 1);
-                         if (remainingWards > 0) {
-                           return `+${remainingWards} khu vực`;
-                         }
-                         return '';
-                       })()}
-                     </span>
-                   )}
-                  
-                                     {/* Always show input for new keyword */}
-                   <input
-                     placeholder={placeholder}
-                     value={keyword}
-                     onChange={(e) => handleKeywordChange(e.target.value)}
-                     onKeyDown={(e) => {
-                       if (e.key === 'Enter' && keyword.trim()) {
-                         // Add keyword to tag and push to params
-                         setInternalKeywordTagText(keyword.trim());
-                         setInternalShowKeywordAsTag(true);
-                         // Clear input
-                         setKeyword('');
-                         // Update parent component
-                         if (onKeywordChange) {
-                           onKeywordChange(keyword.trim());
-                         }
-                         // Close suggestions if open
-                         setSuggestionsVisible(false);
-                       }
-                     }}
-                     onFocus={handleInputFocus}
-                     className="w-full border-none outline-none bg-transparent text-sm placeholder:text-gray-400 flex-1 min-w-0"
-                     disabled={disabled || !city || city === 'Chọn vị trí'}
-                   />
-                </div>
-              ) : (
-                                 <input
-                   placeholder={
-                     !city || city === 'Chọn vị trí'
-                       ? 'Vui lòng chọn tỉnh/thành phố trước'
-                       : placeholder
-                   }
-                   value={keyword}
-                   onChange={(e) => handleKeywordChange(e.target.value)}
-                   onKeyDown={(e) => {
-                     if (e.key === 'Enter' && keyword.trim()) {
-                       // Add keyword to tag and push to params
-                       setInternalKeywordTagText(keyword.trim());
-                       setInternalShowKeywordAsTag(true);
-                       // Clear input
-                       setKeyword('');
-                       // Update parent component
-                       if (onKeywordChange) {
-                         onKeywordChange(keyword.trim());
-                       }
-                       // Close suggestions if open
-                       setSuggestionsVisible(false);
+           <div className="flex-1 flex items-center gap-2 flex-wrap">
+             {/* Show selected wards */}
+             {selectedWards.length > 0 && !wardPickerVisible && !suggestionsVisible && (
+               <>
+                 {selectedWards.slice(0, 1).map((ward, index) => (
+                   <span
+                     key={`${ward}-${index}`}
+                     className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm cursor-pointer"
+                     onClick={handleWardClick}
+                   >
+                     {ward}
+                   </span>
+                 ))}
+                 
+                 {/* Show remaining wards summary */}
+                 {selectedWards.length > 1 && (
+                   <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer" onClick={handleWardClick}>
+                     +{selectedWards.length - 1} khu vực
+                   </span>
+                 )}
+               </>
+             )}
+             
+             {/* Show keyword tag */}
+             {((showKeywordAsTag && keywordTagText) || (internalShowKeywordAsTag && internalKeywordTagText)) && !wardPickerVisible && !suggestionsVisible && (
+               <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                 <span>🔍</span>
+                 <span className="max-w-[120px] truncate" title={keywordTagText || internalKeywordTagText}>
+                   {keywordTagText || internalKeywordTagText}
+                 </span>
+                 <button
+                   type="button"
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     // Clear all keyword states
+                     setKeyword('');
+                     setInternalKeywordTagText('');
+                     setInternalShowKeywordAsTag(false);
+                     // Reset keyword in parent component to remove from URL params
+                     if (onKeywordChange) {
+                       onKeywordChange('');
                      }
                    }}
-                   onFocus={handleInputFocus}
-                   className={`w-full border-none outline-none bg-transparent text-sm placeholder:text-gray-400 ${
-                     (!city || city === 'Chọn vị trí')
-                       ? 'cursor-pointer' : ''
-                   }`}
-                   disabled={disabled || !city || city === 'Chọn vị trí'}
-                 />
-              )}
-            </div>
+                   className="text-green-600 hover:text-green-800 ml-1 flex-shrink-0"
+                 >
+                   ×
+                 </button>
+               </span>
+             )}
+             
+             {/* Always show input */}
+             <input
+               placeholder={
+                 !city || city === 'Chọn vị trí'
+                   ? 'Vui lòng chọn tỉnh/thành phố trước'
+                   : placeholder
+               }
+               value={keyword}
+               onChange={(e) => handleKeywordChange(e.target.value)}
+               onKeyDown={(e) => {
+                 if (e.key === 'Enter' && keyword.trim()) {
+                   // Add keyword to tag and push to params
+                   setInternalKeywordTagText(keyword.trim());
+                   setInternalShowKeywordAsTag(true);
+                   // Clear input
+                   setKeyword('');
+                   // Update parent component
+                   if (onKeywordChange) {
+                     onKeywordChange(keyword.trim());
+                   }
+                   // Close all dropdowns
+                   setSuggestionsVisible(false);
+                   setWardPickerVisible(false);
+                   setLocationPickerVisible(false);
+                 }
+               }}
+               onFocus={handleInputFocus}
+               className={`w-full border-none outline-none bg-transparent text-sm placeholder:text-gray-400 flex-1 min-w-0 ${
+                 (!city || city === 'Chọn vị trí')
+                   ? 'cursor-pointer' : ''
+               }`}
+               disabled={disabled || !city || city === 'Chọn vị trí'}
+             />
+           </div>
            {keyword && (
              <button
                type="button"
@@ -315,7 +292,7 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
              <Button
                type="primary"
                size="small"
-               onClick={onSearch}
+               onClick={handleSearchClick}
                className={`text-white font-medium rounded-r-lg transition-colors ${searchButtonClassName}`}
              >
                {searchButtonText}
@@ -354,53 +331,49 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
        />
 
       {/* Search Suggestions Dropdown */}
-      {suggestionsVisible && keyword.length > 0 && (
-        <div className="absolute top-full left-0 right-0 z-[9999]">
-                     <SearchSuggestions
-             visible={suggestionsVisible}
-             keyword={keyword}
-             onClose={() => setSuggestionsVisible(false)}
-             selectedWards={selectedWards}
-             onClearAllWards={() => {
-               setSelectedWards([]);
-               onWardChange('');
-             }}
-             onRemoveWard={(ward) => {
-               const newWards = selectedWards.filter(d => d !== ward);
-               setSelectedWards(newWards);
-               onWardChange(newWards.join(', '));
-             }}
-              onSelectSuggestion={(title) => {
-                 // Don't fill the input, just add to keyword tag
-                 setInternalKeywordTagText(title);
-                 setInternalShowKeywordAsTag(true);
-                 setSuggestionsVisible(false);
-                 // Clear input after selecting suggestion
-                 setKeyword('');
-                 // Update parent component with the new keyword
-                 if (onKeywordChange) {
-                   onKeywordChange(title);
-                 }
-               }}
-              onSelectSuggestionAsTag={(title) => {
-                setInternalKeywordTagText(title);
-                setInternalShowKeywordAsTag(true);
-              }}
-             showKeywordAsTag={Boolean((showKeywordAsTag && keywordTagText) || (internalShowKeywordAsTag && internalKeywordTagText))}
-             keywordTagText={keywordTagText || internalKeywordTagText}
-             onRemoveKeyword={() => {
-               // Clear all keyword states
-               setKeyword('');
-               setInternalKeywordTagText('');
-               setInternalShowKeywordAsTag(false);
-               // Reset keyword in parent component to remove from URL params
-               if (onKeywordChange) {
-                 onKeywordChange('');
-               }
-             }}
-           />
-        </div>
-      )}
+      <SearchSuggestions
+        visible={suggestionsVisible && keyword.length > 0}
+        keyword={keyword}
+        onClose={() => setSuggestionsVisible(false)}
+        selectedWards={selectedWards}
+        onClearAllWards={() => {
+          setSelectedWards([]);
+          onWardChange('');
+        }}
+        onRemoveWard={(ward) => {
+          const newWards = selectedWards.filter(d => d !== ward);
+          setSelectedWards(newWards);
+          onWardChange(newWards.join(', '));
+        }}
+        onSelectSuggestion={(title) => {
+          // Don't fill the input, just add to keyword tag
+          setInternalKeywordTagText(title);
+          setInternalShowKeywordAsTag(true);
+          setSuggestionsVisible(false);
+          // Clear input after selecting suggestion
+          setKeyword('');
+          // Update parent component with the new keyword
+          if (onKeywordChange) {
+            onKeywordChange(title);
+          }
+        }}
+        onSelectSuggestionAsTag={(title) => {
+          setInternalKeywordTagText(title);
+          setInternalShowKeywordAsTag(true);
+        }}
+        showKeywordAsTag={Boolean((showKeywordAsTag && keywordTagText) || (internalShowKeywordAsTag && internalKeywordTagText))}
+        keywordTagText={keywordTagText || internalKeywordTagText}
+        onRemoveKeyword={() => {
+          // Clear all keyword states
+          setKeyword('');
+          setInternalKeywordTagText('');
+          setInternalShowKeywordAsTag(false);
+          // Reset keyword in parent component to remove from URL params
+          if (onKeywordChange) {
+            onKeywordChange('');
+          }
+        }}
+      />
     </div>
   );
 };
