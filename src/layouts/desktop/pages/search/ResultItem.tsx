@@ -69,16 +69,16 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
             style={{ pointerEvents: isHovered ? 'auto' : 'none' }}
           >
             {/* Dim + blur layer */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]" />
+            <div className="absolute inset-0 bg-white/40 backdrop-blur-[3px]" />
             {/* Message + CTA */}
-            <div className="relative z-10 flex flex-col items-center gap-3 px-4 text-center">
-              <div className="text-white drop-shadow opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-out">
+            <div className="relative z-10 flex flex-col items-center gap-3 px-4 text-center hover:bg-black/40 h-full w-full align-middle justify-center">
+              <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-out">
                 Bạn cần đăng nhập để xem đầy đủ các bất động sản còn lại.
               </div>
               <button
                 type="button"
                 onClick={() => setIsLoginModalOpen(true)}
-                className="px-4 py-2 md:px-5 md:py-2.5 bg-[#005ebc] hover:bg-[#0f75db] text-white rounded-md shadow opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-out"
+                className="px-4 py-2 md:px-5 md:py-2.5 bg-[#005ebc] hover:bg-[#0f75db] text-white rounded-md shadow opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-out cursor-pointer"
               >
                 ĐĂNG NHẬP NGAY
               </button>
