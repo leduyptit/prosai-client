@@ -186,7 +186,7 @@ const NewsDetailPage: React.FC = () => {
             <div className="bg-white">
               {/* Article Header */}
               <div className="mb-6">
-                <h1 className="text-3xl font-bold text-[#1D1D44] mb-4">
+                <h1 className="text-3xl font-medium text-[#1D1D44] mb-4">
                   {article.title}
                 </h1>
                 <div className="flex items-center text-sm text-[#8D8DA1] mb-4">

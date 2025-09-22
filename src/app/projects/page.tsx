@@ -4,11 +4,9 @@ import React, { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ProjectList } from '@/components/features/projects';
 import { PROJECT_SORT, PROJECT_SORT_OPTIONS } from '@/constants';
-import { Select, Input, Button } from 'antd';
-import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
-
-const { Option } = Select;
-
+import { Input } from 'antd';
+import { Select } from '@/components/ui/forms';
+import { SearchOutlined } from '@ant-design/icons';
 
 export default function ProjectsPage() {
   const searchParams = useSearchParams();
@@ -28,19 +26,19 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white">
         <div className="responsive-container mx-auto py-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dự án bất động sản</h1>
-          <p className="text-gray-600">Khám phá các dự án bất động sản mới nhất và uy tín nhất</p>
+          <h1 className="text-3xl font-medium text-[#1D1D44] mb-2">Dự án bất động sản</h1>
+          <p className="text-gray-600 mt-2">Khám phá các dự án bất động sản mới nhất và uy tín nhất</p>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white">
         <div className="responsive-container mx-auto py-4">
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+          <div className="flex flex-col lg:flex-row gap-4 items-center lg:items-center rounded-lg border border-gray-200 p-4">
             {/* Search Input */}
             <div className="flex-1 max-w-md">
               <Input
@@ -51,11 +49,8 @@ export default function ProjectsPage() {
                 className="w-full"
               />
             </div>
-
             {/* Desktop Filters */}
             <div className="hidden lg:flex gap-4 items-center">
-
-
               <Select
                 placeholder="Sắp xếp"
                 value={filters.sort_type}
@@ -63,9 +58,9 @@ export default function ProjectsPage() {
                 className="w-40"
               >
                 {PROJECT_SORT_OPTIONS.map((option: { value: string; label: string }) => (
-                  <Option key={option.value} value={option.value}>
+                  <option key={option.value} value={option.value}>
                     {option.label}
-                  </Option>
+                  </option>
                 ))}
               </Select>
 
@@ -89,9 +84,9 @@ export default function ProjectsPage() {
                     className="w-full"
                   >
                     {PROJECT_SORT_OPTIONS.map((option: { value: string; label: string }) => (
-                      <Option key={option.value} value={option.value}>
+                      <option key={option.value} value={option.value}>
                         {option.label}
-                      </Option>
+                      </option>
                     ))}
                   </Select>
                 </div>

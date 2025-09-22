@@ -339,11 +339,11 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
                 <div className="space-y-1 text-sm text-left">
                   <div className="flex items-center justify-start gap-2">
                     <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
-                    <span>Nhà bán với giá trị thực tế: <span className="font-bold text-[#FFAA22]">{loading ? '...' : statistics?.data.market.real_value.toLocaleString() || '19,000'}</span></span>
+                    <span>Nhà bán với giá trị thực tế: <span className="font-medium text-[#FFAA22]">{loading ? '...' : statistics?.data.market.real_value.toLocaleString() || '19,000'}</span></span>
                   </div>
                   <div className="flex items-center justify-start gap-2">
                     <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
-                    <span>Khoảng cách giao với giá thực tế: <span className="font-bold text-[#FFAA22]">{loading ? '...' : statistics?.data.market.transaction_gap.toLocaleString() || '5,000'}</span></span>
+                    <span>Khoảng cách giao với giá thực tế: <span className="font-medium text-[#FFAA22]">{loading ? '...' : statistics?.data.market.transaction_gap.toLocaleString() || '5,000'}</span></span>
                   </div>
                   <div className="flex items-center justify-start gap-2">
                     <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>

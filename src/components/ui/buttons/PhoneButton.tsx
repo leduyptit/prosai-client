@@ -32,7 +32,7 @@ const PhoneButton: React.FC<PhoneButtonProps> = ({
           ${className}
         `}
       >
-        <span>Số điện thoại không hợp lệ</span>
+        <span>Không xác định</span>
       </button>
     );
   }

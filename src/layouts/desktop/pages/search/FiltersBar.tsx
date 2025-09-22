@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { App, Input, Button } from 'antd';
+import { App, Button } from 'antd';
 import Select from '@/components/ui/forms/Select';
 import PriceRangeSelect from '@/components/ui/forms/PriceRangeSelect';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
@@ -9,7 +9,6 @@ import { LocationSearchInput } from '@/components/features/search';
 import { useSession } from 'next-auth/react';
 import { 
   PROPERTY_TYPES, 
-  PRICE_RANGES, 
   AREA_RANGES, 
   BEDROOM_OPTIONS,
   BATHROOM_OPTIONS,

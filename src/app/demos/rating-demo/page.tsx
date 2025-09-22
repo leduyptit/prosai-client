@@ -9,7 +9,7 @@ const RatingDemo: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Rating Component Demo</h1>
+        <h1 className="text-3xl font-medium text-gray-900 mb-8">Rating Component Demo</h1>
         
         <div className="space-y-8">
           {/* Basic Ratings */}
@@ -110,7 +110,7 @@ const RatingDemo: React.FC = () => {
                   <span className="text-sm text-gray-500">•</span>
                   <span className="text-sm text-gray-600">24 đánh giá</span>
                 </div>
-                <p className="text-lg font-bold text-blue-600">5.2 tỷ VNĐ</p>
+                <p className="text-lg font-medium text-blue-600">5.2 tỷ VNĐ</p>
               </div>
 
               {/* Agent Rating */}

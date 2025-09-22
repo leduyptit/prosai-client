@@ -79,11 +79,6 @@ const PropertyDetailPage: React.FC = () => {
           limit: 10
         };
         
-        // Add bedrooms if available
-        // if (property.bedrooms) {
-        //   recommendationParams.num_bedrooms = property.bedrooms;
-        // }
-        
         // Add property type if available (assuming property has property_type field)
         if (property.property_type) {
           recommendationParams.property_type = property.property_type;
@@ -201,10 +196,11 @@ const PropertyDetailPage: React.FC = () => {
              {/* Property Details */}
              <PropertyDetails
                propertyId={propertyId}
+               isFavorite={property.is_favorite || false}
                title={property.title || ''}
                description={property.description || ''}
                images={property.images?.length > 0 ? property.images : mockImages}
-               price={property.price ? parseFloat(property.price[0]) : 0}
+               price={property.price_all ? parseFloat(property.price_all[0]) : 0}
                area={property.area ? parseFloat(property.area[0]) : 0}
                address={property.address || ''}
                city={property.city || ''}

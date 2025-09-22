@@ -140,7 +140,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
 
            {/* Title */}
            <div className="mb-8 text-left">
-             <h1 className="text-2xl font-bold text-gray-900">
+             <h1 className="text-2xl font-medium text-gray-900">
                Khôi phục lại mật khẩu
              </h1>
            </div>

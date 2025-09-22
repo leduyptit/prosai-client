@@ -66,7 +66,7 @@ const SuccessScreen: React.FC<SuccessScreenProps> = ({
 
           {/* Success Message */}
           <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-3xl font-medium mb-4">
               Thanh toán thành công!
             </h2>
             <p className="text-base mb-2">

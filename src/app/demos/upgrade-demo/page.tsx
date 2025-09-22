@@ -48,7 +48,7 @@ const UpgradeDemoPage: React.FC = () => {
             }
           >
             <div className="space-y-3">
-              <div className="text-2xl font-bold text-gray-600">99.000₫</div>
+              <div className="text-2xl font-medium text-gray-600">99.000₫</div>
               <div className="text-sm text-gray-500">1 tháng</div>
               <ul className="text-left text-sm space-y-1">
                 <li>• Đăng 30 tin/tháng</li>
@@ -75,7 +75,7 @@ const UpgradeDemoPage: React.FC = () => {
             }
           >
             <div className="space-y-3">
-              <div className="text-2xl font-bold text-yellow-600">199.000₫</div>
+              <div className="text-2xl font-medium text-yellow-600">199.000₫</div>
               <div className="text-sm text-gray-500">1 tháng</div>
               <ul className="text-left text-sm space-y-1">
                 <li>• Đăng 50 tin/tháng</li>

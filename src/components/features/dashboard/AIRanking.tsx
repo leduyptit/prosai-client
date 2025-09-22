@@ -45,7 +45,7 @@ const AIRanking: React.FC<AIRankingProps> = ({
       <div className="responsive-container">
         {/* Section Header */}
         <div className="mb-8">
-          <h2 className="text-3xl font-medium text-[#1D1D44] mb-2 border-l-5 border-[#1D1D44] pl-4">
+          <h2 className="text-3xl font-medium text-[#1D1D44] mb-2">
             Bảng xếp hạng 100 BĐS
           </h2>
           <p className="text-gray-600 mt-2">Những bất động sản được AI gợi ý dựa trên sở thích của bạn</p>

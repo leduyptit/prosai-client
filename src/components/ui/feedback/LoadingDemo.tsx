@@ -31,7 +31,7 @@ const LoadingDemo: React.FC = () => {
 
   return (
     <div className="p-6 space-y-8">
-      <h1 className="text-2xl font-bold mb-6">Loading Components Demo</h1>
+      <h1 className="text-2xl font-medium mb-6">Loading Components Demo</h1>
       
       {/* Fullscreen Loading */}
       <div className="border rounded-lg p-4">

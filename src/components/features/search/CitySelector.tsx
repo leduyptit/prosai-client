@@ -49,8 +49,8 @@ const CitySelector: React.FC<CitySelectorProps> = ({
   if (!visible) return null;
 
   return (
-    <div className={`absolute top-full left-0 right-0 bg-white z-[9999] mt-1 ${className}`}>
-      <div className="flex gap-6 p-4">  
+    <div className={`absolute top-full left-0 right-0 bg-white z-[9999] mt-1 border border-gray-200 rounded-b-lg shadow-lg ${className}`}>
+      <div className="flex gap-6 p-4">
         {/* Left: City List */}
         <div className="w-50">
           <h3 className="text-sm font-medium mb-3 text-gray-700">Danh sách tỉnh, thành phố</h3>

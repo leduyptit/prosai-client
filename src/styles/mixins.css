@@ -45,7 +45,7 @@
 /* Typography Mixins */
 @layer utilities {
   .heading-1 {
-    @apply text-3xl font-bold md:text-4xl lg:text-5xl;
+    @apply text-3xl font-medium md:text-4xl lg:text-5xl;
     font-family: var(--font-family-lexend);
   }
   

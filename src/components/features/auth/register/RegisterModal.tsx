@@ -180,10 +180,10 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
         <div className="w-1/2 bg-white p-8 flex flex-col">
           {/* Header */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-medium text-gray-900 mb-2">
               Chào bạn!
             </h2>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-medium text-gray-900">
               Đăng ký tài khoản mới
             </h1>
           </div>

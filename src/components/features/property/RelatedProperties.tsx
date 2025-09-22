@@ -22,7 +22,7 @@ const RelatedProperties: React.FC<RelatedPropertiesProps> = ({
   if (loading) {
     return (
       <div className={`bg-[#F5F5F5] border border-[#EBEBEB] shadow-md rounded-lg p-4 ${className}`}>
-        <h3 className="text-base font-bold text-[#1D1D44] mb-6">
+        <h3 className="text-base font-medium text-[#1D1D44] mb-6">
           {title}
         </h3>
         <div className="space-y-3">
@@ -40,7 +40,7 @@ const RelatedProperties: React.FC<RelatedPropertiesProps> = ({
     return (
       <div className={`bg-[#F5F5F5] border border-[#EBEBEB] shadow-md rounded-lg p-4 ${className}`}>
         {/* Title */}
-        <h3 className="text-base font-bold text-[#1D1D44] mb-6">
+        <h3 className="text-base font-medium text-[#1D1D44] mb-6">
           {title}
         </h3>
         
@@ -58,7 +58,7 @@ const RelatedProperties: React.FC<RelatedPropertiesProps> = ({
   return (
     <div className={`bg-[#F5F5F5] border border-[#EBEBEB] shadow-md rounded-lg p-4 ${className}`}>
       {/* Title */}
-      <h3 className="text-base font-bold text-[#1D1D44] mb-6">
+      <h3 className="text-base font-medium text-[#1D1D44] mb-6">
         {title}
       </h3>
 

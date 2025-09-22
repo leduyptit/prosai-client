@@ -134,9 +134,10 @@ const NewsPage: React.FC = () => {
           </div>
         </div>
         <div className="responsive-container mx-auto">
-          <h1 className="text-3xl font-font-medium text-[#1D1D44] py-6">
+          <h1 className="text-3xl font-medium text-[#1D1D44] py-4">
             Tin tức bất động sản
           </h1>
+          <p className="text-gray-600 mt-2">Khám phá các tin tức bất động sản mới nhất và uy tín nhất</p>
           <div className="flex justify-center items-center py-20">
             <Loading className="bg-white" />
           </div>
@@ -165,9 +166,10 @@ const NewsPage: React.FC = () => {
           </div>
         </div>
         <div className="responsive-container mx-auto">
-          <h1 className="text-3xl font-font-medium text-[#1D1D44] py-6">
+          <h1 className="text-3xl font-medium text-[#1D1D44] mb-2">
             Tin tức bất động sản
           </h1>
+          <p className="text-gray-600 mt-2">Khám phá các tin tức bất động sản mới nhất và uy tín nhất</p>
           <div className="flex justify-center items-center py-20">
             <div className="text-center">
               <div className="text-red-500 mb-4">{error}</div>
@@ -205,7 +207,7 @@ const NewsPage: React.FC = () => {
       </div>
       <div className="responsive-container mx-auto">
         {/* Page Title */}
-        <h1 className="text-3xl font-font-medium text-[#1D1D44] py-6">
+        <h1 className="text-3xl font-medium text-[#1D1D44] py-4">
           Tin tức bất động sản
         </h1>
 
@@ -309,6 +311,7 @@ const NewsPage: React.FC = () => {
           {/* Sidebar */}
           <div className="lg:col-span-4">
             <NewsSidebar
+              className="mt-4"
               title="Bài viết xem nhiều nhất"
               articles={sidebarArticles.map(article => ({
                 id: article.id,

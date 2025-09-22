@@ -82,7 +82,7 @@ const UpgradeMembershipModal: React.FC<UpgradeMembershipModalProps> = ({
       <div className="bg-white rounded-xl p-6">
         {/* Header */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-medium text-gray-900">
             Nâng cấp hội viên
           </h2>
         </div>
@@ -92,7 +92,7 @@ const UpgradeMembershipModal: React.FC<UpgradeMembershipModalProps> = ({
           <div className="flex items-center space-x-3 w-[50%] rounded-lg overflow-hidden max-h-[87px]">
             <img src={getPackageInfo(selectedDuration).image} alt={getPackageInfo(selectedDuration).name} className="w-full h-full object-cover" />
           </div>
-          <div className="text-green-500 font-bold text-2xl w-[50%] pl-8">
+          <div className="text-green-500 font-medium text-2xl w-[50%] pl-8">
             {getPackageInfo(selectedDuration).price}
           </div>
         </div>

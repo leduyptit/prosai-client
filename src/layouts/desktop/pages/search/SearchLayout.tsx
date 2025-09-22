@@ -124,7 +124,7 @@ const SearchLayout: React.FC = () => {
         postedAt: property.created_at ? formatRelativeTime(property.created_at) : '',
         rating: property.ranking_score ? property.ranking_score : 0,
         phone: property.phone_user ? property.phone_user : property.phone_message?.[0] || '',
-        isFavorite: false
+        isFavorite: property.is_favorite || false
       };
     });
     return items;

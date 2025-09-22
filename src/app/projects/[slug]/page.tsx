@@ -178,7 +178,7 @@ const ProjectDetailPage: React.FC = () => {
                {project.project_type || 'Chưa cập nhật'}
              </span>
            </div>
-           <h1 className="text-3xl font-bold text-[#1D1D44] mb-4">
+           <h1 className="text-3xl font-medium text-[#1D1D44] mb-4">
              {project.name}
            </h1>
            <div className="flex items-center text-sm text-[#8D8DA1] mb-4">
@@ -208,7 +208,7 @@ const ProjectDetailPage: React.FC = () => {
                {/* Project Gallery */}
                {project.images && project.images.length > 0 && (
                  <div className="mb-6">
-                   <h3 className="text-xl font-semibold text-[#1D1D44] mb-4">Hình ảnh dự án</h3>
+                   <h3 className="text-xl font-medium text-[#1D1D44] mb-4">Hình ảnh dự án</h3>
                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                      {project.images.map((image, index) => (
                        <div key={index} className="aspect-square overflow-hidden rounded-lg">
@@ -259,7 +259,7 @@ const ProjectDetailPage: React.FC = () => {
            {/* Sidebar */}
            <div className="lg:col-span-4">
              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-               <h3 className="text-lg font-semibold text-[#1D1D44] mb-4">Thông tin dự án</h3>
+               <h3 className="text-lg font-medium text-[#1D1D44] mb-4">Thông tin dự án</h3>
                
                {/* Project Details */}
                <div className="space-y-4">
@@ -313,7 +313,7 @@ const ProjectDetailPage: React.FC = () => {
                  {project.start_date && (
                    <div className="flex gap-3">
                      <div className="w-5 h-5 flex-shrink-0 mt-0.5">
-                       <img src="/svgs/icon_calendar.svg" alt="start date" className="w-full h-full" />
+                       <img src="/svgs/icon_namxaydung.svg" alt="start date" className="w-full h-full" />
                      </div>
                      <div className="flex-1 min-w-0">
                        <p className="text-sm font-medium text-gray-700 mb-1">Ngày khởi công</p>
@@ -326,7 +326,7 @@ const ProjectDetailPage: React.FC = () => {
                  {project.expected_completion_date && (
                    <div className="flex gap-3">
                      <div className="w-5 h-5 flex-shrink-0 mt-0.5">
-                       <img src="/svgs/icon_calendar.svg" alt="completion date" className="w-full h-full" />
+                       <img src="/svgs/icon_namxaydung.svg" alt="completion date" className="w-full h-full" />
                      </div>
                      <div className="flex-1 min-w-0">
                        <p className="text-sm font-medium text-gray-700 mb-1">Dự kiến hoàn thành</p>

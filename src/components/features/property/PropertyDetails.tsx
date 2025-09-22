@@ -3,6 +3,7 @@
 import React from 'react';
 import { Rating } from '@/components/ui/data-display';
 import { FavoriteButton } from '@/components/features';
+import { formatPrice } from '@/utils/format';
 
 interface PropertyDetailsProps {
   propertyId: string;
@@ -50,9 +51,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({
           <div className="text-sm text-gray-500 mb-1">Mức giá</div>
           <div className="font-font-medium text-gray-900">
             {price === 0 ? 'Thỏa thuận' : 
-              price >= 1000000000 ? 
-                `${(price / 1000000000).toFixed(1)} tỷ` : 
-                `${(price / 1000000).toFixed(0)} triệu`
+              formatPrice(price)
             }
           </div>
         </div>

@@ -25,7 +25,7 @@ const AIRatingItem: React.FC<AIRatingItemProps> = ({
       <div className={`items-center text-center ${className}`}>
         <div className="relative w-20 h-20 rounded-full" style={{ margin: '0 auto', backgroundImage:  `url("/images/Ai_tong@2x.png")`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <img src={icon} alt="AI Review Total" className="py-3 px-3" />
-          <p className="text-3xl font-bold absolute bottom-5 w-full text-center text-[#FC7400]">
+          <p className="text-3xl font-medium absolute bottom-5 w-full text-center text-[#FC7400]">
             {totalScore || 0}
           </p>
         </div>

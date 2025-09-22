@@ -63,7 +63,7 @@ const StatsCircle: React.FC<StatsCircleProps> = ({
       <div className={`
         ${getSizeClasses()} 
         ${getColorClasses()}
-        flex items-center justify-center font-bold mb-4
+        flex items-center justify-center font-medium mb-4
       `}
       style={{
         backgroundImage: `${getBackgroundImage()}`,

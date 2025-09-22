@@ -20,7 +20,7 @@ const DesktopFooter: React.FC = () => {
               <div className="flex items-center space-x-3 pb-5">
                 <img src="/svgs/footer_logo.svg" alt="logo" className="w-40" />
               </div>
-              <Text className="text-gray-600 text-sm leading-relaxed font-lexend font-bold">
+              <Text className="text-gray-600 text-sm leading-relaxed font-lexend font-medium">
                 Nền tảng tìm kiếm bất động sản ứng dụng AI đầu tiên cho người Việt
               </Text>
               

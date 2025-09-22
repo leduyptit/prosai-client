@@ -1,28 +1,28 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, message } from 'antd';
 import Rating from '@/components/ui/data-display/Rating';
 import PhoneButton from '@/components/ui/buttons/PhoneButton';
 import { FavoriteButton } from '@/components/features';
 import Link from 'next/link';
+import { LoginModal } from '@/components/features/auth/login';
 
 export interface SearchItem {
   id: string;
   title: string;
-  priceLabel: string; // e.g., "2 tỷ"
-  pricePerM2?: string; // e.g., "44.44 tr/m²"
+  priceLabel: string;
+  pricePerM2?: string;
   bedrooms?: number;
   bathrooms?: number;
   address: string;
   imageUrl: string;
   imagesCount?: number;
   postedBy?: string;
-  postedAt?: string; // e.g., "Đăng 2 ngày trước"
-  rating?: number; // 0-5
-  phone?: string; // e.g., "0982560123"
-  is_favorite?: boolean; // Favorite status
-  // Additional fields for favorite functionality
+  postedAt?: string;
+  rating?: number;
+  phone?: string;
+  isFavorite?: boolean;
+  isLogin?: boolean;
   description?: string;
   images?: string[];
   price?: number;
@@ -37,11 +37,55 @@ interface ResultItemProps {
 }
 
 const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const isBlank = (value?: string | number | null) => {
+    return (
+      value === undefined ||
+      value === null ||
+      (typeof value === 'string' && value.trim() === '')
+    );
+  };
+
+  const isItemEmpty =
+    isBlank(item?.title) ||
+    isBlank(item?.imageUrl) ||
+    isBlank(item?.priceLabel) ||
+    isBlank(item?.address);
+
+  const shouldMask = isItemEmpty;
 
   return (
     <>
-      <div className="mb-4 rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="md:flex items-stretch">
+      <div
+        className="mb-4 rounded-lg border border-gray-200 bg-white shadow-sm relative group border-rounded-lg overflow-hidden"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {shouldMask && (
+          <div
+            className="absolute inset-0 z-10 flex items-center justify-center"
+            style={{ pointerEvents: isHovered ? 'auto' : 'none' }}
+          >
+            {/* Dim + blur layer */}
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]" />
+            {/* Message + CTA */}
+            <div className="relative z-10 flex flex-col items-center gap-3 px-4 text-center">
+              <div className="text-white drop-shadow opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-out">
+                Bạn cần đăng nhập để xem đầy đủ các bất động sản còn lại.
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsLoginModalOpen(true)}
+                className="px-4 py-2 md:px-5 md:py-2.5 bg-[#005ebc] hover:bg-[#0f75db] text-white rounded-md shadow opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-out"
+              >
+                ĐĂNG NHẬP NGAY
+              </button>
+            </div>
+          </div>
+        )}
+        <div className="md:flex items-stretch min-h-[200px]">
           {/* Image */}
           <div className="md:relative w-full md:w-60 md:min-h-[112px] self-stretch overflow-hidden rounded-md flex-shrink-0 bg-gray-100">
             <img src={item.imageUrl} alt={item.title} className="md:absolute inset-0 w-full h-full object-cover" />
@@ -108,7 +152,7 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
                 />
                 <FavoriteButton
                   propertyId={item.id}
-                  isFavorite={item.is_favorite || false}
+                  isFavorite={item.isFavorite || false}
                   className="rounded-full"
                   size="middle"
                 />
@@ -117,6 +161,14 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
           </div>
         </div>
       </div>
+
+      {/* Login Modal */}
+      {shouldMask && (
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+        />
+      )}
     </>
   );
 };

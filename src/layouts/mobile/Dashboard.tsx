@@ -311,7 +311,7 @@ const MobileDashboard: React.FC = () => {
         <div className="absolute inset-0 bg-black opacity-70"></div>
         <div className="relative z-10 flex items-center justify-center h-full">
           <div className="text-center text-white px-4">
-            <h1 className="text-2xl font-bold mb-2">Tìm kiếm BĐS</h1>
+            <h1 className="text-2xl font-medium mb-2">Tìm kiếm BĐS</h1>
             <p className="text-sm opacity-90">Nền tảng bất động sản hàng đầu</p>
           </div>
         </div>
@@ -425,15 +425,15 @@ const MobileDashboard: React.FC = () => {
             <div className="space-y-1 text-xs mt-3">
               <div className="flex items-center justify-center gap-2">
                 <div className="w-1 h-1 bg-white rounded-full"></div>
-                <span>Nhà bán với giá trị thực tế: <span className="font-bold text-[#FFAA22]">{loading ? '...' : statistics?.data.market.real_value.toLocaleString() || '19,000'}</span></span>
+                <span>Nhà bán với giá trị thực tế: <span className="font-medium text-[#FFAA22]">{loading ? '...' : statistics?.data.market.real_value.toLocaleString() || '19,000'}</span></span>
               </div>
               <div className="flex items-center justify-center gap-2">
                 <div className="w-1 h-1 bg-white rounded-full"></div>
-                <span>Khoảng cách giao với giá thực tế: <span className="font-bold text-[#FFAA22]">{loading ? '...' : statistics?.data.market.transaction_gap.toLocaleString() || '5,000'}</span></span>
+                <span>Khoảng cách giao với giá thực tế: <span className="font-medium text-[#FFAA22]">{loading ? '...' : statistics?.data.market.transaction_gap.toLocaleString() || '5,000'}</span></span>
               </div>
               <div className="flex items-center justify-center gap-2">
                 <div className="w-1 h-1 bg-white rounded-full"></div>
-                <span>Mức độ quan tâm: <span className="font-bold text-[#FFAA22]">{loading ? '...' : statistics?.data.market.interest_rate_change || '+18%'}</span> so với hôm qua</span>
+                <span>Mức độ quan tâm: <span className="font-medium text-[#FFAA22]">{loading ? '...' : statistics?.data.market.interest_rate_change || '+18%'}</span> so với hôm qua</span>
               </div>
             </div>
           </div>
