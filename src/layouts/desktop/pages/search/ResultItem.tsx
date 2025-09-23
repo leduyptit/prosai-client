@@ -134,7 +134,7 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
             </div>
 
             {/* Footer Row */}
-            <div className="mt-3 flex items-center justify-between gap-3 border-t border-gray-200 pt-3">
+            <div className="mt-3 flex items-center justify-between gap-2 border-t border-gray-200 pt-3">
               <div className="flex items-center gap-2 min-w-0">
                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-medium text-sm">
                   {(item.postedBy ?? 'U')[0]}
@@ -145,10 +145,10 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex justify-end gap-2 min-w-[230px]">
                 <PhoneButton
                   phoneNumber={item.phone || ''}
-                  className="px-4"
+                  contactId={item.id}
                 />
                 <FavoriteButton
                   propertyId={item.id}

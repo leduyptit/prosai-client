@@ -10,8 +10,8 @@ interface ContactInfoProps {
     phone: string;
     email?: string;
     website?: string;
+    propertyId?: string;
   };
-  propertyId?: string;
   className?: string;
 }
 
@@ -21,6 +21,7 @@ const ContactInfo: React.FC<ContactInfoProps> = ({
     phone: '0962 560 xxx',
     email: 'info@prosai.vn',
     website: 'prosai.vn',
+    propertyId: '',
   },
   className = ''
 }) => {
@@ -40,6 +41,7 @@ const ContactInfo: React.FC<ContactInfoProps> = ({
         <div className="flex items-center gap-2">
           <PhoneButton
             phoneNumber={contactInfo.phone || ''}
+            contactId={contactInfo.propertyId}
             className="w-full"
           />
         </div>

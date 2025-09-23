@@ -236,6 +236,7 @@ const PropertyDetailPage: React.FC = () => {
                 contactInfo={{
                   name: property.user_name_social || 'Người đăng',
                   phone: property.phone_user || property.phone_message?.[0] || '',
+                  propertyId: propertyId
                 }}
               />
             </div>
@@ -249,9 +250,9 @@ const PropertyDetailPage: React.FC = () => {
                   name: property.user_name_social || 'Người đăng',
                   phone: property.phone_user || property.phone_message?.[0] || '',
                   avatar: '',
-                  isAgent: true
+                  isAgent: true,
+                  propertyId: propertyId
                 }}
-                propertyId={propertyId}
                 className="mb-6"
               />
               

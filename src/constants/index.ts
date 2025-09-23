@@ -94,6 +94,9 @@ export const API_ENDPOINTS = {
     UPLOAD: '/minio/upload',
     FILE: '/minio/file',
   },
+  CONTACT: {
+    BASE: '/contact',
+  },
 } as const;
 
 // User roles

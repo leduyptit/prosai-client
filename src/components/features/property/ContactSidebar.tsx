@@ -10,11 +10,11 @@ interface ContactInfoData {
   avatar?: string;
   phone: string;
   isAgent?: boolean;
+  propertyId?: string;
 }
 
 interface ContactSidebarProps {
   contactInfo?: ContactInfoData;
-  propertyId?: string;
   className?: string;
 }
 
@@ -22,9 +22,9 @@ const ContactSidebar: React.FC<ContactSidebarProps> = ({
   contactInfo = {
     name: 'Nguyễn Văn A',
     phone: '0901234567',
-    isAgent: true
+    isAgent: true,
+    propertyId: ''
   },
-  propertyId = '1',
   className = ''
 }) => {
   const handleCall = () => {
@@ -74,8 +74,9 @@ const ContactSidebar: React.FC<ContactSidebarProps> = ({
         {/* Action Buttons */}
         <div className="space-y-3">
           <PhoneButton
-              phoneNumber={contactInfo.phone || ''}
-              className="w-full h-12"
+            phoneNumber={contactInfo.phone || ''}
+            contactId={contactInfo.propertyId}
+            className="w-full text-xs"
           />
 
           <Button

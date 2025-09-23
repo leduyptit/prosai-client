@@ -11,10 +11,9 @@ import { RegisterModal } from '@/components/features/auth/register';
 import { ForgotPasswordModal } from '@/components/features/auth/forgot-password';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/utils/env';
-import { useProfileStats } from '@/hooks';
 import { FavoritesDropdown, NotificationsDropdown } from '@/components/features';
 import { useLogout } from '@/hooks/useLogout';
-import { useUserBalance } from '@/hooks';
+import { useUserBalance, useProfileStats } from '@/hooks';
 import { requestBalanceRefresh } from '@/hooks/useUserBalance';
 
 const Header: React.FC = () => {

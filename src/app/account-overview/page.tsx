@@ -1,16 +1,47 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AccountSidebar, MembershipCard, StatsOverview } from '@/components/features/account';
 import { Breadcrumb } from '@/components/ui/navigation';
 import { ProtectedRoute } from '@/components/shared';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/utils/env';
-import { usePropertyStats, useUserPackage } from '@/hooks';
+import { useUserPackage } from '@/hooks';
+import { fetchPropertyStats } from '@/services';
 
-const AccountOverviewPage: React.FC = () => {
-  const { data: propertyStats, loading, error } = usePropertyStats();
-  const { packageInfo, loading: packageLoading } = useUserPackage();
+ const AccountOverviewPage: React.FC = () => {
+   const { packageInfo, loading: packageLoading } = useUserPackage();
+   const [statsLoading, setStatsLoading] = useState(false);
+   const [statsError, setStatsError] = useState<string | null>(null);
+   const [stats, setStats] = useState<{ active_listings: number; expired_listings: number; total_views: number; total_inquiries: number } | null>(null);
+
+   useEffect(() => {
+     let mounted = true;
+     const load = async () => {
+       try {
+         setStatsLoading(true);
+         setStatsError(null);
+         const res = await fetchPropertyStats();
+         if (!mounted) return;
+         // Service returns fallback on error, ensure shape
+         const data = (res as any)?.data || res;
+         setStats({
+           active_listings: data?.active_listings || 0,
+           expired_listings: data?.expired_listings || 0,
+           total_views: data?.total_views || 0,
+           total_inquiries: data?.total_inquiries || 0,
+         });
+       } catch (e) {
+         if (!mounted) return;
+         setStatsError('Không thể tải dữ liệu thống kê');
+       } finally {
+         if (!mounted) return;
+         setStatsLoading(false);
+       }
+     };
+     load();
+     return () => { mounted = false; };
+   }, []);
 
   return (
     <ProtectedRoute>
@@ -66,17 +97,17 @@ const AccountOverviewPage: React.FC = () => {
                               loading={packageLoading}
                             />
                         </div>
-                        <div className="col-span-12 lg:col-span-6">
-                            {/* Stats Overview */}
-                            <StatsOverview 
-                            activeListings={propertyStats?.data?.active_listings || 0}
-                            expiredListings={propertyStats?.data?.expired_listings || 0}
-                            totalViews={propertyStats?.data?.total_views || 0}
-                            totalInquiries={propertyStats?.data?.total_inquiries || 0}
-                            loading={loading}
-                            error={error}
-                            />
-                        </div>
+                         <div className="col-span-12 lg:col-span-6">
+                             {/* Stats Overview */}
+                             <StatsOverview 
+                               activeListings={stats?.active_listings || 0}
+                               expiredListings={stats?.expired_listings || 0}
+                               totalViews={stats?.total_views || 0}
+                               totalInquiries={stats?.total_inquiries || 0}
+                               loading={statsLoading}
+                               error={statsError}
+                             />
+                         </div>
                     </div>
                 </div>
                 </div>
