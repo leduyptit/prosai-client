@@ -257,6 +257,22 @@ footer.ant-layout-footer {
   padding: 20px;
 }
 
+.top-up-modal .ant-modal-content {
+  padding: 20px !important;
+}
+
+.top-up-modal .ant-modal-header {
+  padding: 15px 0;
+}
+
+.top-up-modal .ant-form-item-additional {
+  padding: 5px 0;
+}
+
+.top-up-modal .ant-modal-footer {
+  margin-top: 20px;
+}
+
 .map-button {
   background: transparent linear-gradient(90deg, #FC7400 0%, #FFAA22 100%) 0% 0% no-repeat padding-box;
   color: #fff;

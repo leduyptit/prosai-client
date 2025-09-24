@@ -9,6 +9,7 @@ export * from './news';
 export * from './properties';
 export * from './property';
 export * from './propertyStats';
+export * from './payments';
 export * from './statistics';
 export * from './suggestions';
 export * from './search';

@@ -8,3 +8,4 @@ export * from './notifications';
 export * from './property';
 export * from './projects';
 export * from './search';
+export { default as TopUpModal } from './payments/TopUpModal';

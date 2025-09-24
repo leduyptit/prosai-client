@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Menu } from 'antd';
-import { UserOutlined, CrownOutlined, FileTextOutlined, SettingOutlined, LogoutOutlined, HeartOutlined, FilterOutlined } from '@ant-design/icons';
+import { UserOutlined, CrownOutlined, FileTextOutlined, SettingOutlined, LogoutOutlined, HeartOutlined, FilterOutlined, CreditCardOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useLogout } from '@/hooks/useLogout';
 import { useSession } from 'next-auth/react';
@@ -39,6 +39,11 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({
       key: 'posts',
       icon: <FileTextOutlined />,
       label: <Link href="/account-overview/post-manager">Quản lý tin đăng</Link>,
+    },
+    {
+      key: 'invoices',
+      icon: <CreditCardOutlined />,
+      label: <Link href="/account-overview/invoices">Hóa đơn / Giao dịch</Link>,
     },
     {
       key: 'settings',

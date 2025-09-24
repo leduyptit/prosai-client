@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button, Dropdown, Avatar, Badge } from 'antd';
-import { CrownOutlined, LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { CreditCardOutlined, CrownOutlined, LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { formatCurrency } from '@/utils/format';
@@ -11,7 +11,7 @@ import { RegisterModal } from '@/components/features/auth/register';
 import { ForgotPasswordModal } from '@/components/features/auth/forgot-password';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/utils/env';
-import { FavoritesDropdown, NotificationsDropdown } from '@/components/features';
+import { FavoritesDropdown, NotificationsDropdown, TopUpModal } from '@/components/features';
 import { useLogout } from '@/hooks/useLogout';
 import { useUserBalance, useProfileStats } from '@/hooks';
 import { requestBalanceRefresh } from '@/hooks/useUserBalance';
@@ -24,6 +24,7 @@ const Header: React.FC = () => {
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
   const [isFavoritesDropdownOpen, setIsFavoritesDropdownOpen] = useState(false);
   const [isNotificationsDropdownOpen, setIsNotificationsDropdownOpen] = useState(false);
+  const [isTopUpOpen, setIsTopUpOpen] = useState(false);
   const { logout, isLoading: isLoggingOut } = useLogout();
   const { balance } = useUserBalance();
 
@@ -76,6 +77,11 @@ const Header: React.FC = () => {
       key: 'membership',
       label: <Link href="/account-overview/membership">Gói hội viên</Link>,
       icon: <CrownOutlined />,
+    },
+    {
+      key: 'invoices',
+      label: <Link href="/account-overview/invoices">Hóa đơn / Giao dịch</Link>,
+      icon: <CreditCardOutlined />,
     },
     {
       type: 'divider' as const,
@@ -206,6 +212,7 @@ const Header: React.FC = () => {
                   icon={<img src="/svgs/icon_naptien.svg" alt="payment" width={20} height={20} />}
                   className="font-medium"
                   style={{ border: '1px solid #D4D4D4', borderRadius: '20px' }}
+                  onClick={() => setIsTopUpOpen(true)}
                 >
                   Nạp tiền
                 </Button>
@@ -273,6 +280,9 @@ const Header: React.FC = () => {
             onClose={handleCloseForgotPasswordModal}
             onBackToLogin={handleBackToLoginFromForgotPassword}
           />
+
+          {/* Top Up Modal */}
+          <TopUpModal isOpen={isTopUpOpen} onClose={() => setIsTopUpOpen(false)} />
         </div>
       </div>
     </header>

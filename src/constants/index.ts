@@ -60,6 +60,11 @@ export const API_ENDPOINTS = {
     MOST_VIEWED: '/news/most-viewed',
     BY_CATEGORY: '/news/category',
   },
+  PAYMENTS: {
+    CREATE: '/payments/create',
+    LIST: '/payments',
+    DETAIL: '/payments',
+  },
   MEMBERSHIP: {
     BASE: '/membership',
     PLANS: '/membership/plans',
