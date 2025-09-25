@@ -47,17 +47,20 @@ const PhoneButton: React.FC<PhoneButtonProps> = ({
           const data = await fetchContactById(contactId);
           if (data.phone_message.length > 0) {
             message.success('Số điện thoại đã được lấy thành công!');
+            const phone = (data as any)?.phone_message?.[0] || (data as any)?.phone_user || phoneNumber;
+            setRevealedPhone(phone || phoneNumber);
           } else {
             message.error('Số điện thoại không tồn tại!');
           }
-          const phone = (data as any)?.phone_message?.[0] || (data as any)?.phone_user || phoneNumber;
-          setRevealedPhone(phone || phoneNumber);
+          setIsRevealed(true);
         } catch (error) {
-          setRevealedPhone(phoneNumber);
-          message.error((error as any).message);
+          if ((error as any).status === 429) {
+            message.error('Đã đạt giới hạn lượt lấy số điện thoại. Vui lòng nâng cấp gói để sử dụng tính năng này.');
+          } else {
+            message.error((error as any).message);
+          }
         }
       }
-      setIsRevealed(true);
     } else {
       // Second click: copy to clipboard
       const success = await copyToClipboard(revealedPhone || phoneNumber);
