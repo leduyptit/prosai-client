@@ -471,8 +471,6 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
       if (apiParams.bathrooms) urlParams.set('bathrooms', apiParams.bathrooms.toString());
       if (apiParams.legal_status) urlParams.set('legal_status', apiParams.legal_status);
       
-      // Ensure tpl param is removed on search page
-      urlParams.delete('tpl');
       const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
       window.history.pushState({}, '', newUrl);
     }
@@ -665,7 +663,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
         </div>
 
         {/* Save filter */}
-        <Button 
+        {/* <Button 
           className={`md:w-auto transition-all duration-200`}
           style={{ padding: '0 15px'}}
           size="large"
@@ -679,31 +677,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
                 : buttonText
             }
           </span>
-        </Button>
-
-        {/* View map */}
-        <Button 
-          className="px-4 bg-orange-500 text-white border-none flex items-center gap-2 map-button w-full md:w-auto md:py-2 my-3 md:my-0" 
-          size="large"
-          style={{ padding: '0 15px'}}
-          onClick={() => {
-            // Lấy tất cả tham số từ URL hiện tại
-            const currentUrl = new URL(window.location.href);
-            const searchParams = new URLSearchParams(currentUrl.search);
-            
-            // Thêm tpl=map mặc định
-            searchParams.set('tpl', 'map');
-            
-            // Tạo URL mới cho map-search
-            const mapUrl = `/map-search?${searchParams.toString()}`;
-            
-            // Chuyển đến trang map-search
-            window.location.href = mapUrl;
-          }}
-        >
-          <img src="/svgs/icon_map.svg" alt="map" className="h-4 w-4" />
-          <span className="font-medium" >Xem bản đồ</span>
-        </Button>
+        </Button> */}
       </div>
 
       {/* Row 2 */}

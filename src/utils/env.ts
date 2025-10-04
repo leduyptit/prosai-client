@@ -153,6 +153,11 @@ export const MINIO_CDN_CONFIG = {
   endpointUrl: process.env.MINIO_ENDPOINT_URL || 'https://cdn.prosai.vn/',
 } as const;
 
+export const GOOGLE_MAPS_CONFIG = {
+  apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+  mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID,
+} as const;
+
 export default {
   APP_CONFIG,
   API_CONFIG,
@@ -165,6 +170,7 @@ export default {
   PERFORMANCE_CONFIG,
   MONITORING_CONFIG,
   MINIO_CDN_CONFIG,
+  GOOGLE_MAPS_CONFIG,
   getEnvironment,
   validateRequiredEnvVars,
   getConfigForEnvironment,

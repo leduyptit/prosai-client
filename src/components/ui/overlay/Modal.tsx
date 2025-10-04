@@ -45,7 +45,14 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <AntModal
       className={`${getVariantClass()} ${getSizeClass()} ${className}`}
-      {...props}
+      // Map deprecated destroyOnClose -> destroyOnHidden to remove warning
+      {...(() => {
+        const { destroyOnClose, destroyOnHidden, ...rest } = props as any;
+        return {
+          destroyOnHidden: destroyOnHidden ?? destroyOnClose,
+          ...rest,
+        };
+      })()}
     >
       {children}
     </AntModal>

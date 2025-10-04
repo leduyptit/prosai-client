@@ -60,6 +60,30 @@ class PropertyService {
     return response.data;
   }
 
+  // Search properties for map view (dedicated endpoint)
+  async searchPropertyMap(params: {
+    page?: number;
+    limit?: number;
+    city?: string;
+    tpl?: 'map';
+  } = {}): Promise<{ data: Property[]; total: number; page: number; pageCount: number; count: number }> {
+    try {
+      const response = await apiClient.get(`${API_ENDPOINTS.PROPERTIES.SEARCH_PUBLIC}/map`, {
+        params
+      });
+      return {
+        data: response.data.data || [],
+        total: response.data.total || 0,
+        page: response.data.page || (params.page ?? 1),
+        pageCount: response.data.pageCount || 0,
+        count: response.data.count || 0,
+      };
+    } catch (error) {
+      console.error('Error fetching map properties:', error);
+      throw error;
+    }
+  }
+
   // Get featured properties
   async getFeaturedProperties(limit: number = 10): Promise<Property[]> {
     const response = await api.get<Property[]>(`${API_ENDPOINTS.PROPERTIES.FEATURED}?limit=${limit}`);

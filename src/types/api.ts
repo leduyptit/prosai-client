@@ -151,6 +151,7 @@ export interface Property {
   note_9?: number | null;
   note_10?: number | null;
   is_favorite?: boolean;
+  is_vip?: boolean;
 }
 
 export interface PropertySummary {
