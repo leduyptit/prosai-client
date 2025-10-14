@@ -102,6 +102,10 @@ export const API_ENDPOINTS = {
   CONTACT: {
     BASE: '/contact',
   },
+  CONVERSATION: {
+    HISTORY: '/conversation-history/conversations',
+    MESSAGES: '/conversation-history/conversations', // usage: `${MESSAGES}/${id}/messages`
+  },
 } as const;
 
 // User roles

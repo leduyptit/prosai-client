@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from '@/components/ui/navigation';
 import Link from 'next/link';
 import { APP_CONFIG } from '@/utils/env';
@@ -8,6 +8,20 @@ import ChatInterface from './ChatInterface';
 import SearchHistory from './SearchHistory';
 
 const ChatAiLayout: React.FC = () => {
+  const [selectedConversationId, setSelectedConversationId] = useState<string>('');
+
+  // Read hash on mount and on hash change
+  useEffect(() => {
+    const applyHash = () => {
+      if (typeof window === 'undefined') return;
+      const id = window.location.hash.replace('#', '');
+      if (id) setSelectedConversationId(id);
+    };
+    applyHash();
+    window.addEventListener('hashchange', applyHash);
+    return () => window.removeEventListener('hashchange', applyHash);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       <div className="bg-gray-50 p-3">
@@ -41,12 +55,12 @@ const ChatAiLayout: React.FC = () => {
               <div className="grid grid-cols-12 gap-6 h-[calc(100vh-300px)]">
                 {/* Chat Interface - 2/3 width */}
                 <div className="col-span-12 lg:col-span-8">
-                  <ChatInterface />
+                  <ChatInterface selectedConversationId={selectedConversationId} />
                 </div>
                 
                 {/* Search History - 1/3 width */}
-                <div className="col-span-12 lg:col-span-4">
-                  <SearchHistory />
+                <div className="col-span-12 lg:col-span-4 overflow-y-auto">
+                  <SearchHistory onSelectConversation={setSelectedConversationId} selectedConversationId={selectedConversationId} />
                 </div>
               </div>
             </div>

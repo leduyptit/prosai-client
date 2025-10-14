@@ -10,3 +10,4 @@ export { useBookmarksList } from './useBookmarksList';
 export { useMyProperties } from './useMyProperties';
 export { default as useUserPackage } from './useUserPackage';
 export { default as useUserBalance } from './useUserBalance';
+export { useSocket } from './useSocket';
