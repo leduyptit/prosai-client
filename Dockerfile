@@ -10,8 +10,8 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager with warnings suppressed
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile --silent; \
-  elif [ -f package-lock.json ]; then npm ci --silent --no-audit --no-fund; \
+  if [ -f package-lock.json ]; then npm ci --silent --no-audit --no-fund; \
+  elif [ -f yarn.lock ]; then yarn --frozen-lockfile --silent; \
   elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile --silent; \
   else echo "Lockfile not found." && exit 1; \
   fi

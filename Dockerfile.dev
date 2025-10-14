@@ -5,15 +5,15 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json yarn.lock* package-lock.json* ./
+# Copy only lockfiles and package.json for better caching
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
-# Install dependencies with npm warnings suppressed
+# Pre-install deps in image layer (improves first run); will still re-install at start
 RUN \
-  if [ -f yarn.lock ]; then yarn install --silent; \
-  elif [ -f package-lock.json ]; then npm ci --silent --no-audit --no-fund; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --silent; \
-  else echo "Lockfile not found." && exit 1; \
+  if [ -f package-lock.json ]; then npm ci --silent --no-audit --no-fund || true; \
+  elif [ -f yarn.lock ]; then yarn install --silent || true; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --silent || true; \
+  else echo "No lockfile, will install at runtime"; \
   fi
 
 # Copy source code
@@ -29,5 +29,16 @@ ENV npm_config_update_notifier=false
 ENV npm_config_audit=false
 ENV npm_config_fund=false
 
-# Start development server
-CMD ["npm", "run", "dev"]
+# At container start: ensure node_modules exists (because volumes may override image's node_modules)
+# Then start dev server
+CMD ["sh", "-c", "\
+  if [ -f package-lock.json ]; then \
+    npm ci --silent --no-audit --no-fund; \
+  elif [ -f yarn.lock ]; then \
+    yarn install --silent; \
+  elif [ -f pnpm-lock.yaml ]; then \
+    corepack enable pnpm && pnpm install --silent; \
+  else \
+    npm install --silent --no-audit --no-fund; \
+  fi && \
+  npm run dev"]
