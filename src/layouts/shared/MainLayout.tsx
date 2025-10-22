@@ -4,6 +4,7 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import { Layout } from 'antd';
 import useDevice from '@/hooks/useDevice';
+import { useTokenAuth } from '@/hooks/useTokenAuth';
 
 import DesktopHeader from '../desktop/Header';
 import DesktopFooter from '../desktop/Footer';
@@ -21,6 +22,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const { isDesktop, isMobile, isTablet } = useDevice();
   const pathname = usePathname();
   const isMapSearch = pathname?.startsWith('/map-search');
+  
+  // Handle token authentication globally
+  useTokenAuth();
 
   // Desktop Layout
   if (isDesktop) {

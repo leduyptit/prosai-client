@@ -88,8 +88,8 @@ export default function TokenProvider(): NextAuthOptions['providers'][0] {
             role: userData.role,
             accessToken: credentials.token,
             refreshToken: undefined, // Token-based auth doesn't provide refresh token
-            provider: 'credentials' as const, // Use credentials as provider type
-          };
+            provider: 'token' as any, // Use token as provider type
+          } as any;
         } else {
           console.log('TokenProvider: Invalid response structure:', response);
           return null;

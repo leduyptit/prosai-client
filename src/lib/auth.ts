@@ -131,8 +131,9 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Handle token authentication (using credentials provider with token)
-      if (account?.provider === 'credentials' && (user as any).accessToken && (user as any).provider === 'credentials') {
+      // Handle token authentication - account.provider will be 'token' because of the id in TokenProvider
+      if (account?.provider === 'token') {
+        console.log('SignIn callback: Processing token authentication', { user, account });
         (user as any).provider = 'token';
         return true;
       }
@@ -169,8 +170,9 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account }) {
       // Initial sign in
       if (account && user) {
-        // For token authentication
-        if (account.provider === 'credentials' && (user as any).provider === 'token') {
+        // For token authentication - account.provider will be 'token' because of the id in TokenProvider
+        if (account.provider === 'token') {
+          console.log('JWT callback: Processing token authentication', { user, account });
           const userData = {
             id: user.id,
             email: user.email,
@@ -231,6 +233,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      console.log('Session callback: Processing session', { session, token });
       session.accessToken = token.accessToken;
       session.user = token.user;
       return session;

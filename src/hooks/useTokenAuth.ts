@@ -16,7 +16,7 @@ export function useTokenAuth() {
 
   const processTokenLogin = useCallback(async (token: string) => {
     // Prevent multiple calls with the same token
-    if (!token || isAuthenticated || tokenProcessed || hasProcessedRef.current || currentTokenRef.current === token) {
+    if (!token || tokenProcessed || hasProcessedRef.current || currentTokenRef.current === token) {
       return;
     }
 
@@ -60,17 +60,18 @@ export function useTokenAuth() {
     } finally {
       setIsProcessing(false);
     }
-  }, [isAuthenticated, tokenProcessed]);
+  }, [tokenProcessed]);
 
   // Auto-process token from URL parameters - only run once
   useEffect(() => {
     const token = searchParams.get('token');
     
-    if (token && !isAuthenticated && !isLoading && !tokenProcessed && !hasProcessedRef.current) {
+    // Process token immediately if found, regardless of session loading state
+    if (token && !tokenProcessed && !hasProcessedRef.current) {
       console.log('Token found in URL, processing...', token);
       processTokenLogin(token);
     }
-  }, [searchParams.get('token'), isAuthenticated, isLoading, tokenProcessed, processTokenLogin]);
+  }, [searchParams.get('token'), tokenProcessed, processTokenLogin]);
 
   return {
     isProcessing,

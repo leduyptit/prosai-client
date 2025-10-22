@@ -49,15 +49,6 @@ const TokenProtectedRoute: React.FC<TokenProtectedRouteProps> = ({
                 description="Bạn đang truy cập bằng token tạm thời. Để có trải nghiệm đầy đủ, vui lòng đăng nhập chính thức."
                 type="warning"
                 showIcon
-                action={
-                  <Button 
-                    size="small" 
-                    type="primary"
-                    onClick={() => router.push('/auth/signin')}
-                  >
-                    Đăng nhập
-                  </Button>
-                }
                 closable
               />
             </div>
