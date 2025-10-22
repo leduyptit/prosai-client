@@ -39,7 +39,8 @@ const Message: React.FC<MessageProps> = ({ type, content, timestamp }) => {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
+                className="font-medium cursor-pointer"
+                style={{ color: '#00478E'}}
               >
                 {label}
               </a>

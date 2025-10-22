@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
     REFRESH: '/auth/refresh',
     PROFILE: '/auth/profile',
     CALLBACK: '/auth/callback',
+    VERIFY_TOKEN: '/auth/verify-token',
   },
   USERS: {
     BASE: '/users',

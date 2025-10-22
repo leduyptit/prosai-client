@@ -24,7 +24,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedConversationId })
     {
       id: 'welcome-message',
       type: 'ai',
-      content: 'Xin chào! Tôi có thể giúp gì bạn hôm nay?',
+      content: 'Xin chào! \nTôi có thể giúp gì bạn hôm nay?',
       timestamp: new Date(),
     },
   ]);
@@ -51,8 +51,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedConversationId })
     };
 
     const handleMessage = (msg: any) => {
-      console.log('💬 Received message:', msg);
-      
       const newMessage: Message = {
         id: msg.id,
         type: msg.role === 'user' ? 'user' : 'ai',
@@ -64,7 +62,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedConversationId })
         // Check if message already exists to avoid duplicates
         const exists = prev.some(m => m.id === newMessage.id);
         if (exists) {
-          console.log('⚠️ Duplicate message ignored:', newMessage.id);
           return prev;
         }
 
@@ -120,7 +117,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedConversationId })
         joinConversation(selectedConversationId);
         lastLoadedIdRef.current = selectedConversationId;
       } catch (e) {
-        console.error('Failed to load conversation messages', e);
       }
     };
 
@@ -169,11 +165,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedConversationId })
           });
           lastLoadedIdRef.current = conversationId;
         } catch (e) {
-          console.error('Failed to reload conversation after creation', e);
         }
       }
     } catch (error) {
-      console.error('Error sending message:', error);
       setIsTyping(false);
       
       // Remove temporary user message on error

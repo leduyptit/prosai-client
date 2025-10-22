@@ -42,6 +42,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
       </div>
       <Button
         type="primary"
+        htmlType="submit"
         disabled={!message.trim()}
         className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg px-4 py-3 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
       >

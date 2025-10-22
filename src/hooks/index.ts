@@ -1,5 +1,6 @@
 // Export all hooks
 export { useAuth } from './useAuth';
+export { useTokenAuth } from './useTokenAuth';
 export { default as useDevice } from './useDevice';
 export { useLogout } from './useLogout';
 export { default as useLocalStorage } from './useLocalStorage';

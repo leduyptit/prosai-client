@@ -14,6 +14,11 @@ export const apiClient: AxiosInstance = axios.create({
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
   async (config) => {
+    // Skip adding auth header for verify-token endpoint to avoid infinite loops
+    if (config.url?.includes('/auth/verify-token')) {
+      return config;
+    }
+
     const session = await getSession();
     if (session?.accessToken) {
       config.headers.Authorization = `Bearer ${session.accessToken}`;

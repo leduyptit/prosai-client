@@ -3,6 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import ZaloProvider from './providers/zalo';
+import TokenProvider from './providers/token';
 import { corsApi } from '@/services/api';
 import { ProSaiAuthResponse } from '@/types/prosai-api';
 
@@ -114,6 +115,7 @@ export const authOptions: NextAuthOptions = {
         }
       }
     }),
+    TokenProvider(),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
@@ -129,6 +131,12 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
+      // Handle token authentication (using credentials provider with token)
+      if (account?.provider === 'credentials' && (user as any).accessToken && (user as any).provider === 'credentials') {
+        (user as any).provider = 'token';
+        return true;
+      }
+      
       // Handle social login callbacks - bypass NextAuth credentials flow
       if (account?.provider === 'google' && account.access_token) {
         // Set provider before calling callback
@@ -161,6 +169,25 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account }) {
       // Initial sign in
       if (account && user) {
+        // For token authentication
+        if (account.provider === 'credentials' && (user as any).provider === 'token') {
+          const userData = {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            avatar_url: (user as any).avatar_url || user.image,
+            balance: user.balance,
+            role: user.role,
+            provider: 'token',
+          };
+          return {
+            ...token,
+            accessToken: user.accessToken,
+            refreshToken: user.refreshToken,
+            user: userData,
+          } as any;
+        }
+        
         // For social login, user data is already updated in signIn callback
         if (account.provider === 'google' || account.provider === 'facebook' || account.provider === 'zalo') {
           const userData = {

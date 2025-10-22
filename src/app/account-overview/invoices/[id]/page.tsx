@@ -7,7 +7,8 @@ import { CopyOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { paymentsService } from '@/services';
 import { Breadcrumb } from '@/components/ui/navigation';
-import { ProtectedRoute } from '@/components/shared';
+import TokenProtectedRoute from '@/components/shared/auth/TokenProtectedRoute';
+import { useTokenAuth } from '@/hooks/useTokenAuth';
 import { APP_CONFIG } from '@/utils/env';
 import { formatCurrency, formatDateTime } from '@/utils/format';
 
@@ -16,6 +17,7 @@ export default function InvoiceDetailPage() {
   const router = useRouter();
   const { message } = App.useApp();
   const id = String(params?.id || '');
+  const { isProcessing, error: tokenError } = useTokenAuth();
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any | null>(null);
@@ -59,8 +61,41 @@ export default function InvoiceDetailPage() {
     else message.error('Sao chép thất bại');
   };
 
+  // Show loading if processing token authentication
+  if (isProcessing) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Đang xử lý đăng nhập...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error if token authentication failed
+  if (tokenError) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <Card className="w-full max-w-md text-center">
+          <div className="mb-6">
+            <div className="text-red-500 text-4xl mb-4">⚠️</div>
+            <h2 className="text-xl font-semibold mb-2">Lỗi xác thực</h2>
+            <p className="text-gray-600 mb-4">{tokenError}</p>
+            <Button 
+              type="primary" 
+              onClick={() => router.push('/auth/signin')}
+            >
+              Đăng nhập
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-    <ProtectedRoute>
+    <TokenProtectedRoute>
       <div className="min-h-screen bg-white">
         <div className="bg-gray-50 p-3">
           <div className="responsive-container mx-auto px-4">
@@ -211,7 +246,7 @@ export default function InvoiceDetailPage() {
           </div>
         </div>
       </div>
-    </ProtectedRoute>
+    </TokenProtectedRoute>
   );
 }
 

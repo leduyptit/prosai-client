@@ -135,8 +135,9 @@ class AuthService {
   // Verify Token
   async verifyToken(token: string): Promise<ApiResponse<{ user: UserProfile }>> {
     try {
-      const response = await apiClient.get<ApiResponse<{ user: UserProfile }>>(`${API_ENDPOINTS.AUTH.BASE}/verify-token?token=${encodeURIComponent(token)}`);
-      return response.data;
+      // Use corsApi instead of apiClient to avoid interceptor loops
+      const response = await corsApi.get<ApiResponse<{ user: UserProfile }>>(`${API_ENDPOINTS.AUTH.VERIFY_TOKEN}?token=${encodeURIComponent(token)}`);
+      return response;
     } catch (error) {
       console.error('Verify token failed:', error);
       throw error;
