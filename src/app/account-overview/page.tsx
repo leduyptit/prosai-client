@@ -13,7 +13,7 @@ import { fetchPropertyStats } from '@/services';
    const { packageInfo, loading: packageLoading } = useUserPackage();
    const [statsLoading, setStatsLoading] = useState(false);
    const [statsError, setStatsError] = useState<string | null>(null);
-   const [stats, setStats] = useState<{ active_listings: number; expired_listings: number; total_views: number; total_inquiries: number } | null>(null);
+   const [stats, setStats] = useState<{ active_properties: number; expired_properties: number; total_views: number; total_contacts: number } | null>(null);
 
    useEffect(() => {
      let mounted = true;
@@ -23,14 +23,14 @@ import { fetchPropertyStats } from '@/services';
          setStatsError(null);
          const res = await fetchPropertyStats();
          if (!mounted) return;
-         // Service returns fallback on error, ensure shape
-         const data = (res as any)?.data || res;
-         setStats({
-           active_listings: data?.active_listings || 0,
-           expired_listings: data?.expired_listings || 0,
-           total_views: data?.total_views || 0,
-           total_inquiries: data?.total_inquiries || 0,
-         });
+        // Service returns fallback on error, ensure shape
+        const data = (res as any)?.data || res;
+        setStats({
+          active_properties: data?.active_properties || 0,
+          expired_properties: data?.expired_properties || 0,
+          total_views: data?.total_views || 0,
+          total_contacts: data?.total_contacts || 0,
+        });
        } catch (e) {
          if (!mounted) return;
          setStatsError('Không thể tải dữ liệu thống kê');
@@ -100,10 +100,10 @@ import { fetchPropertyStats } from '@/services';
                          <div className="col-span-12 lg:col-span-6">
                              {/* Stats Overview */}
                              <StatsOverview 
-                               activeListings={stats?.active_listings || 0}
-                               expiredListings={stats?.expired_listings || 0}
+                               activeListings={stats?.active_properties || 0}
+                               expiredListings={stats?.expired_properties || 0}
                                totalViews={stats?.total_views || 0}
-                               totalInquiries={stats?.total_inquiries || 0}
+                               totalInquiries={stats?.total_contacts || 0}
                                loading={statsLoading}
                                error={statsError}
                              />
