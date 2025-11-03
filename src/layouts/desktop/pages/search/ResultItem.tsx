@@ -28,6 +28,7 @@ export interface SearchItem {
   price?: number;
   area?: number;
   city?: string;
+  user_id?: string;
   district?: string;
   ward?: string;
 }
@@ -137,7 +138,11 @@ const ResultItem: React.FC<ResultItemProps> = ({ item }) => {
             <div className="mt-3 flex items-center justify-between gap-2 border-t border-gray-200 pt-3">
               <div className="flex items-center gap-2 min-w-0">
                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-medium text-sm">
-                  {(item.postedBy ?? 'U')[0]}
+                  { item.user_id ? (
+                    <img src="/images/profile-user.png" alt="avatar" className="h-8 w-8" />
+                  ) : (
+                    ( item.postedBy ?? 'U')[0]
+                  )}
                 </div>
                 <div className="text-sm text-gray-700 truncate">
                   <div className="font-medium truncate">{item.postedBy ?? 'Người đăng'}</div>

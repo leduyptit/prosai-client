@@ -249,7 +249,7 @@ const PropertyDetailPage: React.FC = () => {
                 contactInfo={{
                   name: property.user_name_social || 'Người đăng',
                   phone: property.phone_user || property.phone_message?.[0] || '',
-                  avatar: '',
+                  avatar: property.user_id ? '/images/profile-user.png' : '',
                   isAgent: true,
                   propertyId: propertyId
                 }}

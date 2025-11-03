@@ -117,12 +117,12 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
     const listingTypeValue = formDataToUse.listingType || '1';
     searchParams.set('listing_type', listingTypeValue);
     
-    if (formDataToUse.priceRange) {
+                if (formDataToUse.priceRange && formDataToUse.priceRange !== 'all') {
       const [min, max] = formDataToUse.priceRange.split('-');
       if (min) searchParams.set('from_price', min);
       if (max && max !== '+') searchParams.set('to_price', max);
     }
-    if (formDataToUse.area) {
+    if (formDataToUse.area && formDataToUse.area !== 'all') {
       const [min, max] = formDataToUse.area.split('-');
       if (min) searchParams.set('from_area', min);
       if (max && max !== '+') searchParams.set('to_area', max);
@@ -257,10 +257,11 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
                     value={localSearchForm.propertyType}
                     size="small"
                     onChange={(value) => {
-                      handleLocalInputChange('propertyType', value);
+                      handleLocalInputChange('propertyType', value || undefined);
                     }}
                     className="w-full placeholder:text-[#8D8DA1] bg-white border-[#C3C3C3] rounded-lg"
-                    options={PROPERTY_TYPES as any}
+                    allowClear
+                    options={[{ value: '', label: 'Tất cả loại hình' }, ...(PROPERTY_TYPES as any)]}
                   />
                   <PriceRangeSelect
                     placeholder="Mức giá"
@@ -276,10 +277,11 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
                     value={localSearchForm.area}
                     size="small"
                     onChange={(value) => {
-                      handleLocalInputChange('area', value);
+                      handleLocalInputChange('area', value || undefined);
                     }}
                     className="w-full placeholder:text-[#8D8DA1] bg-white border-[#C3C3C3] rounded-lg"
-                    options={AREA_RANGES as any}
+                    allowClear
+                    options={[{ value: '', label: 'Tất cả diện tích' }, ...(AREA_RANGES as any)]}
                   />
                 </div>
               </div>

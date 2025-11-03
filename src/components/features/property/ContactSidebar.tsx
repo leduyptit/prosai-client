@@ -44,8 +44,7 @@ const ContactSidebar: React.FC<ContactSidebarProps> = ({
         {contactInfo.avatar ? (<Avatar 
           size={48} 
           src={contactInfo.avatar} 
-          icon={<UserOutlined />}
-          className="border-2 border-blue-100"
+          className="border-2 border-blue-100 rounded-full"
           style={{ backgroundColor: '#3b82f6' }}
         />) : (<Avatar 
             size={48} 
