@@ -17,6 +17,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.prosai.vn',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   turbopack: {
