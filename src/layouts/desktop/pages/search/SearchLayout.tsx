@@ -205,6 +205,7 @@ const SearchLayout: React.FC = () => {
 
   useEffect(() => {
     fetchProperties();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update filters when URL params change
@@ -235,6 +236,7 @@ const SearchLayout: React.FC = () => {
       url.searchParams.delete('action');
       window.history.replaceState({}, '', url.toString());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParamsFromUrl]);
 
   return (

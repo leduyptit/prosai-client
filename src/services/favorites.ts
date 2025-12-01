@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { apiClient } from './api';
 import { API_ENDPOINTS } from '@/constants';
 
@@ -56,9 +57,10 @@ class FavoriteService {
         message: response.data.message || 'Đã thêm vào danh sách yêu thích',
         statusCode: response.status
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string }>;
       // Handle 409 Conflict (already exists)
-      if (error.response?.status === 409) {
+      if (axiosError.response?.status === 409) {
         return {
           success: false,
           message: 'Bất động sản này đã có trong danh sách yêu thích',
@@ -67,11 +69,11 @@ class FavoriteService {
       }
       
       // Handle other errors
-      console.error('Create favorite failed:', error);
+      console.error('Create favorite failed:', axiosError);
       return {
         success: false,
-        message: error.response?.data?.message || 'Có lỗi xảy ra khi thêm vào danh sách yêu thích',
-        statusCode: error.response?.status || 500
+        message: axiosError.response?.data?.message || 'Có lỗi xảy ra khi thêm vào danh sách yêu thích',
+        statusCode: axiosError.response?.status || 500
       };
     }
   }
@@ -93,18 +95,19 @@ class FavoriteService {
         success: true,
         message: response.data?.message || 'Đã xóa khỏi danh sách yêu thích'
       };
-    } catch (error: any) {
-      console.error('Delete favorite failed:', error);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      console.error('Delete favorite failed:', axiosError);
       
       // Handle specific error cases
-      if (error.response?.status === 404) {
+      if (axiosError.response?.status === 404) {
         return {
           success: false,
           message: 'Không tìm thấy tin yêu thích này'
         };
       }
       
-      if (error.response?.status === 401) {
+      if (axiosError.response?.status === 401) {
         return {
           success: false,
           message: 'Vui lòng đăng nhập để thực hiện thao tác này'
@@ -113,7 +116,7 @@ class FavoriteService {
       
       return {
         success: false,
-        message: error.response?.data?.message || 'Có lỗi xảy ra khi xóa khỏi danh sách yêu thích'
+        message: axiosError.response?.data?.message || 'Có lỗi xảy ra khi xóa khỏi danh sách yêu thích'
       };
     }
   }

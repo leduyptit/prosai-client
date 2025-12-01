@@ -10,7 +10,6 @@ import Loading from '@/components/ui/feedback/Loading';
 import { EmptyState } from '@/components/shared/empty-states';
 import { APP_CONFIG } from '@/utils/env';
 import { formatCurrency, formatArea, formatDateTime } from '@/utils/format';
-import { PROJECT_STATUS } from '@/constants';
 
 const ProjectDetailPage: React.FC = () => {
   const params = useParams();

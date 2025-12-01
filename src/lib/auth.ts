@@ -42,7 +42,7 @@ async function handleSocialLoginCallback(
     } else {
       return false;
     }
-  } catch (error: unknown) {
+  } catch {
     return false;
   }
 }
@@ -130,7 +130,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       // Handle token authentication - account.provider will be 'token' because of the id in TokenProvider
       if (account?.provider === 'token') {
         console.log('SignIn callback: Processing token authentication', { user, account });

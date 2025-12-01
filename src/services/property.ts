@@ -123,8 +123,8 @@ class PropertyService {
   }
 
   // Get user's property statistics
-  async getUserStats(): Promise<any> {
-    const response = await api.get<any>(API_ENDPOINTS.USERS.USER_PROPERTIES_STATS);
+  async getUserStats(): Promise<Record<string, unknown>> {
+    const response = await api.get<Record<string, unknown>>(API_ENDPOINTS.USERS.USER_PROPERTIES_STATS);
     return response.data;
   }
 
@@ -240,7 +240,7 @@ class PropertyService {
   // Get related properties by owner
   async getRelatedPropertiesByOwner(userId?: string, userIdSocial?: string, limit: number = 10): Promise<PropertyRankingItem[]> {
     try {
-      const params: any = { limit };
+      const params: Record<string, string | number> = { limit };
       
       if (userId) {
         params.user_id = userId;
@@ -286,7 +286,7 @@ class PropertyService {
 export const propertyService = new PropertyService();
 
 // Fetch property details by ID
-export const getPropertyById = async (id: string): Promise<any> => {
+export const getPropertyById = async (id: string): Promise<Property> => {
   try {
     const response = await apiClient.get(`${API_ENDPOINTS.PROPERTIES.SEARCH_PUBLIC}/${id}`);
     return response.data;

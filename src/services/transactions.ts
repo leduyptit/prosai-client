@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { apiClient } from './api';
 import { API_ENDPOINTS } from '@/constants';
 
@@ -30,8 +31,9 @@ class TransactionsService {
         data: list,
         message: 'Lấy danh sách giao dịch thành công'
       };
-    } catch (error: any) {
-      if (error?.response?.status === 401) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ msg?: string }>;
+      if (axiosError.response?.status === 401) {
         return {
           success: false,
           data: [],
@@ -42,7 +44,7 @@ class TransactionsService {
       return {
         success: false,
         data: [],
-        message: error?.response?.data?.msg || 'Có lỗi xảy ra khi tải giao dịch'
+        message: axiosError.response?.data?.msg || 'Có lỗi xảy ra khi tải giao dịch'
       };
     }
   }

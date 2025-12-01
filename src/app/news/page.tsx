@@ -17,11 +17,10 @@ const NewsPage: React.FC = () => {
   const [sidebarArticles, setSidebarArticles] = useState<NewsArticle[]>([]);
   const [categories, setCategories] = useState<NewsCategory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sidebarLoading, setSidebarLoading] = useState(true);
+  const [, setSidebarLoading] = useState(true);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState(0);
-  const [totalItems, setTotalItems] = useState(0);
   const itemsPerPage = 10;
 
   // Filter states
@@ -72,7 +71,6 @@ const NewsPage: React.FC = () => {
         console.log('News API response:', response);
         setNewsData(response.data || []);
         setTotalPages(response.pageCount || 0);
-        setTotalItems(response.total || 0);
       } catch (err) {
         console.error('Failed to load news:', err);
         setError('Không thể tải tin tức. Vui lòng thử lại sau.');

@@ -66,6 +66,7 @@ export const useMyProperties = (initialFilters: MyPropertiesFilters = {}) => {
   // Initial fetch on component mount
   useEffect(() => {
     refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array for initial load only
 
   return {

@@ -64,7 +64,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({ onSelectConversation, sel
     });
   };
 
-  const handleConversationClick = (conversationId: string, title: string) => {
+  const handleConversationClick = (conversationId: string) => {
     if (typeof window !== 'undefined') {
       window.location.hash = conversationId;
     }
@@ -110,13 +110,13 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({ onSelectConversation, sel
             </div>
           ) : conversationHistory.length > 0 ? (
             <div className="space-y-2">
-              {conversationHistory.slice(0, 20).map((item, index) => (
+              {conversationHistory.slice(0, 20).map((item) => (
                 <div key={item.id}>
                   <div
                     className={`cursor-pointer p-3 transition-all duration-200 relative group border-l-4 ${
                       item.id === selectedConversationId ? 'bg-[#F0F7FF] border-l-[#005EBC]' : 'border-l-transparent hover:bg-[#F7F7F7] hover:border-l-[#005EBC]'
                     }`}
-                    onClick={() => handleConversationClick(item.id, item.title)}
+                    onClick={() => handleConversationClick(item.id)}
                   >
                     <div className="text-xs text-gray-500 mb-2">
                       {formatDateTime(item.created_at)}

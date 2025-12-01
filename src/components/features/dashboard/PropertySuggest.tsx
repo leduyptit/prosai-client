@@ -30,7 +30,6 @@ const PropertySuggest: React.FC<PropertySuggestProps> = ({
 }) => {
   // Helper function to convert PropertyRankingItem to display format
   const convertPropertyToDisplayFormat = (property: PropertyRankingItem) => {
-    const price = property.price_all?.[0] || property.price?.[0] || 0;
     const area = property.area?.[0] || 0;
     
     return {

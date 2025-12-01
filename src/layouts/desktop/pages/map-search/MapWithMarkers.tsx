@@ -140,7 +140,7 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({ city, items = [] }) => 
 
   useEffect(() => {
     let map: any = null;
-    let markers: any[] = [];
+    const markers: any[] = [];
 
     const init = async () => {
       try {
@@ -404,7 +404,6 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({ city, items = [] }) => 
           updateTimer = setTimeout(updateUrl, 250);
         });
       } catch (err) {
-        // eslint-disable-next-line no-console
         console.error('Google Maps failed to load:', err);
         setFallbackIframe(true);
       }
@@ -415,6 +414,7 @@ const MapWithMarkers: React.FC<MapWithMarkersProps> = ({ city, items = [] }) => 
       markers.forEach((m) => m.map = null as any);
       map = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [city, items]);
 
   if (fallbackIframe) {

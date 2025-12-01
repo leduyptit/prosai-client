@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PropertyRankingItem } from '@/types/api';
-import { formatPrice, formatRelativeTime } from '@/utils/format';
+import { formatPrice } from '@/utils/format';
 import { EmptyState } from '@/components/shared/empty-states';
 
 interface RelatedPropertiesProps {

@@ -18,7 +18,6 @@ interface WardSelectorProps {
 
 const WardSelector: React.FC<WardSelectorProps> = ({
   visible,
-  onClose,
   onSelect,
   selectedCity,
   selectedWards,

@@ -8,14 +8,18 @@ export interface TopTopicItem {
   count: number;
 }
 
+interface SearchResponse {
+  data?: TopTopicItem[];
+}
+
 export class SearchService {
   async getTopTopics(): Promise<TopTopicItem[]> {
-    const response = await apiClient.get(API_ENDPOINTS.SEARCH.TOP_TOPICS);
-    const payload: any = response.data;
+    const response = await apiClient.get<TopTopicItem[] | SearchResponse>(API_ENDPOINTS.SEARCH.TOP_TOPICS);
+    const payload = response.data;
     if (Array.isArray(payload)) {
-      return payload as TopTopicItem[];
+      return payload;
     }
-    return (payload?.data as TopTopicItem[]) || [];
+    return (payload as SearchResponse)?.data || [];
   }
 }
 

@@ -57,7 +57,7 @@ export function useApi<T = unknown>() {
 
       throw error;
     }
-  }, []);
+  }, [message]);
 
   const reset = useCallback(() => {
     setState({ data: null, loading: false, error: null });

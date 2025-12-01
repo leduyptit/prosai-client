@@ -26,7 +26,6 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
   onClearAllWards,
   onRemoveWard,
   onSelectSuggestion,
-  onSelectSuggestionAsTag,
   className = '',
   showKeywordAsTag = false,
   keywordTagText = '',
@@ -46,7 +45,7 @@ const SearchSuggestions: React.FC<SearchSuggestionsProps> = ({
         try {
           const data = await fetchSuggestions(keyword, 10);
           setSuggestions(data);
-        } catch (err) {
+        } catch {
           setError('Không thể tải gợi ý');
           setSuggestions([]);
         } finally {

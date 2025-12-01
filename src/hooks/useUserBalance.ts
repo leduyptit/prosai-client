@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { apiClient } from '@/services/api';
@@ -30,8 +31,9 @@ const useUserBalance = (): UseUserBalanceResult => {
       const data = response.data;
       const newBalance = typeof data?.balance === 'string' ? data.balance : '0.00';
       setBalance(newBalance);
-    } catch (err: any) {
-      setError(err?.response?.data?.msg || 'Không thể tải số dư');
+    } catch (err: unknown) {
+      const axiosError = err as AxiosError<{ msg?: string }>;
+      setError(axiosError.response?.data?.msg || 'Không thể tải số dư');
     } finally {
       setLoading(false);
     }

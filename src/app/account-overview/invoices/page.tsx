@@ -50,7 +50,7 @@ export default function InvoicesPage() {
         }));
         setData(normalized);
         setTotal(totalCount);
-      } catch (e) {
+      } catch {
         if (!mounted) return;
         setError('Không thể tải danh sách hóa đơn');
       } finally {
@@ -132,7 +132,7 @@ export default function InvoicesPage() {
         </div>
       )
     }
-  ], []);
+  ], [message]);
 
   return (
     <ProtectedRoute>

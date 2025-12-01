@@ -1,7 +1,8 @@
 'use client';
 
+import { AxiosError } from 'axios';
 import React, { useState } from 'react';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { authService } from '@/services/auth';
 import Alert from '@/components/ui/feedback/Alert';
@@ -70,12 +71,13 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
       form.resetFields();
       
       console.log('Password updated successfully:', response);
-    } catch (error: any) {
-      console.error('Password update failed:', error);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string; error?: string }>;
+      console.error('Password update failed:', axiosError);
       
       // Show error notification
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
+      const errorMessage = axiosError.response?.data?.message || 
+                          axiosError.response?.data?.error || 
                           'Có lỗi xảy ra khi thay đổi mật khẩu. Vui lòng thử lại.';
       showNotification('error', errorMessage);
     } finally {

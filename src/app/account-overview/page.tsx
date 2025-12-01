@@ -31,7 +31,7 @@ import { fetchPropertyStats } from '@/services';
           total_views: data?.total_views || 0,
           total_contacts: data?.total_contacts || 0,
         });
-       } catch (e) {
+       } catch {
          if (!mounted) return;
          setStatsError('Không thể tải dữ liệu thống kê');
        } finally {

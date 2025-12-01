@@ -42,7 +42,7 @@ export default function InvoiceDetailPage() {
         if (!mounted) return;
         const payload = (res as any)?.data || res;
         setData(payload);
-      } catch (e) {
+      } catch {
         if (!mounted) return;
         setError('Không thể tải chi tiết hóa đơn');
       } finally {

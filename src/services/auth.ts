@@ -39,7 +39,7 @@ class AuthService {
   // Social Login
   async socialLogin(accessToken: string, provider: 'FACEBOOK' | 'GOOGLE'): Promise<ProSaiAuthResponse> {
     try {
-      const request: SocialLoginRequest = {
+      const _request: SocialLoginRequest = {
         access_token: accessToken,
         provider
       };

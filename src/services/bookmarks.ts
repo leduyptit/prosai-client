@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { apiClient } from './api';
 import { API_ENDPOINTS } from '@/constants';
 
@@ -52,9 +53,10 @@ class BookmarkService {
         message: response.data.message || 'Bộ lọc đã được lưu thành công',
         statusCode: response.status
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string }>;
       // Handle 409 Conflict (already exists)
-      if (error.response?.status === 409) {
+      if (axiosError.response?.status === 409) {
         return {
           success: false,
           message: 'Bộ lọc này đã tồn tại',
@@ -63,11 +65,11 @@ class BookmarkService {
       }
       
       // Handle other errors
-      console.error('Create bookmark failed:', error);
+      console.error('Create bookmark failed:', axiosError);
       return {
         success: false,
-        message: error.response?.data?.message || 'Có lỗi xảy ra khi lưu bộ lọc',
-        statusCode: error.response?.status || 500
+        message: axiosError.response?.data?.message || 'Có lỗi xảy ra khi lưu bộ lọc',
+        statusCode: axiosError.response?.status || 500
       };
     }
   }
@@ -99,18 +101,19 @@ class BookmarkService {
         success: true,
         message: response.data?.message || 'Đã xóa bộ lọc tìm kiếm'
       };
-    } catch (error: any) {
-      console.error('Delete bookmark failed:', error);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      console.error('Delete bookmark failed:', axiosError);
       
       // Handle specific error cases
-      if (error.response?.status === 404) {
+      if (axiosError.response?.status === 404) {
         return {
           success: false,
           message: 'Không tìm thấy bộ lọc này'
         };
       }
       
-      if (error.response?.status === 401) {
+      if (axiosError.response?.status === 401) {
         return {
           success: false,
           message: 'Vui lòng đăng nhập để thực hiện thao tác này'
@@ -119,7 +122,7 @@ class BookmarkService {
       
       return {
         success: false,
-        message: error.response?.data?.message || 'Có lỗi xảy ra khi xóa bộ lọc tìm kiếm'
+        message: axiosError.response?.data?.message || 'Có lỗi xảy ra khi xóa bộ lọc tìm kiếm'
       };
     }
   }

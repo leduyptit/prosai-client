@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Input, Button } from 'antd';
+import { Input } from 'antd';
 import { CITIES } from '@/constants';
 
 interface CitySelectorProps {
@@ -37,6 +37,7 @@ const CitySelector: React.FC<CitySelectorProps> = ({
     } else {
       setFilteredCities(uniqueCities as any);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
   // Reset search term when dropdown closes

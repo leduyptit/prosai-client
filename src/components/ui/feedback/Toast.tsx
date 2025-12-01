@@ -10,11 +10,6 @@ interface ToastOptions {
   rtl?: boolean;
 }
 
-interface ToastProps {
-  content: string;
-  type?: 'success' | 'error' | 'info' | 'warning' | 'loading';
-  duration?: number;
-}
 
 class Toast {
   private static instance: Toast;

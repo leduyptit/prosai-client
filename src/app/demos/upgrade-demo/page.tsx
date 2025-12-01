@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Space, Card, Typography } from 'antd';
+import { Button, Card, Typography } from 'antd';
 import { UpgradeMembershipModal } from '@/components/shared/upgrade';
 
 const { Title, Text } = Typography;

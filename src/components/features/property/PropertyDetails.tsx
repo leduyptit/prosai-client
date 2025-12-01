@@ -26,15 +26,8 @@ interface PropertyDetailsProps {
 
 const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   propertyId,
-  title,
-  description,
-  images,
   price,
   area,
-  address,
-  city,
-  district,
-  ward,
   bedrooms = 2,
   bathrooms = 1,
   rating = 4,

@@ -23,7 +23,7 @@ interface PostData {
 
 const PostManagerPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [, setDeleteLoading] = useState(false);
   const router = useRouter();
   const { modal, message } = App.useApp();
   

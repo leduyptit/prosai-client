@@ -27,10 +27,6 @@ const ContactSidebar: React.FC<ContactSidebarProps> = ({
   },
   className = ''
 }) => {
-  const handleCall = () => {
-    console.log('Calling:', contactInfo.phone);
-    window.open(`tel:${contactInfo.phone}`, '_self');
-  };
 
   const handleMessage = () => {
     console.log('Messaging:', contactInfo.name);

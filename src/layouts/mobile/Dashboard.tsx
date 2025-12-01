@@ -3,9 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Select, Input, Button, Card } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { useRouter } from 'next/navigation';
 import { 
-  LISTING_TYPES
 } from '@/constants';
 import { fetchStatistics, StatisticsResponse } from '@/services/statistics';
 import { fetchNewsCategories, fetchNewsByCategory, NewsCategory, NewsArticle } from '@/services/news';
@@ -21,7 +19,6 @@ import {
 } from '@/components/features/dashboard';
 
 const MobileDashboard: React.FC = () => {
-  const router = useRouter();
   const [searchForm, setSearchForm] = useState({
     location: 'hn',
     keyword: '',

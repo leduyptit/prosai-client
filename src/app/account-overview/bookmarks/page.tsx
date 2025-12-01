@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, Suspense } from 'react';
 import { AccountSidebar } from '@/components/features/account';
 import { Breadcrumb } from '@/components/ui/navigation';
 import { ProtectedRoute } from '@/components/shared';
@@ -15,7 +15,8 @@ import { bookmarkService } from '@/services/bookmarks';
 import { Button, App } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
-const BookmarksPage: React.FC = () => {
+// Component that uses useSearchParams - must be wrapped in Suspense
+const BookmarksContent: React.FC = () => {
   const { message } = App.useApp();
   const searchParams = useSearchParams();
   const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 50;
@@ -72,7 +73,7 @@ const BookmarksPage: React.FC = () => {
       } else {
         message.error(result.message);
       }
-    } catch (error) {
+    } catch {
       message.error('Có lỗi xảy ra khi xóa bộ lọc tìm kiếm');
     } finally {
       setDeletingIds(prev => {
@@ -200,6 +201,20 @@ const BookmarksPage: React.FC = () => {
         </div>
       </div>
     </ProtectedRoute>
+  );
+};
+
+const BookmarksPage: React.FC = () => {
+  return (
+    <Suspense fallback={
+      <ProtectedRoute>
+        <div className="min-h-screen bg-white flex items-center justify-center">
+          <Loading className="bg-white" size="large" text="Đang tải..." />
+        </div>
+      </ProtectedRoute>
+    }>
+      <BookmarksContent />
+    </Suspense>
   );
 };
 

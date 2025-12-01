@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       try {
         const topics = await searchService.getTopTopics();
         setTopTopics(topics);
-      } catch (e) {
+      } catch {
         setTopTopics([]);
       }
     };

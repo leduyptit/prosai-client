@@ -7,7 +7,7 @@ import MobileDashboard from './mobile/Dashboard';
 import { Loading } from '@/components/ui/feedback';
 
 const ResponsiveDashboard: React.FC = () => {
-  const { isDesktop, isMobile, isTablet, isLoading } = useDevice();
+  const { isDesktop, isLoading } = useDevice();
 
   // Show loading while detecting device
   if (isLoading) {

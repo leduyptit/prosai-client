@@ -9,7 +9,7 @@ import { propertyService } from '@/services/property';
 import { Property } from '@/types/api';
 import { formatArea, formatPrice, formatRelativeTime } from '@/utils/format';
 import { SearchItem } from '@/layouts/desktop/pages/search/ResultItem';
-import { CloseOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 import { Button } from '@/components/ui/buttons';
 import MapWithMarkers from './MapWithMarkers';
 import FiltersBar from './FiltersBar';
@@ -23,9 +23,9 @@ const MapSearchLayout: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [mapProperties, setMapProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const [mapLoading, setMapLoading] = useState(true);
+  const [, setMapLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [mapError, setMapError] = useState<string | null>(null);
+  const [, setMapError] = useState<string | null>(null);
   const [totalCount, setTotalCount] = useState(0);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -197,6 +197,7 @@ const MapSearchLayout: React.FC = () => {
   useEffect(() => {
     fetchProperties();
     fetchMapProperties();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Đo chiều cao FiltersBar
@@ -222,6 +223,7 @@ const MapSearchLayout: React.FC = () => {
       url.searchParams.set('tpl', 'map');
       router.replace(url.pathname + '?' + url.searchParams.toString(), { scroll: false });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -249,6 +251,7 @@ const MapSearchLayout: React.FC = () => {
       url.searchParams.delete('action');
       window.history.replaceState({}, '', url.toString());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParamsFromUrl]);
 
   return (

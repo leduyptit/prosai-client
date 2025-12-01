@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { EnvironmentOutlined, CarOutlined, ShoppingOutlined, MedicineBoxOutlined, BankOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined } from '@ant-design/icons';
 
 interface MapData {
   address: string;

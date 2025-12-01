@@ -98,9 +98,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedConversationId })
 
       try {
         const msgs = await conversationService.getConversationMessages(selectedConversationId, { limit: 100 });
-        const mapped = msgs.map((m: ConversationMessageItem) => ({
+        const mapped: Message[] = msgs.map((m: ConversationMessageItem) => ({
           id: m.id,
-          type: m.role === 'user' ? 'user' : 'ai',
+          type: (m.role === 'user' ? 'user' : 'ai') as 'user' | 'ai',
           content: m.content,
           timestamp: (/^\d+$/.test(String(m.created_at))
             ? new Date(Number(m.created_at) * 1000)
@@ -116,11 +116,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedConversationId })
         setCurrentConversationId(selectedConversationId);
         joinConversation(selectedConversationId);
         lastLoadedIdRef.current = selectedConversationId;
-      } catch (e) {
+      } catch {
       }
     };
 
     loadHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedConversationId]);
 
   const handleSendMessage = async (content: string) => {
@@ -150,9 +151,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedConversationId })
         // Immediately load full history for the newly created conversation
         try {
           const msgs = await conversationService.getConversationMessages(conversationId, { limit: 100 });
-          const mapped = msgs.map((m: ConversationMessageItem) => ({
+          const mapped: Message[] = msgs.map((m: ConversationMessageItem) => ({
             id: m.id,
-            type: m.role === 'user' ? 'user' : 'ai',
+            type: (m.role === 'user' ? 'user' : 'ai') as 'user' | 'ai',
             content: m.content,
             timestamp: (/^\d+$/.test(String(m.created_at))
               ? new Date(Number(m.created_at) * 1000)
@@ -164,10 +165,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedConversationId })
             return [...base, ...mapped];
           });
           lastLoadedIdRef.current = conversationId;
-        } catch (e) {
+        } catch {
         }
       }
-    } catch (error) {
+    } catch {
       setIsTyping(false);
       
       // Remove temporary user message on error

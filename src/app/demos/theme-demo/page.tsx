@@ -13,11 +13,9 @@ import {
   Alert,
   Badge,
   Space,
-  Divider,
   Typography,
   Switch,
   Checkbox,
-  Radio,
   Slider,
   Progress,
   Tag,
@@ -32,13 +30,10 @@ import {
   LockOutlined,
   MailOutlined,
   PhoneOutlined,
-  CalendarOutlined,
-  SearchOutlined,
   PlusOutlined,
   EditOutlined,
   DeleteOutlined,
   EyeOutlined,
-  EyeInvisibleOutlined,
 } from '@ant-design/icons';
 
 const { Title, Paragraph, Text } = Typography;
@@ -135,7 +130,7 @@ export default function ThemeDemoPage() {
     },
   ];
 
-  const handleFormSubmit = (values: Record<string, unknown>) => {
+  const handleFormSubmit = () => {
     setLoading(true);
     setTimeout(() => {
       message.success('Form đã được gửi thành công!');

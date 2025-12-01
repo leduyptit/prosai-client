@@ -2,13 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useSession } from 'next-auth/react';
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  conversation_id: string;
-  created_at: string;
-}
 
 interface UseSocketReturn {
   socket: Socket | null;
@@ -69,7 +62,7 @@ export function useSocket(): UseSocketReturn {
       socketRef.current.emit('sendMessage', {
         conversationId: conversationId || '', // Tạo conversation mới nếu không có
         content: content
-      }, (ack: any) => {
+      }, (ack: { conversationId?: string }) => {
         if (ack && ack.conversationId) {
           resolve(ack.conversationId);
         } else {
@@ -82,7 +75,7 @@ export function useSocket(): UseSocketReturn {
   const joinConversation = (conversationId: string) => {
     if (!socketRef.current) return;
 
-    socketRef.current.emit('joinConversation', { conversationId }, (ack: any) => {
+    socketRef.current.emit('joinConversation', { conversationId }, (ack: Record<string, unknown>) => {
       console.log('🔗 Joined conversation:', ack);
     });
   };
@@ -90,7 +83,7 @@ export function useSocket(): UseSocketReturn {
   const leaveConversation = (conversationId: string) => {
     if (!socketRef.current) return;
 
-    socketRef.current.emit('leaveConversation', { conversationId }, (ack: any) => {
+    socketRef.current.emit('leaveConversation', { conversationId }, (ack: Record<string, unknown>) => {
       console.log('🔌 Left conversation:', ack);
     });
   };

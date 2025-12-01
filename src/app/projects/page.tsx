@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ProjectList } from '@/components/features/projects';
 import { PROJECT_SORT, PROJECT_SORT_OPTIONS } from '@/constants';
@@ -8,7 +8,8 @@ import { Input } from 'antd';
 import { Select } from '@/components/ui/forms';
 import { SearchOutlined } from '@ant-design/icons';
 
-export default function ProjectsPage() {
+// Component that uses useSearchParams - must be wrapped in Suspense
+function ProjectsContent() {
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
@@ -16,7 +17,7 @@ export default function ProjectsPage() {
     sort_type: searchParams.get('sort_type') || PROJECT_SORT.LATEST
   });
 
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters] = useState(false);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters(prev => ({
@@ -104,5 +105,17 @@ export default function ProjectsPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function ProjectsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Đang tải...</div>
+      </div>
+    }>
+      <ProjectsContent />
+    </Suspense>
   );
 }

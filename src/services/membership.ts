@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { apiClient } from './api';
 import { API_ENDPOINTS } from '@/constants';
 
@@ -32,9 +33,10 @@ class MembershipService {
         data: response.data || [],
         message: 'Lấy danh sách gói hội viên thành công'
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string }>;
       
-      if (error.response?.status === 401) {
+      if (axiosError.response?.status === 401) {
         return {
           success: false,
           data: [],
@@ -45,7 +47,7 @@ class MembershipService {
       return {
         success: false,
         data: [],
-        message: error.response?.data?.message || 'Có lỗi xảy ra khi tải gói hội viên'
+        message: axiosError.response?.data?.message || 'Có lỗi xảy ra khi tải gói hội viên'
       };
     }
   }
@@ -61,25 +63,26 @@ class MembershipService {
         success: true,
         message: response.data.message || 'Mua gói hội viên thành công'
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ msg?: string }>;
       
-      if (error.response?.status === 401) {
+      if (axiosError.response?.status === 401) {
         return {
           success: false,
           message: 'Vui lòng đăng nhập để mua gói hội viên'
         };
       }
       
-      if (error.response?.status === 400) {
+      if (axiosError.response?.status === 400) {
         return {
           success: false,
-          message: error.response?.data?.msg ? "Không đủ số dư trong tài khoản" : 'Dữ liệu không hợp lệ'
+          message: axiosError.response?.data?.msg ? "Không đủ số dư trong tài khoản" : 'Dữ liệu không hợp lệ'
         };
       }
       
       return {
         success: false,
-        message: error.response?.data?.msg || 'Có lỗi xảy ra khi mua gói hội viên'
+        message: axiosError.response?.data?.msg || 'Có lỗi xảy ra khi mua gói hội viên'
       };
     }
   }
@@ -94,18 +97,19 @@ class MembershipService {
         success: true,
         message: response.data.message || 'Nâng cấp gói hội viên thành công'
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ msg?: string }>;
       
-      if (error.response?.status === 401) {
+      if (axiosError.response?.status === 401) {
         return {
           success: false,
-          message: error.response?.data?.msg || 'Có lỗi xảy ra khi nâng cấp gói hội viên'
+          message: axiosError.response?.data?.msg || 'Có lỗi xảy ra khi nâng cấp gói hội viên'
         };
       }
       
       return {
         success: false,
-        message: error.response?.data?.msg || 'Có lỗi xảy ra khi nâng cấp gói hội viên'
+        message: axiosError.response?.data?.msg || 'Có lỗi xảy ra khi nâng cấp gói hội viên'
       };
     }
   }
@@ -119,9 +123,10 @@ class MembershipService {
         data: response.data.data,
         message: response.data.message
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ msg?: string }>;
       
-      if (error.response?.status === 401) {
+      if (axiosError.response?.status === 401) {
         return {
           success: false,
           message: 'Vui lòng đăng nhập để xem thông tin hồ sơ'
@@ -130,7 +135,7 @@ class MembershipService {
       
       return {
         success: false,
-        message: error.response?.data?.msg || 'Có lỗi xảy ra khi tải thông tin hồ sơ'
+        message: axiosError.response?.data?.msg || 'Có lỗi xảy ra khi tải thông tin hồ sơ'
       };
     }
   }

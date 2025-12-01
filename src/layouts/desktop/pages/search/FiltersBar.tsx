@@ -32,22 +32,7 @@ interface FiltersBarProps {
   };
 }
 
-const iconClass = 'inline-block align-middle';
 
-const LocationIcon = () => (
-  <svg className={iconClass} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z" />
-    <circle cx="12" cy="10" r="3" />
-  </svg>
-);
-
-const MapIcon = () => (
-  <svg className={iconClass} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="1 6 8 3 16 6 23 3 23 18 16 21 8 18 1 21 1 6" />
-    <line x1="8" y1="3" x2="8" y2="18" />
-    <line x1="16" y1="6" x2="16" y2="21" />
-  </svg>
-);
 
 const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => {
   const { data: session } = useSession();
@@ -608,7 +593,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ onSearch, initialFilters }) => 
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
       {/* Transaction Type Tabs */}
       <div className="flex mb-3 space-x-2 w-3/4">
-        {LISTING_TYPES.map((type, index) => (
+        {LISTING_TYPES.map((type) => (
           <button
             key={type.value}
             onClick={() => handleListingTypeChange(type.value)}

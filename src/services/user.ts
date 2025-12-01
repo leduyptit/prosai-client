@@ -1,5 +1,5 @@
 import { api, PaginatedResponse } from './api';
-import { User, MembershipPlanDetails, UserMembership } from '@/types/auth';
+import { MembershipPlanDetails, UserMembership } from '@/types/auth';
 import { Notification } from '@/types/api';
 import { API_ENDPOINTS } from '@/constants';
 

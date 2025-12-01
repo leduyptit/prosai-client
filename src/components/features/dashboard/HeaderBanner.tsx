@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Input, Button } from 'antd';
+import { Button } from 'antd';
 import Select from '@/components/ui/forms/Select';
 import PriceRangeSelect from '@/components/ui/forms/PriceRangeSelect';
 import { useRouter } from 'next/navigation';
 import { 
   PROPERTY_TYPES, 
-  PRICE_RANGES, 
   AREA_RANGES, 
   LISTING_TYPES
 } from '@/constants';
@@ -43,8 +42,7 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
   loading,
   error,
   onTabChange,
-  onInputChange,
-  onSearch
+  onInputChange
 }) => {
   const router = useRouter();
   const [keyword, setKeyword] = useState<string>('');
@@ -340,15 +338,15 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
                 )}
                 <div className="space-y-1 text-sm text-left">
                   <div className="flex items-center justify-start gap-2">
-                    <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
+                    <img src="/svgs/Group 11556.svg" alt="" className="w-2 h-2"/>
                     <span>Nhà bán với giá trị thực tế: <span className="font-medium text-[#FFAA22]">{loading ? '...' : statistics?.data.market.real_value.toLocaleString() || '19,000'}</span></span>
                   </div>
                   <div className="flex items-center justify-start gap-2">
-                    <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
+                    <img src="/svgs/Group 11556.svg" alt="" className="w-2 h-2"/>
                     <span>Khoảng cách giao với giá thực tế: <span className="font-medium text-[#FFAA22]">{loading ? '...' : statistics?.data.market.transaction_gap.toLocaleString() || '5,000'}</span></span>
                   </div>
                   <div className="flex items-center justify-start gap-2">
-                    <img src="/svgs/Group 11556.svg" className="w-2 h-2"/>
+                    <img src="/svgs/Group 11556.svg" alt="" className="w-2 h-2"/>
                     <span>Mức độ quan tâm: {loading ? '...' : statistics?.data.market.interest_rate_change || '+18%'} so với hôm qua</span>
                   </div>
                 </div>

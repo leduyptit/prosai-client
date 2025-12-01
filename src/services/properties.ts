@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { apiClient } from './api';
 import type { MyPropertyItem } from './myProperties';
 import { API_ENDPOINTS } from '@/constants';
@@ -78,33 +79,34 @@ class PropertiesService {
         data: response.data.data,
         message: response.data.message || 'Đăng tin thành công'
       };
-    } catch (error: any) {
-      console.error('Post property failed:', error);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      console.error('Post property failed:', axiosError);
       
-      if (error.response?.status === 401) {
+      if (axiosError.response?.status === 401) {
         return {
           success: false,
           message: 'Vui lòng đăng nhập để đăng tin'
         };
       }
       
-      if (error.response?.status === 400) {
+      if (axiosError.response?.status === 400) {
         return {
           success: false,
-          message: error.response?.data?.message || 'Dữ liệu không hợp lệ'
+          message: axiosError.response?.data?.message || 'Dữ liệu không hợp lệ'
         };
       }
       
-      if (error.response?.status === 422) {
+      if (axiosError.response?.status === 422) {
         return {
           success: false,
-          message: error.response?.data?.message || 'Dữ liệu không hợp lệ'
+          message: axiosError.response?.data?.message || 'Dữ liệu không hợp lệ'
         };
       }
       
       return {
         success: false,
-        message: error.response?.data?.message || 'Có lỗi xảy ra khi đăng tin'
+        message: axiosError.response?.data?.message || 'Có lỗi xảy ra khi đăng tin'
       };
     }
   }
@@ -117,11 +119,12 @@ class PropertiesService {
         data: (response.data as any).data || (response as any).data?.data || (response as any).data,
         message: (response.data as any).message
       };
-    } catch (error: any) {
-      console.error('Get property failed:', error);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      console.error('Get property failed:', axiosError);
       return {
         success: false,
-        message: error.response?.data?.message || 'Không thể tải thông tin tin đăng'
+        message: axiosError.response?.data?.message || 'Không thể tải thông tin tin đăng'
       };
     }
   }
@@ -134,23 +137,24 @@ class PropertiesService {
         data: (response.data as any).data || (response as any).data?.data || (response as any).data,
         message: (response.data as any).message || 'Cập nhật tin đăng thành công'
       };
-    } catch (error: any) {
-      console.error('Update property failed:', error);
-      if (error.response?.status === 401) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      console.error('Update property failed:', axiosError);
+      if (axiosError.response?.status === 401) {
         return {
           success: false,
           message: 'Vui lòng đăng nhập để cập nhật tin'
         };
       }
-      if (error.response?.status === 400 || error.response?.status === 422) {
+      if (axiosError.response?.status === 400 || axiosError.response?.status === 422) {
         return {
           success: false,
-          message: error.response?.data?.message || 'Dữ liệu không hợp lệ'
+          message: axiosError.response?.data?.message || 'Dữ liệu không hợp lệ'
         };
       }
       return {
         success: false,
-        message: error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật tin đăng'
+        message: axiosError.response?.data?.message || 'Có lỗi xảy ra khi cập nhật tin đăng'
       };
     }
   }
@@ -162,24 +166,25 @@ class PropertiesService {
         success: true,
         message: 'Xóa tin đăng thành công'
       };
-    } catch (error: any) {
-      console.error('Delete property failed:', error);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      console.error('Delete property failed:', axiosError);
       
-      if (error.response?.status === 401) {
+      if (axiosError.response?.status === 401) {
         return {
           success: false,
           message: 'Vui lòng đăng nhập để xóa tin'
         };
       }
       
-      if (error.response?.status === 403) {
+      if (axiosError.response?.status === 403) {
         return {
           success: false,
           message: 'Bạn không có quyền xóa tin đăng này'
         };
       }
       
-      if (error.response?.status === 404) {
+      if (axiosError.response?.status === 404) {
         return {
           success: false,
           message: 'Tin đăng không tồn tại'
@@ -188,7 +193,7 @@ class PropertiesService {
       
       return {
         success: false,
-        message: error.response?.data?.message || 'Có lỗi xảy ra khi xóa tin đăng'
+        message: axiosError.response?.data?.message || 'Có lỗi xảy ra khi xóa tin đăng'
       };
     }
   }

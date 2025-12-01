@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, Suspense } from 'react';
 import { Form, Input, Select, DatePicker, Button, Upload, Breadcrumb, App } from 'antd';
 import { UploadOutlined, CalendarOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -16,7 +16,8 @@ import { wardsService } from '@/services/wards';
 const { TextArea } = Input;
 const { Option } = Select;
 
-const PostPropertyPage: React.FC = () => {
+// Component that uses useSearchParams - must be wrapped in Suspense
+const PostPropertyContent: React.FC = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<any[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -38,6 +39,7 @@ const PostPropertyPage: React.FC = () => {
       setSelectedCity(initialCity);
       loadWardsByCity(initialCity);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   // Load property in edit mode
@@ -211,7 +213,7 @@ const PostPropertyPage: React.FC = () => {
       setLoadingWards(true);
       const wardsData = await wardsService.getWardsByCity(city);
       setWards(wardsData);
-    } catch (error) {
+    } catch {
       message.error('Không thể tải danh sách phường/xã');
       setWards([]);
     } finally {
@@ -973,6 +975,18 @@ const PostPropertyPage: React.FC = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const PostPropertyPage: React.FC = () => {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Đang tải...</div>
+      </div>
+    }>
+      <PostPropertyContent />
+    </Suspense>
   );
 };
 

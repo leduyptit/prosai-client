@@ -31,7 +31,7 @@ export default function ZaloProvider(
     },
     token: {
       url: 'https://oauth.zaloapp.com/v4/access_token',
-      async request({ client, params, checks, provider }) {
+      async request({ params, checks }) {
         // Ensure we have the required parameters
         if (!params.code) {
           throw new Error('Missing required parameter: code');
@@ -77,7 +77,7 @@ export default function ZaloProvider(
         let data;
         try {
           data = JSON.parse(responseText);
-        } catch (parseError) {
+        } catch {
           throw new Error('Invalid response format from Zalo');
         }
 
@@ -99,7 +99,7 @@ export default function ZaloProvider(
     userinfo: {
       // request to prosai api backend
       url: `${API_CONFIG.baseUrl}/auth/social-login`,
-      async request({ tokens, provider }) {
+      async request({ tokens }) {
         const response = await fetch(`${API_CONFIG.baseUrl}/auth/social-login?access_token=${tokens.access_token}&provider=ZALO`, {
           headers: {
             Authorization: `Bearer ${tokens.access_token}`,

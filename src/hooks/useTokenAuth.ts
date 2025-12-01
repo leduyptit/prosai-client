@@ -9,7 +9,7 @@ export function useTokenAuth() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tokenProcessed, setTokenProcessed] = useState(false);
-  const { isAuthenticated, isLoading } = useAuth();
+  useAuth();
   const searchParams = useSearchParams();
   const hasProcessedRef = useRef(false);
   const currentTokenRef = useRef<string | null>(null);
@@ -71,7 +71,8 @@ export function useTokenAuth() {
       console.log('Token found in URL, processing...', token);
       processTokenLogin(token);
     }
-  }, [searchParams.get('token'), tokenProcessed, processTokenLogin]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, tokenProcessed, processTokenLogin]);
 
   return {
     isProcessing,

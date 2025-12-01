@@ -26,9 +26,7 @@ interface NotificationItem {
 }
 
 const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ 
-  visible, 
-  onClose, 
-  notificationsCount = 0 
+  visible
 }) => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -57,7 +55,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
       }));
 
       setNotifications(items);
-    } catch (err) {
+    } catch {
       setError('Không thể tải thông báo');
       setNotifications([]);
     } finally {

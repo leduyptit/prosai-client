@@ -19,7 +19,7 @@ const NewsDetailPage: React.FC = () => {
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [sidebarArticles, setSidebarArticles] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sidebarLoading, setSidebarLoading] = useState(true);
+  const [, setSidebarLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
   // Parse slug and shortId from URL
