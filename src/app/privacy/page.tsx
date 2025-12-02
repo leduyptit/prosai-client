@@ -49,7 +49,7 @@ const PrivacyPolicyPage: React.FC = () => {
                 1. Giới thiệu
               </Title>
               <Paragraph className="text-gray-700 leading-relaxed">
-                ProSai.vn ("chúng tôi", "của chúng tôi" hoặc "nền tảng") cam kết bảo vệ quyền riêng tư và thông tin cá nhân của người dùng. 
+                ProSai.vn (&quot;chúng tôi&quot;, &quot;của chúng tôi&quot; hoặc &quot;nền tảng&quot;) cam kết bảo vệ quyền riêng tư và thông tin cá nhân của người dùng. 
                 Chính sách bảo mật này mô tả cách chúng tôi thu thập, sử dụng, lưu trữ và bảo vệ thông tin của bạn khi sử dụng dịch vụ của chúng tôi.
               </Paragraph>
               <Paragraph className="text-gray-700 leading-relaxed">
@@ -195,7 +195,7 @@ const PrivacyPolicyPage: React.FC = () => {
               </Title>
               <Paragraph className="text-gray-700 leading-relaxed">
                 Chúng tôi có thể cập nhật chính sách bảo mật này theo thời gian. 
-                Chúng tôi sẽ thông báo về bất kỳ thay đổi nào bằng cách đăng chính sách mới trên trang này và cập nhật ngày "Cập nhật lần cuối". 
+                Chúng tôi sẽ thông báo về bất kỳ thay đổi nào bằng cách đăng chính sách mới trên trang này và cập nhật ngày &quot;Cập nhật lần cuối&quot;. 
                 Chúng tôi khuyến khích bạn xem lại chính sách này định kỳ.
               </Paragraph>
             </section>

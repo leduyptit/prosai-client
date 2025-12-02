@@ -49,7 +49,7 @@ const TermsOfServicePage: React.FC = () => {
                 1. Chấp nhận điều khoản
               </Title>
               <Paragraph className="text-gray-700 leading-relaxed">
-                Chào mừng bạn đến với ProSai.vn ("nền tảng", "dịch vụ", "chúng tôi"). 
+                Chào mừng bạn đến với ProSai.vn (&quot;nền tảng&quot;, &quot;dịch vụ&quot;, &quot;chúng tôi&quot;). 
                 Bằng việc truy cập và sử dụng nền tảng này, bạn đồng ý tuân thủ và bị ràng buộc bởi các Điều khoản Dịch vụ này. 
                 Nếu bạn không đồng ý với bất kỳ phần nào của các điều khoản này, bạn không được phép sử dụng dịch vụ.
               </Paragraph>
@@ -183,7 +183,7 @@ const TermsOfServicePage: React.FC = () => {
                 8. Từ chối trách nhiệm
               </Title>
               <Paragraph className="text-gray-700 leading-relaxed">
-                Dịch vụ được cung cấp "nguyên trạng" và "theo khả năng có sẵn". 
+                Dịch vụ được cung cấp &quot;nguyên trạng&quot; và &quot;theo khả năng có sẵn&quot;. 
                 Chúng tôi không đảm bảo rằng dịch vụ sẽ không bị gián đoạn, an toàn hoặc không có lỗi. 
                 Chúng tôi không chịu trách nhiệm về:
               </Paragraph>
