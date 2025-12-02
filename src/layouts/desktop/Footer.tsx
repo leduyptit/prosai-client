@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { Layout, Row, Col, Typography, Space, Divider } from 'antd';
+import Link from 'next/link';
 // Removed unused imports
 
 const { Footer: AntFooter } = Layout;
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 const DesktopFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -67,21 +68,21 @@ const DesktopFooter: React.FC = () => {
             <div className="space-y-4 pt-19">
               <ul className="space-y-2">
                 <li className="mb-5">
-                  <Link href="#" className="text-gray-700 hover:text-blue-600 text-sm flex items-center space-x-2">
+                  <Link href="/about" className="text-gray-700 hover:text-blue-600 text-sm flex items-center space-x-2">
                     <div className="w-2 h-2 bg-[#1565C0] rounded-full"></div>
                     <span>Giới thiệu</span>
                   </Link>
                 </li>
                 <li className="mb-5">
-                  <Link href="#" className="text-gray-700 hover:text-blue-600 text-sm flex items-center space-x-2">
+                  <Link href="/terms" className="text-gray-700 hover:text-blue-600 text-sm flex items-center space-x-2">
                     <div className="w-2 h-2 bg-[#1565C0] rounded-full"></div>
-                    <span>Chính sách</span>
+                    <span>Điều khoản dịch vụ</span>
                   </Link>
                 </li>
                 <li className="mb-5">
-                  <Link href="#" className="text-gray-700 hover:text-blue-600 text-sm flex items-center space-x-2">
+                  <Link href="/privacy" className="text-gray-700 hover:text-blue-600 text-sm flex items-center space-x-2">
                     <div className="w-2 h-2 bg-[#1565C0] rounded-full"></div>
-                    <span>Quy chế</span>
+                    <span>Chính sách bảo mật</span>
                   </Link>
                 </li>
                 <li className="mb-5">
@@ -91,7 +92,7 @@ const DesktopFooter: React.FC = () => {
                   </Link>
                 </li>
                 <li className="mb-5">
-                  <Link href="#" className="text-gray-700 hover:text-blue-600 text-sm flex items-center space-x-2">
+                  <Link href="/terms" className="text-gray-700 hover:text-blue-600 text-sm flex items-center space-x-2">
                     <div className="w-2 h-2 bg-[#1565C0] rounded-full"></div>
                     <span>Thỏa thuận người dùng</span>
                   </Link>
@@ -105,7 +106,7 @@ const DesktopFooter: React.FC = () => {
             <div className="space-y-4 pt-19">
               <ul className="space-y-2">
                 <li className="mb-5">
-                  <Link href="#" className="text-gray-700 hover:text-blue-600 text-sm flex items-center space-x-2">
+                  <Link href="/privacy" className="text-gray-700 hover:text-blue-600 text-sm flex items-center space-x-2">
                     <div className="w-2 h-2 bg-[#1565C0] rounded-full"></div>
                     <span>Bảo mật</span>
                   </Link>
