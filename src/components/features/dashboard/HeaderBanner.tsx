@@ -312,7 +312,9 @@ const HeaderBanner: React.FC<HeaderBannerProps> = ({
                     minWidth: '172px',
                   }}
                 >
-                  Tư vấn AI
+                  <Link href="/chat-ai">
+                    Tư vấn AI
+                  </Link>
                 </Button>
               </div>
             </div>
