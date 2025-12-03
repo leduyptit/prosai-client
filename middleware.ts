@@ -12,6 +12,7 @@ export default withAuth(
       '/property/create',
       '/property/edit',
       '/user',
+      '/chat-ai',
     ];
 
     // Define admin routes (if needed)
